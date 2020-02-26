@@ -1,5 +1,5 @@
 
-import colors from 'colors';
+import colors from 'colors/safe';
 
 import Word from './word/word';
 
@@ -69,6 +69,7 @@ export class WordGroup {
         }
 
         let strReslut = '';
+        let inParenthesis = false; 
 
         for (let i=0 ; i<this._words.length ; i++) {
             const word = this._words[i];
@@ -76,7 +77,10 @@ export class WordGroup {
                 if (range[0] === i+1)
                     strReslut += '(';
 
-            strReslut += word.str.red;
+            // if (inParenthesis)
+            //     strReslut += colors.red(word.str);
+            // else
+            //     strReslut += colors.red(word.str);
 
             for (const range of matches)
                 if (range[1] === i+1)

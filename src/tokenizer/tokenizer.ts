@@ -1,8 +1,6 @@
-import fs from 'fs';
 import pos from 'pos';
-import * as Data from './data'
-import GrammarRegex from './grammarRegex/grammarRegex'
-import {WordGroup, Word} from './wordGroup/wordGroup'
+import * as Data from './data';
+import {WordGroup, Word} from './wordGroup/wordGroup';
 
 
 /**
@@ -26,11 +24,11 @@ export default class Tokenizer {
      *     ]
      */
     subSentences(sentence: string): object {
-        const wordGroup = this.wordPerWord(sentence); 
+        const wordGroup = this.wordPerWord(sentence);
         const rules = Data.getData('grammarGroupRules');
-        const matches = {};
+        // const matches = {};
         console.log('wordGroup: ', wordGroup);
-        const allRanges = {};
+        // const allRanges = {};
         for (const category of Object.keys(rules)) {
             console.log('\ncategory: ', category);
             const rule = rules[category];
