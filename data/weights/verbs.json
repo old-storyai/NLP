@@ -1,0 +1,8 @@
+{
+    "what": [
+        "give", "recieve", "send", "open", "turn on", "turn off", "get"
+    ],
+    "who": [
+        "call", "message", "tell"
+    ]
+}

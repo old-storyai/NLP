@@ -1,0 +1,14 @@
+{
+    "location": {
+        "^at": 50,
+        "^in": 60
+    },
+    "time": {
+        "^at": 50,
+        "^before": 80,
+        "^after": 80,
+        "^during": 80
+    },
+    "person": {
+    }
+}

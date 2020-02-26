@@ -1,0 +1,4 @@
+{
+    "G_NN": "(( DT| PRPS)*( JJ[RS]?)*( NNS?)+| PRP)",
+    "G_VB": "( VB[NP]?)+( RB[RS]?)*"
+}

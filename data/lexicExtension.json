@@ -1,0 +1,24 @@
+{
+    "turn (on|off)": "VB",
+    "turns (on|off)": "VBZ",
+    "turned (on|off)": "VBD",
+    "close": "VB",
+    "closes": "VBZ",
+    "closed": "VBD",
+    "reserve": "VB",
+    "reserves": "VBZ",
+    "reserved": "VBD",
+    "lock": "VB",
+    "locks": "VBZ",
+    "locked": "VBD",
+
+    "get (out|in)": "VB",
+    "'(s|m|d|ve)": "VB",
+    "'ve got": "VB",
+    "as soon as": "WRB",
+    "mars": "NN",
+    "right now": "NN",
+    "\\d+[AP]M": "NN",
+    "\\d+[ap]m": "NN"
+}
+
