@@ -6,7 +6,7 @@ export default class Word {
 
     constructor(str0, group0) {
         // Using the setters
-        this._str = str0;
+        this.str = str0;
         this.group = group0;
     }
 
@@ -22,6 +22,10 @@ export default class Word {
 
     isVerb(): boolean {
         return this.group.slice(0, 2) === 'VB';
+    }
+
+    isPunctuation(): boolean {
+        return /[.,?!;:]/.test(this.group);
     }
 
     isDeterminer(): boolean {
@@ -53,5 +57,9 @@ export default class Word {
          *  - NNPS: Proper noun, plural (Smiths)
          */
         return this.group.slice(0,2) === 'NN';
+    }
+
+    toString() {
+        return this.str;
     }
 }

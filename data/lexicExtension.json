@@ -12,6 +12,10 @@
     "locks": "VBZ",
     "locked": "VBD",
 
+    "\\w+ness": "NN",
+
+    "right\\s+now": "RB",
+
     "get (out|in)": "VB",
     "'(s|m|d|ve)": "VB",
     "'ve got": "VB",
@@ -19,6 +23,8 @@
     "mars": "NN",
     "right now": "NN",
     "\\d+[AP]M": "NN",
-    "\\d+[ap]m": "NN"
-}
+    "\\d+[ap]m": "NN",
 
+    "\\?": "?",
+    "\\!": "."
+}

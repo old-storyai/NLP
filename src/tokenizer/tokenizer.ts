@@ -29,48 +29,12 @@ export default class Tokenizer {
         // const matches = {};
         console.log('wordGroup: ', wordGroup);
         // const allRanges = {};
-        for (const category of Object.keys(rules)) {
-            console.log('\ncategory: ', category);
-            const rule = rules[category];
-            wordGroup.findGrammar(rule);
-
-            // const p = new GrammarRegex(rules[category]);
-            // const ranges = p.search(wordGroup);
-            // allRanges[category] = ranges;
-            // matches[category] = ranges.map(([beg, end]) => wordGroup.slice(beg, end+1));
-        }
-
-        // console.log('allRanges: ', allRanges);
-
-        // for (const key of Object.keys(matches)) {
-        //     matches[key] = matches[key].map(v => v.map(w=>w[0]).join(' '));
+        // for (const category of Object.keys(rules)) {
+        //     console.log('\ncategory: ', category);
+        //     const rule = rules[category];
         // }
 
-        // // We analyse the wordGroup that didn't get picked
-        // const unpickedWords = [];
-        // let neighbours = false;
-        // for (let i=0 ; i<wordGroup.length ; i++) {
-        //     let picked = false;
-        //     const word = wordGroup[i];
-        //     for (const category of Object.keys(allRanges)) {
-        //         allRanges[category].forEach(range => {
-        //             if (range[0]<=i && range[1]>=i)
-        //                 picked = true;
-        //         });
-        //     }
-        //     if (!picked) {
-        //         unpickedWords.push(wordGroup[i]);
-        //         neighbours = true;
-        //     } else {
-        //         neighbours = false;
-        //     }
-        // }
-        // console.log('unpickedWords: ', unpickedWords);
-        // //
-        // //  1. It's nouns and adjectives, it has an important meaning.
-        // //     We weight the wordGroup to understand their meaning
-
-        // console.log('matches: ', matches);
+        wordGroup.tokenize(rules);
 
         return {};
     }
@@ -87,7 +51,7 @@ export default class Tokenizer {
      */
     wordPerWord(sentence: string): WordGroup {
         const tagger = new pos.Tagger();
-        sentence = sentence.replace(/(['.,;])/g, ' $1');
+        sentence = sentence.replace(/(['.,;?!])/g, ' $1 ');
 
         //
         // Extending the lexic with our words
@@ -108,7 +72,7 @@ export default class Tokenizer {
 
         // Tagging the words
         let taggedWords = tagger.tag(
-            sentence.split(/[^\w':;,.]+/)
+            sentence.trim().split(/[^\w':;,.]+/)
         );
 
         // Placing back the extended words in their placeholders
