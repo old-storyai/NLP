@@ -26,7 +26,6 @@ export default class Tokenizer {
     subSentences(sentence: string): object {
         const wordGroup = this.wordPerWord(sentence);
         const rules = Data.getData('grammarGroupRules');
-        // console.log('wordGroup: ', wordGroup);
 
         wordGroup.tokenize(rules);
 
@@ -34,7 +33,7 @@ export default class Tokenizer {
     }
 
     /**
-     * Identify the sentence word per word:
+     * Identify the genre of each word of the sentence
      *   "Turn on the heating system"
      *     -> {
      *        "Turn on": "VB",
@@ -79,8 +78,12 @@ export default class Tokenizer {
             return [word, grp];
         });
 
-        // Creating proper "Word" instances
+        // Creating Word instances
         const words = taggedWords.map(w => new Word(w[0], w[1]));
+
+        //
+        // Exceptions!
+        //
 
         // Verb right after determiner is impossible, it has to be an adjective
         // e.g. the Heating system, Heating = JJ

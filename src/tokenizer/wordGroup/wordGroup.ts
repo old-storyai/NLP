@@ -5,12 +5,6 @@ import Word from './word/word';
 
 export class WordGroup {
     _words: (Word|WordGroup)[];
-    _meanings: object = {};
-    /**
-     * Noun group
-     * Action group
-     * Preposition?
-     */
     _group: string;
 
     constructor(words: [Word|WordGroup], group:string = 'NONE') {
@@ -19,27 +13,22 @@ export class WordGroup {
     }
 
     /**
-     * Gives a representation of the sentence, based on the words
+     * Gives a representation of the sentence, based on the words composing it
      */
     get grammarRepresentation(): string {
         const s = this._words.map(w => w.group).join(' ');
         return ` ${s} `;
     }
 
+    /**
+     * Getter for the group of the word list, can be one of the following:
+     *
+     *  "G_VB" - a verbal group
+     *  "G_NN" - a noun group
+     *  "G_RB" - an adverb group
+     */
     get group(): string {
         return this._group;
-    }
-
-    findMeaning(): string {
-        return 'time';
-    }
-
-    addMeaningSupposition(meaning: string, weight: number): void {
-        if (meaning in this._meanings) {
-            this._meanings[meaning] += weight;
-        } else {
-            this._meanings[meaning] = weight;
-        }
     }
 
     /**
@@ -80,6 +69,15 @@ export class WordGroup {
         return matches as [[number, number]];
     }
 
+    /**
+     * Gathers the words in chunks that makes sense:
+     *
+     *   {Pour} {me} {a good old cup} of {coffee} while {you} {'re} at {it} 
+     *   ╰─┬┬─╯ ╰┬┬╯ ╰──────┬┬──────╯    ╰──┬┬──╯       ╰┬┬─╯ ╰┬┬─╯    ╰┬┬╯
+     *    G_VB  G_NN       G_NN            G_NN         G_NN  G_VB     G_NN
+     *
+     * See the groups getter for more informations about groups
+     */
     tokenize(gramexRules: object): void {
         
         let newWords = this._words.slice(0);
