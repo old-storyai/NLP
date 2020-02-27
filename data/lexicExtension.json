@@ -16,10 +16,20 @@
 
     "right\\s+now": "RB",
 
+    "tomorrow": "NN_S",
+    "yesterday": "NN_S",
+
+    "1st": "NN",
+    "2nd": "NN",
+    "3rd": "NN",
+    "\\d+th": "NN",
+
     "get (out|in)": "VB",
-    "'(s|m|d|ve)": "VB",
+    "'(s|m|d|re|ve)": "VB",
     "'ve got": "VB",
+    "pour": "VB",
     "as soon as": "WRB",
+    "(january|february|march|april|may|june|july|august|september|october|november|december)": "NN",
     "mars": "NN",
     "right now": "NN",
     "\\d+[AP]M": "NN",

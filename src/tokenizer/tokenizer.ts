@@ -26,13 +26,7 @@ export default class Tokenizer {
     subSentences(sentence: string): object {
         const wordGroup = this.wordPerWord(sentence);
         const rules = Data.getData('grammarGroupRules');
-        // const matches = {};
-        console.log('wordGroup: ', wordGroup);
-        // const allRanges = {};
-        // for (const category of Object.keys(rules)) {
-        //     console.log('\ncategory: ', category);
-        //     const rule = rules[category];
-        // }
+        // console.log('wordGroup: ', wordGroup);
 
         wordGroup.tokenize(rules);
 
@@ -51,7 +45,8 @@ export default class Tokenizer {
      */
     wordPerWord(sentence: string): WordGroup {
         const tagger = new pos.Tagger();
-        sentence = sentence.replace(/(['.,;?!])/g, ' $1 ');
+        sentence = sentence.replace(/(['])/g, ' $1');
+        sentence = sentence.replace(/([.,;?!])/g, ' $1 ');
 
         //
         // Extending the lexic with our words

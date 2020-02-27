@@ -5,13 +5,14 @@
 
 import fs from 'fs';
 
-const basePath = './data'
+const basePath = './data';
 const filesPaths = {
     'sentenceChunkWeights': 'weights/chunks.json',
 
     'lexicExtension': 'lexicExtension.json',
-    'grammarGroupRules': 'wordGroupingRules.json'
-}
+    'grammarGroupRules': 'wordGroupingRules.json',
+    'groupBreaksExceptions': 'breakExceptions.json'
+};
 
 export function getData(fileId: string): any {
     const fileFullPath  = basePath + '/' + filesPaths[fileId];

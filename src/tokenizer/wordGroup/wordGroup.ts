@@ -82,10 +82,11 @@ export class WordGroup {
 
     tokenize(gramexRules: object): void {
         
-
         let newWords = this._words.slice(0);
+
         for (const group of Object.keys(gramexRules)) {
-            const matches = this.findGrammar(gramexRules[group]);
+            const gramex = `(${gramexRules[group].join('|')})`;
+            const matches = this.findGrammar(gramex);
 
             for (const range of matches) {
                 const words = this._words.slice(range[0], range[1]+1);
@@ -99,12 +100,12 @@ export class WordGroup {
         newWords = newWords.filter(w => w !== null);
         this._words = newWords;
 
-        console.log('this.toString(): ', ''+this);
+        console.log(''+this);
     }
 
     /**
      * Gives the number of words contained in this group,
-     * regardless of the grouping
+     * regardless of the internal grouping
      */
     countWords(): number {
         let count = 0;
@@ -128,6 +129,12 @@ export class WordGroup {
                     break;
                 case 'G_VB':
                     colorize = colors.green;
+                    break;
+                case 'G_RB':
+                    colorize = colors.yellow;
+                    break;
+                default:
+                    colorize = colors.gray;
                     break;
                 }
 
