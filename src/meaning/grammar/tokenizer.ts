@@ -1,16 +1,13 @@
 import pos from 'pos';
 import * as Data from './data';
 import {WordGroup, Word} from './wordGroup/wordGroup';
-
+export {WordGroup, Word};
 
 /**
- * This is the tokenizer, it can tokenize on different levels:
- *
- * - Split a whole sentence:
- *     "Lower the house temperature when I'm not home" -> ["Lower the house temperature", "when I'm not home"]
- *
+ * Allows to tokenize a sentence, only based on its gramatical composition, no
+ * meaning involved
  */
-export default class Tokenizer {
+export class Tokenizer {
 
 
     /**
@@ -23,13 +20,13 @@ export default class Tokenizer {
      *        "when": "at 5PM"
      *     ]
      */
-    subSentences(sentence: string): object {
+    subSentences(sentence: string): WordGroup {
         const wordGroup = this.wordPerWord(sentence);
         const rules = Data.getData('grammarGroupRules');
 
         wordGroup.tokenize(rules);
 
-        return {};
+        return wordGroup;
     }
 
     /**

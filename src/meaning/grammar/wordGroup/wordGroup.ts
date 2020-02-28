@@ -20,6 +20,10 @@ export class WordGroup {
         return ` ${s} `;
     }
 
+    get words(): (WordGroup|Word)[] {
+        return this._words;
+    }
+
     /**
      * Getter for the group of the word list, can be one of the following:
      *
@@ -97,8 +101,6 @@ export class WordGroup {
 
         newWords = newWords.filter(w => w !== null);
         this._words = newWords;
-
-        console.log(''+this);
     }
 
     /**
