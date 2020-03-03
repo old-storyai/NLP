@@ -19,6 +19,8 @@
     "typescript-eslint": "0.0.1-alpha.0"
   },
   "dependencies": {
-    "fs": "0.0.1-security"
+    "fs": "0.0.1-security",
+    "stemmer": "^1.0.5",
+    "verbix": "0.0.3"
   }
 }

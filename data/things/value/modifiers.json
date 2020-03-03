@@ -1,0 +1,17 @@
+{
+    "more": [
+        "more", "above", "hotter", "higher", "warmer"
+    ],
+    "moreOrEqual": [
+        "at least"
+    ],
+    "less": [
+        "below", "under", "colder", "less", "lower"
+    ],
+    "lessOrEqual": [
+        "at most", "maximum"
+    ],
+    "equal": [
+        "equal"
+    ]
+}

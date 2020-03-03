@@ -1,9 +1,10 @@
-
 import Meaning from './meaning';
+import Thing from './thing';
 
-export default class Location {
+import {WordGroup, Word} from './grammar/tokenizer';
 
-    _raw: string;
+
+export default class Location extends Thing {
 
     // through, the other side of, before
     _modifiers: [string];
@@ -12,5 +13,22 @@ export default class Location {
     //                 ==================================
     _additions?: Meaning;
 
+    _placeTitle: string;
+
     _latlng: [number, number];
+
+
+    constructor(wg: WordGroup) {
+        super(wg);
+        
+        this._placeTitle = '';
+        
+        for (let w of this._wordGroup._words) {
+            w = w as Word;
+            if (!w.isDeterminer()) {
+                this._placeTitle += ' ' + w.toString();
+            }
+        }
+        this._wordGroup.toString();
+    }
 }

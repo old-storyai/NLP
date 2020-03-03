@@ -1,22 +1,26 @@
  
-import Meaning from './meaning/meaning';
+import SentenceAnalyser from './meaning/sentenceAnalyser';
 
 
-Meaning.from('Will it be warmer than 70 degrees near the Golden Gate bridge after 5pm the day after tomorrow?');
-Meaning.from('When the fridge doors from the kitchen next to the living room in August or during the high season are left widely open, send me a text message on my smartphone using the slack app');
-Meaning.from('Call my mom to tell her that I feel sick today');
-Meaning.from('I feel so good that I could explode from happiness right now');
-Meaning.from('I will be there with my wife tomorrow night');
-Meaning.from('Tell me when the sun sets on the 4th of july 2018');
-Meaning.from('Speak up young boy, if you want everybody here to hear you');
-Meaning.from('Come to my place as soon as you have this message');
-Meaning.from('You have been found red handed');
-Meaning.from('Pour me a good old cup of coffee while you\'re at it');
-Meaning.from('Tell the old lady from across the street to give a call to the school');
+let str = '';
 
-Meaning.from('about being abroad');
-Meaning.from('I remember she told me that she jumped into the river once... barefoot');
-Meaning.from('she walked without looking and tumbled into the Seine');
-Meaning.from('The water was freezing, she spent a month sneezing, but she said she\'d  do it again');
+str = 'Will it be warmer than 70 degrees near the Golden Gate bridge after 5pm the day after tomorrow?';
+// str = 'When the fridge doors from the kitchen next to the living room in August or during the high season are left widely open, send me a text message on my smartphone using the slack app';
+// str = 'Call my mom to tell her that I feel sick today';
+// str = 'I feel so good that I could explode from happiness right now';
+// str = 'I will be there with my wife tomorrow night';
+// str = 'Tell me when the sun sets on the 4th of july 2018';
+// str = 'Speak up young boy, if you want everybody here to hear you';
+// str = 'Come to my place as soon as you have this message';
+// str = 'You have been found red handed';
+// str = 'Pour me a good old cup of coffee while you\'re at it';
+// str = 'Tell the old lady from across the street to give a call to the school';
+// str = 'I remember she told me that she jumped into the river once... barefoot';
+// str = 'she walked without looking and tumbled into the Seine';
+// str = 'The water was freezing, she spent a month sneezing, but she said she\'d  do it again';
+// str = 'Me and the son of the old lady who used to take care of me, we\'d go on adventures together';
+// str = 'Turn the heater on when I leave;
+// str = 'the boy who eats chocolate lives on the other side of the street');
+// str = 'Send me a text when the temperature drops lower than 20 degrees outside');
 
-Meaning.from('Me and the son of the old lady who used to take care of me, we\'d go on adventures together');
+new SentenceAnalyser(str).createMeanings();

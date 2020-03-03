@@ -1,7 +1,8 @@
 import pos from 'pos';
 import * as Data from './data';
 import {WordGroup, Word} from './wordGroup/wordGroup';
-export {WordGroup, Word};
+
+export {WordGroup, Word, Data};
 
 /**
  * Allows to tokenize a sentence, only based on its gramatical composition, no
@@ -107,6 +108,25 @@ export class Tokenizer {
 
                 }
             }
+        }
+
+        // do ... open => open is a verb!
+        //   This is an error from the POS tager...
+        let doEncounter = false;
+        for (let i=0 ; i<words.length-1 ; i++) {
+            const word = words[i];
+
+            if (doEncounter) {
+                if (!word.isAdverb())
+                    doEncounter = false;
+
+                if(word.str === 'open') {
+                    word.group = 'VB';
+                }
+            }
+
+            if (word.str.toLowerCase() === 'do')
+                doEncounter = true;
         }
 
         return new WordGroup(words);

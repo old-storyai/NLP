@@ -1,39 +1,46 @@
-
+import Thing from './thing';
 import Meaning from './meaning';
 
-/**
- * Example:
- *
- *  Tell the son of the old lady who used to care for me to call me
- *
- *    Person{
- *      name: 'son'
- *      addition: Meaning{
- *        person: Person{
- *          name: 'lady',
- *          modifiers: ['old'],
- *          addition: Meaning{
- *            action: "care for",
- *            person: Person{
- *              name: "SELF"
- *            }
- *          }
- *        }
- *      }
- *    }
- *
- *
- */
-export default class Person {
+import {WordGroup, Word} from './grammar/tokenizer';
 
-    _raw: string;
+import colors from 'colors';
 
-    _modifiers: [string];
+export default class Person extends Thing {
+
+    // Person qualifiers
+    //  e.g. "The old lady who used to care for me"
+    //            ===
+    _modifiers: string[];
 
     // Extra information about this person
     //  e.g. "The old lady who used to care for me"
     //                     =======================
     _addition: Meaning;
 
-    _name: string;
+    _personTitle: string;
+
+    constructor(wg: WordGroup) {
+        super(wg);
+
+        this.parseWords();
+    }
+
+    private parseWords() {
+        if (/^(me|I)$/i.test(this._wordGroup.toString())) {
+            this._personTitle = 'SELF';
+            return;
+        }
+
+        this._personTitle = '';
+
+        for (let word of this._wordGroup._words) {
+            word = word as Word;
+            if (word.isAdjective()) {
+                this._modifiers.push(word.toString());
+            } else {
+                this._personTitle += ' ' + word.toString();
+            }
+        }
+        this._personTitle.trim();
+    }
 }

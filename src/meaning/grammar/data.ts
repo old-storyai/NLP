@@ -7,11 +7,13 @@ import fs from 'fs';
 
 const basePath = './data';
 const filesPaths = {
-    'sentenceChunkWeights': 'weights/chunks.json',
+    'nounGroupsMeanings': 'weights/GNN_meanings.json',
+    'connectorMeanings': 'weights/connector_meanings.json',
 
-    'lexicExtension': 'lexicExtension.json',
-    'grammarGroupRules': 'wordGroupingRules.json',
-    'groupBreaksExceptions': 'breakExceptions.json'
+    'lexicExtension': 'grammar/lexicExtension.json',
+    'grammarGroupRules': 'grammar/wordGroupingRules.json',
+
+    'value_modifiers': 'things/value/modifiers.json'
 };
 
 export function getData(fileId: string): any {

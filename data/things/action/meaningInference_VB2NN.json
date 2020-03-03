@@ -1,0 +1,14 @@
+{
+    "location": {
+        "leave": 60,
+        "enter": 60,
+        "go": 60
+    },
+    "item": {
+        "close": 40
+    },
+    "person": {
+        "call": 70,
+        "text": 70
+    }
+}

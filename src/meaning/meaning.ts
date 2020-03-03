@@ -1,27 +1,23 @@
+import Time from './time';
+import Person from './person';
+import Location from './location';
+import Value from './value';
+import Item from './item';
+import Action from './action';
 
-import Time from './time'
-import Person from './person'
-import Location from './location'
-
-import {Tokenizer, WordGroup, Word} from './grammar/tokenizer'
+import {WordGroup, Word} from './grammar/tokenizer';
 
 export default class Meaning {
 
     _raw: string;
 
     // Might be:
-    //   description, order, question
+    //   description, order, question, condition
     _type: string;
 
     // "Call me now"
     //  ====
-    _action: string;
-
-    _negated: boolean;
-
-    // "He jumped in the puddle barefoot"
-    //                          ======== 
-    _additions?: [string];
+    _action: Action;
 
     // "I really need to arrive early to class"
     //    ======
@@ -29,7 +25,17 @@ export default class Meaning {
 
     // "Give a call to Bernard when I get home"
     //              ==========
-    _person?: Person;
+    _target?: Person;
+
+    // "I am the head butler in this manor"
+    //  =
+    _subject?: Person|Item;
+
+    // "Pour me a cup of coffee"
+    //          ===============
+    _item?: Item;
+
+    _value?: Value;
 
     // "join me on the 5th avenue"
     //          =================
@@ -43,25 +49,14 @@ export default class Meaning {
     //                ======================== 
     _purpose?: Meaning|string;
 
-    static from(str: string) {
-        const t = new Tokenizer();
+    toString(): string {
+        let out = '';
 
-        let wg: WordGroup = t.subSentences(str);
-
-        console.log(''+ wg);
-
-
-        const all_meanings:Meaning[] = [];
-        const m = new Meaning();
-
-        for (const word of wg.words) {
-            switch (word.group) {
-                case 'G_NN':
-                    break;
-                case 'G_VB':
-                    break;
-                default:
-            }
+        for (const prop of Object.keys(this)) {
+            out += `${prop.replace(/^_+/, '').replace(/^\w/, c=>c.toUpperCase())}:\n` +
+                `\t${this[prop].toString().replace(/\n/g, '\n\t')}\n`;
         }
+
+        return out;
     }
 }

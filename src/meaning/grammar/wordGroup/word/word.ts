@@ -48,6 +48,16 @@ export default class Word {
         return this.group.slice(0,2) === 'JJ';
     }
 
+    isAdverb(): boolean {
+        /**
+         * will match:
+         *  - RB:  Classic adverb (quickly)
+         *  - RBR: Comparative adv (faster)
+         *  - RBS: Superlative adv (fastest)
+         */
+        return this.group.slice(0,2) === 'RB';
+    }
+
     isNoun(): boolean {
         /**
          * will match:

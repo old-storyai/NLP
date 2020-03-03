@@ -118,24 +118,24 @@ export class WordGroup {
         return count;
     }
 
-    toString(): string {
+    toNiceString(): string {
         let str = '';
         for (const word of this._words) {
             if (word instanceof WordGroup) {
                 let colorize;
                 switch (word.group) {
-                case 'G_NN':
-                    colorize = colors.blue;
-                    break;
-                case 'G_VB':
-                    colorize = colors.green;
-                    break;
-                case 'G_RB':
-                    colorize = colors.yellow;
-                    break;
-                default:
-                    colorize = colors.gray;
-                    break;
+                    case 'G_NN':
+                        colorize = colors.blue;
+                        break;
+                    case 'G_VB':
+                        colorize = colors.green;
+                        break;
+                    case 'G_RB':
+                        colorize = colors.yellow;
+                        break;
+                    default:
+                        colorize = colors.gray;
+                        break;
                 }
 
                 str += '['+colorize(word.toString().trim())+']';
@@ -145,7 +145,11 @@ export class WordGroup {
             str += ' ';
         }
 
-        return str.replace(/\s+/g, ' ');
+        return str.replace(/\s+/g, ' ').trim();
+    }
+
+    toString(): string {
+        return this._words.map(w=>w.toString().trim()).join(' ');
     }
 }
 

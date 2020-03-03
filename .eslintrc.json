@@ -20,12 +20,14 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "indent": [2, 4, {
-            "SwitchCase": 1
-        }],
+        "no-case-declarations": 0,
         "no-extra-boolean-cast": 0,
+        "no-empty": 1,
+        "no-unused-vars": 1,
+        "no-constant-condition": 1,
+        "prefer-const": 1,
+        "indent": [2, 4, { "SwitchCase": 1 }],
         "quotes": [2, "single"],
-        "semi": [2, "always"],
-        "prefer-const": 2
+        "semi": [2, "always"]
     }
 }

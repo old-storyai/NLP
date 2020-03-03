@@ -6,10 +6,10 @@
         " EX"
     ],
     "G_VB": [
-        "( MD( TO)?)?( VB[NPD]?)+"
+        "( MD( TO)?)?( VB[NPDZ]?)+"
     ],
     "G_RB": [
-        "( RB)+( JJ)?",
+        "( RB)+",
         " VBG"
     ]
 }
