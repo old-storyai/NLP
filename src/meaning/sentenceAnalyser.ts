@@ -154,34 +154,41 @@ export default class SentenceAnalyser {
 
 
     private guessGNNCategory(): string {
-        const rigWeights = {};
+        const balanceConfig = Data.getData('nounGroupsMeanings');
+        const b = new Balance(balanceConfig);
 
+        const rigWeights = {};
         if (this._separatorQueue.length) {
             //
             // Infering meaning from the connectors prior to this group.
             //   e.g. "from my place"
             //
 
-            const connectorMeanings = Data.getData('connectorMeanings');
             const strPrec = this._separatorQueue.map(sep=>sep.toString()).join(' ');
+            const b2 = new Balance(Data.getData('connectorMeanings'));
+            const sepRig = b2.getWeightDetails(strPrec);
 
-            // Going through the categories (location, person, ...)
-            for (const category of Object.keys(connectorMeanings)) {
-                // Going through the words (to, from, across, ...)
-                for (const word of Object.keys(connectorMeanings[category])) {
-                    // If the separator is found...
-                    if (new RegExp(word, 'gi').test(strPrec)) {
-                        // Add its weight to the balance rigging
-                        const weight = connectorMeanings[category][word];
-                        rigWeights[category] = (rigWeights[category] || 0) + weight;
-                    }
-                }
-            }
-            console.log('rigWeights: ', rigWeights);
+            for (const cat of Object.keys(sepRig))
+                rigWeights[cat] = (rigWeights[cat] || 0) + sepRig[cat];
         }
 
-        const balanceConfig = Data.getData('nounGroupsMeanings');
-        const b = new Balance(balanceConfig);
+        if (this._reader.previousWord.group === 'G_VB') {
+            //
+            // Infering meaning from the preceding verb
+            //   e.g. "call my brother"
+            //
+
+            const strPrec = this._reader.previousWord.toString();
+            const b2 = new Balance(Data.getData('verbMeaningInference'));
+            const verbRig = b2.getWeightDetails(strPrec);
+
+            for (const cat of Object.keys(verbRig))
+                rigWeights[cat] = (rigWeights[cat] || 0) + verbRig[cat];
+
+            console.log('verbRig: ', verbRig);
+        }
+
+
         b.rig(rigWeights);
         const cat = b.categorize(this._reader.currentWord.toString());
 

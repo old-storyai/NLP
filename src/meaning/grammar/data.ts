@@ -13,7 +13,8 @@ const filesPaths = {
     'lexicExtension': 'grammar/lexicExtension.json',
     'grammarGroupRules': 'grammar/wordGroupingRules.json',
 
-    'value_modifiers': 'things/value/modifiers.json'
+    'value_modifiers': 'things/value/modifiers.json',
+    'verbMeaningInference': 'things/action/meaningInference_VB2NN.json'
 };
 
 export function getData(fileId: string): any {

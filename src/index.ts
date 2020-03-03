@@ -4,8 +4,8 @@ import SentenceAnalyser from './meaning/sentenceAnalyser';
 
 let str = '';
 
-str = 'Will it be warmer than 70 degrees near the Golden Gate bridge after 5pm the day after tomorrow?';
-// str = 'When the fridge doors from the kitchen next to the living room in August or during the high season are left widely open, send me a text message on my smartphone using the slack app';
+// str = 'Will it be warmer than 70 degrees near the Golden Gate bridge after 5pm the day after tomorrow?';
+str = 'When the fridge doors from the kitchen next to the living room in August or during the high season are left widely open, send me a text message on my smartphone using the slack app';
 // str = 'Call my mom to tell her that I feel sick today';
 // str = 'I feel so good that I could explode from happiness right now';
 // str = 'I will be there with my wife tomorrow night';
