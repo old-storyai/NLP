@@ -26,7 +26,7 @@ export default class SentenceAnalyser {
         this._separatorQueue = [];
 
         const t = new Tokenizer();
-        const wg: WordGroup = t.subSentences(str);
+        const wg: WordGroup = t.groupWords(str);
 
         console.log(''+ wg.toNiceString());
         

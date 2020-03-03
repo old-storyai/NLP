@@ -1,20 +1,94 @@
 # Natural Language Processing
 
+## Installation
+The NLP runs with Node and Typescript. To install, simply run;
+```bash
+npm install
+```
+And to run:
+```bash
+npm start
+``` 
 
-# Data
+## Inner working
+### Gramex
+The `Gramex` is a mix of Grammar and regex.  
+It allows to search for specific grammar formations in sentences, for example:
+```javascript
+new WordGroup("This cat is so cute!").findGrammar("RB JJ");
+// Result: so cute (so = adverb/RB, cute = adjective/JJ)
+```
+And we can of course use more advanced regex:
+```javascript
+const str = "When I'm not in the house, lock all the doors and turn off the lights";
+new WordGroup(str).findGrammar("( PRP| RB)? DT NN");
+// Result: ["in  the house", "all the doors", "the lights"]
+//           ==  === =====    === === =====    === ====== 
+//           PRP  DT   NN     RB  RB   NN      DT    NN
+```
+### Tokenization
+We use 2 different types of tokenization: the first one is a word per word tokenization (it's basically a POS tagger). For example:
+```javascript
+new Tokenizer().wordPerWord("Turn on the heating system");
+// Will give:
+{
+   "Turn on": "VB",
+   "the": "DT",
+   "heating": "NN",
+   "system": "NN"
+}
+```
+To do so, we use [pos](https://www.npmjs.com/package/pos), which is a simple POS tagger Node module.
 
-Various data files exist, to help with the language processing, here's their roles:
+The second type of tokenization we use is a **word grouping tokenization**. It allows us to form noun or verb groups, based on specific **gramex rules**.
+Those rules can be found at `/data/grammar/wordGroupingRules.json`
 
-- __breakExceptions.json__  
-  This contains mandatory breaks for specific word formations in a sentence, for example:  
-  ```
-  "I   will be there with my   wife tomorrow night"
-  PRP MD   VB EX    IN   PRP$ NN   NN       NN
-  ```
-  In this sentence, the normal behaviour would group `my wife tomorrow night`, 
-  when what we want is `my wife` `tomorrow night`.  
-  So we can add a rule as follow:
-  ```
-  "!tomorrow"
-  ```
-  This says that there __HAS__ to be a group break before tomorrow
+An example of the word grouping tokenization:
+```javascript
+new Toknenizer().groupWords("Turn off the old stove next to the washing machine")
+{
+    "Turn off": "G_VV",
+    "the old stove": "G_NN",
+    "next to": "PRP",
+    "the washing machine": "G_NN"
+}
+```
+
+### Balance
+To determine the nature of a noun group, we use a weighting system, handled by the class `Balance`.
+The Balance is first given a **setting**, and then a string to weight.
+A **balance setting** resembles the following example:
+```json
+{
+	"yes": {
+		"definitely": 100, "most likely": 50, "probably": 20
+	},
+	"no": {
+		"never": 100, "unlikely": 50
+	}
+}
+``` 
+And here's this setting in action:
+```javascript
+const setting = {/*setting above*/};
+const bal = new Balance(setting);
+bal.categorize('I\'ll never go there'); // no
+bal.categorize('Definitely, count me in!'); // yes
+bal.categorize('It\'s unlikely, I\'ll probably stay at home'); // {yes: 20, no:50} => no 
+```
+
+We can **rig** also the balance:
+```javascript
+bal.rig({"yes": 40});
+bal.categorize('It\'s unlikely, I\'ll probably stay at home'); // {yes: 20+40, no:50} => yes 
+```
+This is useful in our case to infer a meaning from external elements, for example:
+
+> "Call my mom"  
+
+We know that the verb `call` is most likely followed by a person, so, when we weight `my mom` we can rig the balance to add weight to the `person` property
+
+
+### Data
+For now, all the Data layer is handled by the Data class ( _src/meaning/grammar/data.ts_ ).  
+The actual Data is located in the " _data_ " directory, as `JSON` files.

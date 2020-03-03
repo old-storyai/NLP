@@ -5,7 +5,7 @@ import SentenceAnalyser from './meaning/sentenceAnalyser';
 let str = '';
 
 // str = 'Will it be warmer than 70 degrees near the Golden Gate bridge after 5pm the day after tomorrow?';
-str = 'When the fridge doors from the kitchen next to the living room in August or during the high season are left widely open, send me a text message on my smartphone using the slack app';
+// str = 'When the fridge doors from the kitchen next to the living room in August or during the high season are left widely open, send me a text message on my smartphone using the slack app';
 // str = 'Call my mom to tell her that I feel sick today';
 // str = 'I feel so good that I could explode from happiness right now';
 // str = 'I will be there with my wife tomorrow night';
@@ -22,5 +22,6 @@ str = 'When the fridge doors from the kitchen next to the living room in August 
 // str = 'Turn the heater on when I leave;
 // str = 'the boy who eats chocolate lives on the other side of the street');
 // str = 'Send me a text when the temperature drops lower than 20 degrees outside');
+str = 'Turn off the old stove next to the washing machine'
 
 new SentenceAnalyser(str).createMeanings();

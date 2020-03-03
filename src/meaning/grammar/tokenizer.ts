@@ -14,14 +14,15 @@ export class Tokenizer {
     /**
      *
      * Identify sub-sentence groups:
-     *   "Lower the house temperature at 5PM"
-     *     -> [
-     *        "action": "lower",
-     *        "what": "the house temperature",
-     *        "when": "at 5PM"
-     *     ]
+     * "Turn off the old stove next to the washing machine"
+     *   => {
+     *        "Turn off": "G_VV",
+     *        "the old stove": "G_NN",
+     *        "next to": "PRP",
+     *        "the washing machine": "G_NN"
+     *      }
      */
-    subSentences(sentence: string): WordGroup {
+    groupWords(sentence: string): WordGroup {
         const wordGroup = this.wordPerWord(sentence);
         const rules = Data.getData('grammarGroupRules');
 
