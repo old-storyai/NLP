@@ -18,6 +18,7 @@ It allows to search for specific grammar formations in sentences, for example:
 new WordGroup("This cat is so cute!").findGrammar("RB JJ");
 // Result: so cute (so = adverb/RB, cute = adjective/JJ)
 ```
+
 And we can of course use more advanced regex:
 ```javascript
 const str = "When I'm not in the house, lock all the doors and turn off the lights";
@@ -26,6 +27,7 @@ new WordGroup(str).findGrammar("( PRP| RB)? DT NN");
 //           ==  === =====    === === =====    === ====== 
 //           PRP  DT   NN     RB  RB   NN      DT    NN
 ```
+
 ### Tokenization
 We use 2 different types of tokenization: the first one is a word per word tokenization (it's basically a POS tagger). For example:
 ```javascript
@@ -40,7 +42,7 @@ new Tokenizer().wordPerWord("Turn on the heating system");
 ```
 To do so, we use [pos](https://www.npmjs.com/package/pos), which is a simple POS tagger Node module.
 
-The second type of tokenization we use is a **word grouping tokenization**. It allows us to form noun or verb groups, based on specific **gramex rules**.
+The second type of tokenization we use is a **word grouping tokenization**. It allows us to form noun or verb groups, based on specific **gramex rules**.  
 Those rules can be found at `/data/grammar/wordGroupingRules.json`
 
 An example of the word grouping tokenization:
@@ -55,8 +57,9 @@ new Toknenizer().groupWords("Turn off the old stove next to the washing machine"
 ```
 
 ### Balance
-To determine the nature of a noun group, we use a weighting system, handled by the class `Balance`.
+To determine the nature of a noun group, we use a weighting system, handled by the class `Balance`.  
 The Balance is first given a **setting**, and then a string to weight.
+
 A **balance setting** resembles the following example:
 ```json
 {
