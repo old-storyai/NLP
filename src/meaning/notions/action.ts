@@ -1,9 +1,9 @@
 import colors from 'colors';
 
-import {WordGroup, Word} from './grammar/tokenizer';
+import {WordGroup, Word} from 'grammar/tokenizer';
 
-import Thing from './thing';
-import Meaning from './meaning';
+import Thing from './thing/thing';
+import {Meaning} from './meaning';
 
 enum Tense {
     past = 'past',

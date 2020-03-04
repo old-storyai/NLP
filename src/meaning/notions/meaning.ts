@@ -5,9 +5,11 @@ import Value from './value';
 import Item from './item';
 import Action from './action';
 
-import {WordGroup, Word} from './grammar/tokenizer';
+export {Time, Person, Location, Value, Item, Action};
 
-export default class Meaning {
+import {WordGroup, Word} from 'grammar/tokenizer';
+
+export class Meaning {
 
     // Might be:
     //   description, order, question, condition

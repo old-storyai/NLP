@@ -1,7 +1,7 @@
-import {WordGroup, Word} from './grammar/tokenizer';
+import {WordGroup, Word} from 'grammar/tokenizer';
 
-import Meaning from './meaning';
-import Thing from './thing';
+import {Meaning} from './meaning';
+import Thing from './thing/thing';
 
 export default class Item extends Thing {
 

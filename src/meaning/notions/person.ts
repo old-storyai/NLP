@@ -1,7 +1,7 @@
-import Thing from './thing';
-import Meaning from './meaning';
+import {WordGroup, Word} from 'grammar/tokenizer';
 
-import {WordGroup, Word} from './grammar/tokenizer';
+import Thing from './thing/thing';
+import {Meaning} from './meaning';
 
 import colors from 'colors';
 

@@ -1,10 +1,6 @@
-import Time from './person';
-import Person from './person';
-import Location from './location';
-import Item from './item';
-import Action from './action';
+import {WordGroup, Word} from 'grammar/tokenizer';
 
-import {WordGroup, Word} from './grammar/tokenizer';
+import {Time, Person, Location, Item, Action, Meaning} from './notions/meaning';
 
 /**
  * This class helps to read a sentence. 
@@ -83,6 +79,14 @@ export default class SentenceReader {
     next(): boolean {
         if (this._idx < this._words.length-1) {
             this._idx++;
+            return true;
+        } else
+            return false;
+    }
+
+    prev(): boolean {
+        if (this._idx > 0) {
+            this._idx--;
             return true;
         } else
             return false;

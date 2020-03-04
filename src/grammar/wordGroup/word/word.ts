@@ -1,5 +1,4 @@
 
-
 export default class Word {
     _str: string;
     _group: string;

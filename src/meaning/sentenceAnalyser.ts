@@ -1,15 +1,10 @@
-import Time from './time';
-import Person from './person';
-import Location from './location';
-import Value from './value';
-import Item from './item';
-import Action from './action';
-import Meaning from './meaning';
+import Balance from 'balance/balance';
+import * as Data from 'data/data';
+import {Tokenizer, WordGroup, Word} from 'grammar/tokenizer';
+
 import SentenceReader from './sentenceReader';
+import {Time, Person, Location, Value, Item, Action, Meaning} from './notions/meaning';
 
-import Balance from './balance/balance';
-
-import {Tokenizer, WordGroup, Word, Data} from './grammar/tokenizer';
 
 /**
  * This class helps to understand a sentence
@@ -42,7 +37,7 @@ export default class SentenceAnalyser {
         this.startNewSubsentence();
 
         do {
-            let word = this._reader.currentWord;
+            const word = this._reader.currentWord;
 
             switch (word.group) {
                 case 'G_NN':
@@ -60,30 +55,34 @@ export default class SentenceAnalyser {
                 default:
                     // non-group: separator word
                     
-                    word = word as Word;
+                    this._separatorQueue.push(word as Word);
 
-                    this._separatorQueue.push(word);
-                    
-                    if (['and', 'if', 'when'].includes(word.toString()) || word.isPunctuation()) 
-                        this.startNewSubsentence();
-
-                    switch (word.toString()) {
-                        case 'of':
-                            break;
-
-                        case 'and':
-                            break;
-                        default:
-                    }
+                    this.analyseSeparator();
             }
-            if (word.group.slice(0, 2) === 'G_') {
+            if (word.group.slice(0, 2) === 'G_')
                 this._separatorQueue = [];
-            }
 
         } while (this._reader.next());
         this._allMeanings.push(this._currentMeaning);
 
         console.log('\n\nall_meanings: \n' + this._allMeanings.map(m=>m.toString()).join('\n\n'));
+    }
+
+    private analyseSeparator() {
+
+        const word = this._reader.currentWord as Word;
+
+        if (['and', 'if', 'when'].includes(word.toString()) || word.isPunctuation()) 
+            this.startNewSubsentence();
+
+        if (word.toString() === 'of' &&
+            this._reader.nextWord.group === 'G_NN' &&
+            this._reader.previousWord.group === 'G_NN') {
+            this._reader.next();
+            this.analyseNounGroup();
+            this._reader.prev();
+            // this._reader.
+        }
     }
 
     private analyseNounGroup() {
@@ -92,6 +91,7 @@ export default class SentenceAnalyser {
         const category = this.guessGNNCategory();
 
         switch(category) {
+
             case 'time':
                 if (!this._currentMeaning._time) {
                     const t = new Time(word as WordGroup, this._separatorQueue);
@@ -101,11 +101,13 @@ export default class SentenceAnalyser {
                 }
                 this._reader.addMeaning(this._currentMeaning._time);
                 break;
+
             case 'value':
                 const value = new Value(word, this._separatorQueue);
                 this._currentMeaning._value = value;
                 this._reader.addMeaning(value);
                 break;
+
             case 'item':
                 const item = new Item(word, this._separatorQueue);
                 if (this._reader.verbWasUsedBefore()) {
@@ -115,11 +117,13 @@ export default class SentenceAnalyser {
                 }
                 this._reader.addMeaning(item);
                 break;
+
             case 'location':
                 const loc = new Location(word, this._separatorQueue);
                 this._currentMeaning._location = loc;
                 this._reader.addMeaning(loc);
                 break;
+
             case 'person':
                 const person = new Person(word, this._separatorQueue);
                 if (this._reader.verbWasUsedBefore()) {

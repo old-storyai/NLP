@@ -62,12 +62,14 @@ export default class Balance {
                 weightPerCategory[category] = this.rigging[category];
 
 
-            for (const word of Object.keys(this.data[category])) {
+            for (let word of Object.keys(this.data[category])) {
                 const weight = this.data[category][word];
                 if (!(category in weightPerCategory))
                     weightPerCategory[category] = 0;
-
-                if (new RegExp('\\b'+word+'\\b', 'gi').test(sentence))
+                
+                word = word.replace(/([^\\]\w)$/, '$1\\b');
+                word = word.replace(/^(\w)/, '\\b$1');
+                if (new RegExp(word, 'gi').test(sentence))
                     weightPerCategory[category] += weight;
             }
         }

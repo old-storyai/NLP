@@ -1,11 +1,16 @@
 {
     "compilerOptions": {
+        "baseUrl": "./src/",
+        "rootDir": "./src/",
         "module": "commonjs",
         "esModuleInterop": true,
         "target": "es6",
         "moduleResolution": "node",
         "sourceMap": true,
-        "outDir": "dist"
+        "target": "es5",
+        "outDir": "dist",
+        "typeRoots": ["./node_modules/@types", "./typings"]
     },
+    "include": ["src"],
     "lib": ["es2015"]
 }

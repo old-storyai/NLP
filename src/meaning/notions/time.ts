@@ -1,7 +1,8 @@
-import Meaning from './meaning';
-import Thing from './thing';
+import {WordGroup, Word} from 'grammar/tokenizer';
+import * as Data from 'data/data';
 
-import {Data, WordGroup, Word} from './grammar/tokenizer';
+import {Meaning} from './meaning';
+import Thing from './thing/thing';
 
 /**
  * all the times category:

@@ -1,8 +1,8 @@
 import pos from 'pos';
-import * as Data from './data';
+import * as Data from 'data/data';
 import {WordGroup, Word} from './wordGroup/wordGroup';
 
-export {WordGroup, Word, Data};
+export {WordGroup, Word};
 
 /**
  * Allows to tokenize a sentence, only based on its gramatical composition, no
