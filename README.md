@@ -92,6 +92,42 @@ This is useful in our case to infer a meaning from external elements, for exampl
 We know that the verb `call` is most likely followed by a person, so, when we weight `my mom` we can rig the balance to add weight to the `person` property
 
 
+
+### Meaning
+Each part of a sentence has a **meaning** (of the `Meaning` class).  
+A Meaning is composed of multiple components:  
+- `Action`
+- `Time`
+- `Subject`
+- `Item`
+- `Value`
+- `Target`
+
+Here's an example:
+```javascript
+const str = 'Send me a text on the 5th of july';
+new SentenceAnalyser(str).createMeanings();
+// result:
+Meaning {
+	action: Action {
+		verb: 'send'
+		tense: 'present'
+	},
+	subject: Person {
+		personTitle: 'SELF'
+	},
+	item: Item {
+		itemName: 'text'
+	},
+	time: Time {
+		day: 5,
+		month: 7
+	},
+	target: {},
+	value: {}
+}
+```
+
 ### Data
 For now, all the Data layer is handled by the Data class ( _src/meaning/grammar/data.ts_ ).  
 The actual Data is located in the " _data_ " directory, as `JSON` files.
