@@ -118,6 +118,10 @@ export class WordGroup {
         return count;
     }
 
+    append(wgs: (Word|WordGroup)[]) {
+        this.words.push(...wgs);
+    }
+
     toNiceString(): string {
         let str = '';
         for (const word of this._words) {

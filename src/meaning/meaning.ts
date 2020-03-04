@@ -9,8 +9,6 @@ import {WordGroup, Word} from './grammar/tokenizer';
 
 export default class Meaning {
 
-    _raw: string;
-
     // Might be:
     //   description, order, question, condition
     _type: string;

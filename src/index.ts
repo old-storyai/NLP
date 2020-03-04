@@ -22,6 +22,7 @@ let str = '';
 // str = 'Turn the heater on when I leave;
 // str = 'the boy who eats chocolate lives on the other side of the street');
 // str = 'Send me a text when the temperature drops lower than 20 degrees outside');
-str = 'Turn off the old stove next to the washing machine'
+// str = 'Turn off the old stove next to the washing machine'
+str = 'Send me a text on the 5th of july'
 
 new SentenceAnalyser(str).createMeanings();

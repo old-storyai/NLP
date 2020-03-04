@@ -93,9 +93,13 @@ export default class SentenceAnalyser {
 
         switch(category) {
             case 'time':
-                const t = new Time(word as WordGroup);
-                this._currentMeaning._time = t;
-                this._reader.addMeaning(t);
+                if (!this._currentMeaning._time) {
+                    const t = new Time(word as WordGroup);
+                    this._currentMeaning._time = t;
+                } else {
+                    this._currentMeaning._time.addInformation(word);
+                }
+                this._reader.addMeaning(this._currentMeaning._time);
                 break;
             case 'value':
                 const value = new Value(word, this._separatorQueue);
