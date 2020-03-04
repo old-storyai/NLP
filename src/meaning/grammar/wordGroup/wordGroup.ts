@@ -122,6 +122,10 @@ export class WordGroup {
         this.words.push(...wgs);
     }
 
+    prepend(wgs: (Word|WordGroup)[]) {
+        this.words.unshift(...wgs);
+    }
+
     toNiceString(): string {
         let str = '';
         for (const word of this._words) {

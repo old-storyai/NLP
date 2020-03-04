@@ -17,9 +17,7 @@ export default class Location extends Thing {
 
     _latlng: [number, number];
 
-
-    constructor(wg: WordGroup) {
-        super(wg);
+    protected processWords() {
         
         this._placeTitle = '';
         
@@ -30,5 +28,6 @@ export default class Location extends Thing {
             }
         }
         this._wordGroup.toString();
+
     }
 }

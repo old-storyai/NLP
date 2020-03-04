@@ -16,13 +16,12 @@ export default class Value extends Thing {
     _unit: string;
     _modifier: string;
 
-    constructor(wg: WordGroup, precedingSeparators: Word[]) {
-        super(wg);
+    protected processWords() {
 
-        if (precedingSeparators.length) {
+        if (this._conns.length) {
 
             const modifiers = Data.getData('value_modifiers');
-            const blob = precedingSeparators.map(sep=>sep.toString()).join(' ');
+            const blob = this._conns.map(sep=>sep.toString()).join(' ');
 
             for (const modifier of Object.keys(modifiers)) {
                 const matchingWords = modifiers[modifier];
@@ -34,13 +33,13 @@ export default class Value extends Thing {
             }
         }
 
-        console.log('var: ', wg.toString());
+        console.log('var: ', this._wordGroup.toString());
 
-        let matches = wg.toString().match(/[\d.,]+/);
+        let matches = this._wordGroup.toString().match(/[\d.,]+/);
         if (matches.length)
             this._amount = Number.parseInt(matches[0]);
 
-        matches = wg.toString().match(/[\d.,]+([\w\s]+)|([\w]+)\s*$/);
+        matches = this._wordGroup.toString().match(/[\d.,]+([\w\s]+)|([\w]+)\s*$/);
         console.log('matches: ', matches);
         if (matches.length > 1)
             this._unit = matches[1].trim();

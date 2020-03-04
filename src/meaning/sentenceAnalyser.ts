@@ -49,7 +49,7 @@ export default class SentenceAnalyser {
                     this.analyseNounGroup();
                     break;
                 case 'G_VB':
-                    const a = new Action(word as WordGroup);
+                    const a = new Action(word as WordGroup, this._separatorQueue);
                     this._currentMeaning._action = a;
                     this._reader.addMeaning(a);
                     break;
@@ -94,10 +94,10 @@ export default class SentenceAnalyser {
         switch(category) {
             case 'time':
                 if (!this._currentMeaning._time) {
-                    const t = new Time(word as WordGroup);
+                    const t = new Time(word as WordGroup, this._separatorQueue);
                     this._currentMeaning._time = t;
                 } else {
-                    this._currentMeaning._time.addInformation(word);
+                    this._currentMeaning._time.addWords(word, this._separatorQueue);
                 }
                 this._reader.addMeaning(this._currentMeaning._time);
                 break;
@@ -107,7 +107,7 @@ export default class SentenceAnalyser {
                 this._reader.addMeaning(value);
                 break;
             case 'item':
-                const item = new Item(word);
+                const item = new Item(word, this._separatorQueue);
                 if (this._reader.verbWasUsedBefore()) {
                     this._currentMeaning._item = item;
                 } else {
@@ -116,12 +116,12 @@ export default class SentenceAnalyser {
                 this._reader.addMeaning(item);
                 break;
             case 'location':
-                const loc = new Location(word);
+                const loc = new Location(word, this._separatorQueue);
                 this._currentMeaning._location = loc;
                 this._reader.addMeaning(loc);
                 break;
             case 'person':
-                const person = new Person(word);
+                const person = new Person(word, this._separatorQueue);
                 if (this._reader.verbWasUsedBefore()) {
                     this._currentMeaning._target = person;
                 } else {

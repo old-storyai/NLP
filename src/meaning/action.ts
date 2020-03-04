@@ -17,20 +17,19 @@ export default class Action extends Thing {
     _tense: Tense;
     _verb: string;
 
-    constructor(wg: WordGroup) {
-        super(wg);
+    protected processWords() {
+        this.findTense();
 
-        this.findTime();
-
-        for (let word of wg._words) {
+        for (let word of this._wordGroup._words) {
             word = word as Word;
             if (word.isVerb()) {
                 this._verb = word.toString();
             }
         }
+        
     }
 
-    findTime() {
+    findTense() {
         const mainWord = this._wordGroup.words[0].toString();
 
         if (mainWord.slice(-1) === 'ed') {

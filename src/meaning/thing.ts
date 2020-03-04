@@ -5,10 +5,24 @@ import {WordGroup, Word} from './grammar/tokenizer'
 export default class Thing {
 
     _wordGroup: WordGroup;
+    _conns: Word[];
 
-    constructor(wg: WordGroup) {
+    constructor(wg: WordGroup, prevConns: Word[]) {
         this._wordGroup = wg;
+        this._conns = prevConns;
+
+        this.processWords();
     }
+
+
+    addWords(wg: WordGroup, prevWord: Word[] = []) {
+        this._wordGroup.append(prevWord);
+        this._wordGroup.append(wg._words);
+
+        this.processWords();
+    }
+
+    protected processWords() {}
 
     toString() {
         let out = '';
@@ -16,8 +30,8 @@ export default class Thing {
         const ALL_COLORS = [ 'blue', 'green', 'magenta', 'red', 'yellow' ];
 
         for (const prop of Object.keys(this)) {
-            if (prop === '_wordGroup') continue;
-            if (Array.isArray(this[prop]) && !this[prop].length) continue;
+            // if (prop === '_wordGroup') continue;
+            if (this[prop] instanceof Object && !Object.keys(this[prop]).length) continue;
 
             const choosenColor = ALL_COLORS[(Math.random()*ALL_COLORS.length)<<0];
 

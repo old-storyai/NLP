@@ -53,15 +53,7 @@ export default class Time extends Thing {
 
     _isRepetition: boolean;
 
-    constructor(wg: WordGroup) {
-        super(wg);
-
-        this.findDate();
-    }
-
-    addInformation(wg: WordGroup) {
-        this._wordGroup.append(wg._words);
-
+    protected processWords() {
         this.findDate();
     }
 

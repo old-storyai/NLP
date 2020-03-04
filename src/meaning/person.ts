@@ -19,13 +19,7 @@ export default class Person extends Thing {
 
     _personTitle: string;
 
-    constructor(wg: WordGroup) {
-        super(wg);
-
-        this.parseWords();
-    }
-
-    private parseWords() {
+    protected processWords() {
         if (/^(me|I)$/i.test(this._wordGroup.toString())) {
             this._personTitle = 'SELF';
             return;

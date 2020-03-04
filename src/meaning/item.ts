@@ -5,8 +5,6 @@ import Thing from './thing';
 
 export default class Item extends Thing {
 
-    _words: WordGroup;
-
     _modifiers: string[];
 
     // Extra information about this person
@@ -18,12 +16,10 @@ export default class Item extends Thing {
 
     _name: string;
 
-    constructor(wg: WordGroup) {
-        super(wg);
-
+    protected processWords() {
         this._modifiers = [];
         this._name = '';
-        for (let word of wg._words) {
+        for (let word of this._wordGroup._words) {
             word = word as Word;
 
             if (word.isAdjective())
@@ -35,6 +31,5 @@ export default class Item extends Thing {
 
         }
         this._name = this._name.trim();
-
     }
 }
