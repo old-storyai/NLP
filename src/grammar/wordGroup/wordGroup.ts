@@ -1,7 +1,7 @@
-
 import colors from 'colors/safe';
 
 import Word from './word/word';
+export {Word};
 
 export class WordGroup {
     _words: (Word|WordGroup)[];
@@ -96,6 +96,7 @@ export class WordGroup {
                 const replacement = Array(range[1]-range[0]+1).fill(null);
                 replacement[0] = wg;
                 newWords.splice(range[0], range[1]-range[0]+1, ...replacement);
+            
             }
         }
 
@@ -160,5 +161,3 @@ export class WordGroup {
         return this._words.map(w=>w.toString().trim()).join(' ');
     }
 }
-
-export {Word};

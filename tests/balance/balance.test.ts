@@ -77,8 +77,26 @@ describe('Balance class', () => {
     });
 
     describe('Rigging', () => {
+
+        const b = new Balance(sampleSetting);
+
         it('Rigged balance should behave as expected', () => {
-            expect(false).toBeTruthy();
+            b.rig({ 'yes': 50 });
+            expect(b.categorize('No, I\'ll never go there')).toBe('no');
+            expect(b.categorize('I\'ll definitely go to the party')).toBe('yes');
+            expect(b.categorize('No, I\'ll probably stay at home')).toBe('yes');
+
+            b.rig({ 'no': 500 });
+            expect(b.categorize('No, I\'ll never go there')).toBe('no');
+            expect(b.categorize('I\'ll definitely go to the party')).toBe('no');
+            expect(b.categorize('No, I\'ll probably stay at home')).toBe('no');
+        });
+
+        it('Unrigging a balance should work', () => {
+            b.unrig();
+            expect(b.categorize('No, I\'ll never go there')).toBe('no');
+            expect(b.categorize('I\'ll definitely go to the party')).toBe('yes');
+            expect(b.categorize('No, I\'ll probably stay at home')).toBe('no');
         });
     });
 });
