@@ -82,7 +82,7 @@ export class WordGroup {
      *
      * See the groups getter for more informations about groups
      */
-    tokenize(gramexRules: object): void {
+    tokenize(gramexRules: object): WordGroup {
         
         let newWords = this._words.slice(0);
 
@@ -102,6 +102,8 @@ export class WordGroup {
 
         newWords = newWords.filter(w => w !== null);
         this._words = newWords;
+
+        return this;
     }
 
     /**

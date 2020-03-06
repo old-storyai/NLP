@@ -1,4 +1,5 @@
-const {Word, WordGroup} = require('grammar/wordGroup/wordGroup');
+// const {Word, WordGroup} = require('grammar/wordGroup/wordGroup');
+import {Word, WordGroup} from 'grammar/wordGroup/wordGroup';
 
 const sampleSentence = [
     new Word('It', 'PRP'),
@@ -10,41 +11,38 @@ const sampleSentence = [
     new Word('!', '!'),
 ];
 
-const gramexRules = {
-    'G_1': [
-        ' JJ( IN)? RB'
-    ],
-    'G_2': [
-        '( PRP)* VB'
-    ]
-};
-
-
 describe('WordGroup class', () => {
 
     it('should assign local variables when constructed', () => {
-        const wg = new WordGroup(sampleSentence, 'G_GG');
+        const ws = [new Word('Hey', '')];
+        const wg = new WordGroup(ws, 'G_GG');
 
         expect(wg.group).toBe('G_GG');
-        expect(wg.words).toBe(sampleSentence);
+        expect(wg.words).toBe(ws);
     });
 
 
     describe('Grammar representation', () => {
-        it('should give a proper grammar representation - Without subgroups', () => {
-            const wg = new WordGroup(sampleSentence);
+        function itRepresentsGrammar(
+            testName: string,
+            wg: WordGroup, 
+            expectedRepresentation: string
+        ) {
+            it('grammarRepresentation Getter => '+testName, () => {
+                expect(wg.grammarRepresentation.trim()).toBe(expectedRepresentation.trim());
+            });
+        }
 
-            expect(wg.grammarRepresentation.trim()).toBe('PRP VB RB JJ IN RB !');
-        });
-
-        it('should give a proper grammar representation - With subgroups', () => {
-            const wg = new WordGroup([
-                new WordGroup(sampleSentence, 'G_TEST'),
-                ...sampleSentence
-            ]);
-
-            expect(wg.grammarRepresentation.trim()).toBe('G_TEST PRP VB RB JJ IN RB !');
-        });
+        itRepresentsGrammar( 
+            'Without Subgroups',
+            wordgrp`It: PRP | 's: VB | a: DT | nice: JJ | dress: NN`,
+            'PRP VB DT JJ NN'
+        );
+        itRepresentsGrammar( 
+            'With Subgroups',
+            wordgrp`It: PRP | 's: VB | a: DT | nice: JJ | dress: NN`.tokenize({'G_NN': [' DT JJ NN']}),
+            'PRP VB G_NN'
+        );
     });
 
     describe('Gramex', () => {
@@ -61,36 +59,98 @@ describe('WordGroup class', () => {
         });
     });
 
-    it('should tokenize the content according to the given rules', () => {
-        const wg = new WordGroup(sampleSentence);
 
-        wg.tokenize(gramexRules);
 
-        expect(wg.grammarRepresentation.trim()).toBe('G_2 RB G_1 !');
+    describe('tokenization', () => {
+        function itTokenizes(
+            testName: string,
+            wg: WordGroup,
+            gramexRules: {[tag:string]: string[]},
+            expectedRepresentation: string
+        ) {
+            it('function tokenize() => '+testName, () => {
+                expect(wg.tokenize(gramexRules).grammarRepresentation.trim()).toBe(expectedRepresentation.trim());
+            });
+        }
+
+        itTokenizes(
+            'No regex',
+            wordgrp`It: PRP | 's: VB | a: DT | nice: JJ | dress: NN`,
+            { 'G_NN': [' DT JJ NN'] },
+            'PRP VB G_NN');
+
+        itTokenizes(
+            'With regex - no matches',
+            wordgrp`It: PRP | 's: VB | a: DT | nice: JJ | dress: NN`,
+            { 'G_NN': ['( DT)+( JJ)*( NN){2}'] },
+            'PRP VB DT JJ NN');
+
+        itTokenizes(
+            'With regex - with matches',
+            wordgrp`It: PRP | 's: VB | a: DT | nice: JJ | old: JJ | dress: NN | dress: NN | dress: NN`,
+            { 'G_NN': ['( DT)+( JJ)*( NN){2}'] },
+            'PRP VB G_NN NN');
+
+        itTokenizes(
+            'With regex - multiple tags',
+            wordgrp`It: PRP | 's: VB | a: DT | nice: JJ | old: JJ | dress: NN | dress: NN | dress: NN`,
+            {
+                'G_NN': ['( DT)+( JJ)*( NN){2}'] ,
+                'G_VB': ['( PRP)?( VB[ZS]?)+'] 
+            },
+            'G_VB G_NN NN');
+
+        itTokenizes(
+            'With regex - multiple regex alternatives',
+            wordgrp`It: PRP | 's: VB | a: DT | nice: JJ | old: JJ | dress: NN | or: CC | a: DT | costume: NN`,
+            {
+                'G_NN': ['( DT)+( JJ)*( NN){2}', '( CC| DT)* NN'] ,
+                'G_VB': ['( PRP)?( VB[ZS]?)+'] 
+            },
+            'G_VB DT JJ JJ G_NN G_NN');
     });
 
-    it('Should count the right number of words - Without sub-groups', () => {
-        const wg = new WordGroup(sampleSentence);
-        expect(wg.countWords()).toBe(7);
-    });
 
-    it('Should count the right number of words - With sub-groups', () => {
-        const wg = new WordGroup(sampleSentence);
-        wg.tokenize(gramexRules);
-        expect(wg.countWords()).toBe(7);
+    describe('wordCount()', () => {
+        it('Should count the right number of words - Without sub-groups', () => {
+            const wg = wordgrp`It: PRP | 's: VB | a: DT | nice: JJ | dress: NN`;
+            expect(wg.countWords()).toBe(5);
+        });
+
+        it('Should count the right number of words - With sub-groups', () => {
+
+            const wg = wordgrp`It: PRP | 's: VB | a: DT | nice: JJ | dress: NN`;
+            wg.tokenize({ 'G_NN': [' DT JJ NN'] });
+
+            // Will give 'PRP VB G_NN'
+
+            expect(wg.countWords()).toBe(5);
+        });
     });
 
     it('Should Append / Prepend properly', () => {
-        const wg = new WordGroup(sampleSentence);
+        const wg = wordgrp`It: PRP | 's: VB | a: DT | nice: JJ | dress: NN`;
         const w = new Word('test', 'TST');
 
         wg.prepend([w]);
-
-        expect(wg.grammarRepresentation.trim()).toBe('TST PRP VB RB JJ IN RB !');
+        expect(wg.grammarRepresentation.trim()).toBe('TST PRP VB DT JJ NN');
 
         wg.append([w]);
-
-        expect(wg.grammarRepresentation.trim()).toBe('TST PRP VB RB JJ IN RB ! TST');
+        expect(wg.grammarRepresentation.trim()).toBe('TST PRP VB DT JJ NN TST');
     });
 });
 
+
+function wordgrp(rawIn: TemplateStringsArray): WordGroup {
+    if (rawIn.length > 1) throw new Error('don\'t know how to interpolate');
+
+    return new WordGroup(
+        rawIn[0]
+            .trim()
+            .split(/\s*[\r\n|]+\s*/)
+            .map(line => {
+                const [str, tag] = line.split(':');
+                return new Word(str.trim(), tag.trim());
+            })
+    );
+}

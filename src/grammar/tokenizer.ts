@@ -10,6 +10,8 @@ export {WordGroup, Word};
  */
 export class Tokenizer {
 
+    static getData = Data.getData;
+
 
     /**
      *
@@ -24,7 +26,11 @@ export class Tokenizer {
      */
     static groupWords(sentence: string): WordGroup {
         const wordGroup = Tokenizer.wordPerWord(sentence);
-        const rules = Data.getData('grammarGroupRules');
+        const rules = Tokenizer.getData('grammarGroupRules');
+
+        console.log('wordGroup: ', wordGroup);
+        console.log('rules: ', rules);  // undefined
+        console.log('Data.getData: ', Data.getData);
 
         wordGroup.tokenize(rules);
 
