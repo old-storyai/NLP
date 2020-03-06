@@ -135,5 +135,7 @@ export class Tokenizer {
             if (word.str.toLowerCase() === 'do')
                 doEncounter = true;
         }
+
+        return words;
     }
 }
