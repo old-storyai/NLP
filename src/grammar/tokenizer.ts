@@ -22,8 +22,8 @@ export class Tokenizer {
      *        "the washing machine": "G_NN"
      *      }
      */
-    groupWords(sentence: string): WordGroup {
-        const wordGroup = this.wordPerWord(sentence);
+    static groupWords(sentence: string): WordGroup {
+        const wordGroup = Tokenizer.wordPerWord(sentence);
         const rules = Data.getData('grammarGroupRules');
 
         wordGroup.tokenize(rules);
@@ -41,14 +41,14 @@ export class Tokenizer {
      *        "system": "NN"
      *     }
      */
-    wordPerWord(sentence: string): WordGroup {
+    static wordPerWord(sentence: string): WordGroup {
         const tagger = new pos.Tagger();
         sentence = sentence.replace(/(['])/g, ' $1');
         sentence = sentence.replace(/([.,;?!])/g, ' $1 ');
 
         //
         // Extending the lexic with our words
-        //
+        // 
         // Replacing matches with placeholders
         const extension = Data.getData('lexicExtension');
         const replacements = [];
@@ -78,11 +78,17 @@ export class Tokenizer {
         });
 
         // Creating Word instances
-        const words = taggedWords.map(w => new Word(w[0], w[1]));
+        let words = taggedWords.map(w => new Word(w[0], w[1]));
 
-        //
-        // Exceptions!
-        //
+        words = Tokenizer.correctPosErrors(words);
+
+        return new WordGroup(words);
+    }
+
+    /**
+     * Corrects errors that the POS tagger might have done
+     */
+    private static correctPosErrors(words: [Word]) {
 
         // Verb right after determiner is impossible, it has to be an adjective
         // e.g. the Heating system, Heating = JJ
@@ -129,7 +135,5 @@ export class Tokenizer {
             if (word.str.toLowerCase() === 'do')
                 doEncounter = true;
         }
-
-        return new WordGroup(words);
     }
 }
