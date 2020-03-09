@@ -5,18 +5,18 @@ export {Word};
 
 export class WordGroup {
     _words: (Word|WordGroup)[];
-    _group: string;
+    _tag: string;
 
-    constructor(words: [Word|WordGroup], group:string = 'NONE') {
+    constructor(words: [Word|WordGroup], tag:string = 'NONE') {
         this._words = words;
-        this._group = group;
+        this._tag = tag;
     }
 
     /**
      * Gives a representation of the sentence, based on the words composing it
      */
     get grammarRepresentation(): string {
-        const s = this._words.map(w => w.group).join(' ');
+        const s = this._words.map(w => w.tag).join(' ');
         return ` ${s} `;
     }
 
@@ -25,14 +25,14 @@ export class WordGroup {
     }
 
     /**
-     * Getter for the group of the word list, can be one of the following:
+     * Getter for the tag of the word list, can be one of the following:
      *
      *  "G_VB" - a verbal group
      *  "G_NN" - a noun group
      *  "G_RB" - an adverb group
      */
-    get group(): string {
-        return this._group;
+    get tag(): string {
+        return this._tag;
     }
 
     /**
@@ -86,13 +86,13 @@ export class WordGroup {
         
         let newWords = this._words.slice(0);
 
-        for (const group of Object.keys(gramexRules)) {
-            const gramex = `(${gramexRules[group].join('|')})`;
+        for (const tag of Object.keys(gramexRules)) {
+            const gramex = `(${gramexRules[tag].join('|')})`;
             const matches = this.findGrammar(gramex);
 
             for (const range of matches) {
                 const words = this._words.slice(range[0], range[1]+1);
-                const wg = new WordGroup(words as [Word|WordGroup], group);
+                const wg = new WordGroup(words as [Word|WordGroup], tag);
                 const replacement = Array(range[1]-range[0]+1).fill(null);
                 replacement[0] = wg;
                 newWords.splice(range[0], range[1]-range[0]+1, ...replacement);
@@ -134,7 +134,7 @@ export class WordGroup {
         for (const word of this._words) {
             if (word instanceof WordGroup) {
                 let colorize;
-                switch (word.group) {
+                switch (word.tag) {
                     case 'G_NN':
                         colorize = colors.blue;
                         break;

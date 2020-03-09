@@ -5,15 +5,15 @@ describe('Word class', () => {
 
     it('should assign local variables when constructed', () => {
         const testStr = 'Hi there';
-        const testGrp = 'NN';
+        const testTag = 'NN';
 
-        const w = new Word(testStr, testGrp);
+        const w = new Word(testStr, testTag);
 
         expect(w._str).toBe(testStr);
-        expect(w._group).toBe(testGrp);
+        expect(w._tag).toBe(testTag);
 
         expect(w.str).toBe(testStr);
-        expect(w.group).toBe(testGrp);
+        expect(w.tag).toBe(testTag);
     });
 
     describe('Genre detection', () => {
@@ -21,7 +21,7 @@ describe('Word class', () => {
         it('is...() functions', () => {
             const w = new Word('Hi there', 'VB');
 
-            const validGroups = {
+            const validTags = {
                 'isVerb': ['VB', 'VBZ'],
                 'isPunctuation': ['.', ',', '?', '!', ';', ':'],
                 'isDeterminer': ['DT', 'PDT', 'WDT'],
@@ -30,9 +30,9 @@ describe('Word class', () => {
                 'isNoun': ['NN', 'NNS', 'NNP', 'NNPS'],
             };
 
-            for (const func of Object.keys(validGroups)) {
-                for (const group of validGroups[func]) {
-                    w.group = group;
+            for (const func of Object.keys(validTags)) {
+                for (const tag of validTags[func]) {
+                    w.tag = tag;
                     expect(w[func]()).toBe(true);
                 }
             }
@@ -40,11 +40,11 @@ describe('Word class', () => {
 
         it('is() function', () => {
             const testStr = 'Hi there';
-            const testGrp = 'NN';
+            const testTag = 'NN';
 
-            const w = new Word(testStr, testGrp);
+            const w = new Word(testStr, testTag);
 
-            expect(w.is(testGrp)).toBe(true);
+            expect(w.is(testTag)).toBe(true);
             expect(w.is('other')).toBe(false);
         });
     });

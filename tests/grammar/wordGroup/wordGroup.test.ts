@@ -17,7 +17,7 @@ describe('WordGroup class', () => {
         const ws = [new Word('Hey', '')];
         const wg = new WordGroup(ws, 'G_GG');
 
-        expect(wg.group).toBe('G_GG');
+        expect(wg.tag).toBe('G_GG');
         expect(wg.words).toBe(ws);
     });
 

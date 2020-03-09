@@ -38,7 +38,7 @@ export default class SentenceAnalyser {
         do {
             const word = this._reader.currentWord;
 
-            switch (word.group) {
+            switch (word.tag) {
                 case 'G_NN':
                     this.analyseNounGroup();
                     break;
@@ -59,7 +59,7 @@ export default class SentenceAnalyser {
 
                     this.analyseSeparator();
             }
-            if (word.group.slice(0, 2) === 'G_')
+            if (word.tag.slice(0, 2) === 'G_')
                 this._separatorQueue = [];
 
         } while (this._reader.next());
@@ -77,8 +77,8 @@ export default class SentenceAnalyser {
             this.startNewSubsentence();
 
         if ( word.toString() === 'of' &&
-            this._reader.nextWord.group === 'G_NN' &&
-            this._reader.previousWord.group === 'G_NN'
+            this._reader.nextWord.tag === 'G_NN' &&
+            this._reader.previousWord.tag === 'G_NN'
         ) {
             // this._reader.next();
             // this.analyseNounGroup();
@@ -143,8 +143,8 @@ export default class SentenceAnalyser {
         const prevWord = this._reader.previousWord;
         if (['person', 'item'].includes(category) &&
             !!prevWord && (
-            prevWord.group === 'MD' ||
-            prevWord.group === 'G_VB' && ['do', 'is', 'are'].includes(prevWord.toString())
+            prevWord.tag === 'MD' ||
+            prevWord.tag === 'G_VB' && ['do', 'is', 'are'].includes(prevWord.toString())
         )) {
             this._currentMeaning._type = 'question';
         }
@@ -187,7 +187,7 @@ export default class SentenceAnalyser {
     private startNewSubsentence() {
         this._allMeanings.push(this._currentMeaning);
         this._currentMeaning = new Meaning();
-        if (this._reader.currentWord.group === 'G_VB')
+        if (this._reader.currentWord.tag === 'G_VB')
             this._currentMeaning._type = 'order';
 
         if (/when|if/gi.test(this._reader.currentWord.toString()))
@@ -213,7 +213,7 @@ export default class SentenceAnalyser {
                 rigWeights[cat] = (rigWeights[cat] || 0) + sepRig[cat];
         }
 
-        if (this._reader.previousWord.group === 'G_VB') {
+        if (this._reader.previousWord.tag === 'G_VB') {
             //
             // Infering meaning from the preceding verb
             //   e.g. "call my brother"

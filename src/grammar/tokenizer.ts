@@ -15,7 +15,7 @@ export class Tokenizer {
 
     /**
      *
-     * Identify sub-sentence groups:
+     * Identify sub-sentence groups and tags:
      * "Turn off the old stove next to the washing machine"
      *   => {
      *        "Turn off": "G_VV",
@@ -71,12 +71,12 @@ export class Tokenizer {
         );
 
         // Placing back the extended words in their placeholders
-        taggedWords = taggedWords.map(([word, grp]) => {
+        taggedWords = taggedWords.map(([word, tag]) => {
             if(/^::\d+::$/.test(word)) {
                 const i = word.replace(/^::|::$/g, '') as number;
                 return replacements[i];
             }
-            return [word, grp];
+            return [word, tag];
         });
 
         // Creating Word instances
@@ -98,7 +98,7 @@ export class Tokenizer {
             const word = words[i];
             const lastWord = words[i-1];
             if (word.isVerb() && (lastWord.isDeterminer() || lastWord.isAdjective())) {
-                words[i].group = 'JJ';
+                words[i].tag = 'JJ';
             }
         }
 
@@ -111,7 +111,7 @@ export class Tokenizer {
                     if (!nextWord.isNoun() && !nextWord.isAdjective()) // it's a verb
                         break;
                     if (nextWord.isNoun()) { // it's a possessive ending
-                        words[i].group = 'POS';
+                        words[i].tag = 'POS';
                         break;
                     }
 
@@ -130,7 +130,7 @@ export class Tokenizer {
                     doEncounter = false;
 
                 if(word.str === 'open') {
-                    word.group = 'VB';
+                    word.tag = 'VB';
                 }
             }
 
@@ -148,7 +148,7 @@ export class Tokenizer {
                 word.is('NN') &&
                 /^[A-Z]/.test(word.toString().charAt(0))
             ) {
-                word.group = 'NNP';
+                word.tag = 'NNP';
             }
 
             prevWord = word;
@@ -168,7 +168,7 @@ export class Tokenizer {
                 !word.isNoun() &&
                 prevWord.isAdjective()
             ) {
-                prevWord.group = 'NN';
+                prevWord.tag = 'NN';
             }
 
             if (word.isDeterminer())

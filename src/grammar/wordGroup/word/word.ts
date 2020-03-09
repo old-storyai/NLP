@@ -1,30 +1,30 @@
 
 export default class Word {
     _str: string;
-    _group: string;
+    _tag: string;
 
-    constructor(str0, group0) {
+    constructor(str0, tag0) {
         // Using the setters
         this.str = str0;
-        this.group = group0;
+        this.tag = tag0;
     }
 
     get str(): string   { return this._str; }
     set str(str:string) { this._str = str; }
 
-    get group(): string { return this._group.replace('$', 'S'); }
-    set group(grp:string) { this._group = grp; }
+    get tag(): string { return this._tag.replace('$', 'S'); }
+    set tag(tag:string) { this._tag = tag; }
 
-    is(grp: string): boolean {
-        return grp === this._group;
+    is(tag: string): boolean {
+        return tag === this._tag;
     }
 
     isVerb(): boolean {
-        return this.group.slice(0, 2) === 'VB';
+        return this.tag.slice(0, 2) === 'VB';
     }
 
     isPunctuation(): boolean {
-        return /[.,?!;:]/.test(this.group);
+        return /[.,?!;:]/.test(this.tag);
     }
 
     isDeterminer(): boolean {
@@ -34,7 +34,7 @@ export default class Word {
          *  - PDT: Pre-determiner (all, both)
          *  - WDT: Wh-determiner (which, that)
          */
-        return this.group.slice(-2) === 'DT';
+        return this.tag.slice(-2) === 'DT';
     }
 
     isAdjective(): boolean {
@@ -44,7 +44,7 @@ export default class Word {
          *  - JJR: Comparative adj (bigger)
          *  - JJS: Superlative adj (biggest)
          */
-        return this.group.slice(0,2) === 'JJ';
+        return this.tag.slice(0,2) === 'JJ';
     }
 
     isAdverb(): boolean {
@@ -54,7 +54,7 @@ export default class Word {
          *  - RBR: Comparative adv (faster)
          *  - RBS: Superlative adv (fastest)
          */
-        return this.group.slice(0,2) === 'RB';
+        return this.tag.slice(0,2) === 'RB';
     }
 
     isNoun(): boolean {
@@ -65,7 +65,7 @@ export default class Word {
          *  - NNP:  Proper noun, sing. (Edinburgh)
          *  - NNPS: Proper noun, plural (Smiths)
          */
-        return this.group.slice(0,2) === 'NN';
+        return this.tag.slice(0,2) === 'NN';
     }
 
     toString() {
