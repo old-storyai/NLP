@@ -1,6 +1,5 @@
-import colors from 'colors';
-
 import {WordGroup, Word} from 'grammar/tokenizer';
+import * as Normalizer from 'language/normalizer';
 
 import Thing from './thing/thing';
 import {Meaning} from './meaning';
@@ -24,7 +23,7 @@ export default class Action extends Thing {
         for (let word of this._wordGroup._words) {
             word = word as Word;
             if (word.isVerb() || word.is('IN')) {
-                this._verb += ' ' + word.toString().toLowerCase();
+                this._verb += ' ' + Normalizer.lemmatize(word.toString().toLowerCase());
             }
         }
         this._verb = this._verb.trim();

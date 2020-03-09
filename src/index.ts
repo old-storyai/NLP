@@ -2,6 +2,8 @@
 import SentenceAnalyser from './meaning/sentenceAnalyser';
 
 
+
+
 let str = '';
 
 // str = 'Will it be warmer than 70 degrees near the Golden Gate bridge after 5pm the day after tomorrow?';
@@ -20,6 +22,7 @@ let str = '';
 // str = 'The water was freezing, she spent a month sneezing, but she said she\'d  do it again';
 // str = 'Me and the son of the old lady who used to take care of me, we\'d go on adventures together';
 str = 'the boy who eats chocolate lives on the other side of the street';
+str = 'eats chocolate';
 // str = 'Send me a text when the temperature drops lower than 20 degrees outside';
 // str = 'Send me a text on the 5th of july';
 // str = 'Give Baptiste Zorzi a call';

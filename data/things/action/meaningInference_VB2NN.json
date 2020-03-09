@@ -5,6 +5,7 @@
         "go": 60
     },
     "item": {
+        "eat": 70,
         "close": 40
     },
     "person": {

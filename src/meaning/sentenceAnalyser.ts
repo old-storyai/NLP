@@ -1,5 +1,6 @@
 import Balance from 'balance/balance';
 import * as Data from 'data/data';
+import * as Normalizer from 'language/normalizer';
 import {Tokenizer, WordGroup, Word} from 'grammar/tokenizer';
 
 import SentenceReader from './sentenceReader';
@@ -18,7 +19,7 @@ export default class SentenceAnalyser {
 
     constructor(str: string) {
 
-        str = SentenceAnalyser.transformIdioms(str);
+        str = Normalizer.replaceIdioms(str);
 
         this._separatorQueue = [];
 
@@ -143,14 +144,11 @@ export default class SentenceAnalyser {
                 break;
         }
 
-        //
-        // TODO: replace the `includes` bellow by stemming!!!
-        //
         const prevWord = this._reader.previousWord;
         if (['person', 'item'].includes(category) &&
             !!prevWord && (
             prevWord.tag === 'MD' ||
-            prevWord.tag === 'G_VB' && ['do', 'is', 'are'].includes(prevWord.toString())
+            prevWord.tag === 'G_VB' && ['be', 'do'].includes(this._reader.getLastAction()._verb)
         )) {
             this._currentMeaning._type = 'question';
         }
@@ -221,9 +219,9 @@ export default class SentenceAnalyser {
             //   e.g. "call my brother"
             //
 
-            const strPrec = this._reader.previousWord.toString();
+            const lastVerb = this._reader.getLastAction()._verb;
             const b2 = new Balance(Data.getData('verbMeaningInference'));
-            const verbRig = b2.getWeightDetails(strPrec);
+            const verbRig = b2.getWeightDetails(lastVerb);
 
             for (const cat of Object.keys(verbRig))
                 rigWeights[cat] = (rigWeights[cat] || 0) + verbRig[cat];
@@ -236,16 +234,5 @@ export default class SentenceAnalyser {
         console.log(this._reader.currentWord + '\t=> ', b.getWeightDetails(this._reader.currentWord.toString()));
 
         return cat;
-    }
-    
-    static transformIdioms(str: string): string {
-        const idioms = Data.getData('idiomsReplacements');
-
-        for (const idiom of Object.keys(idioms)) {
-            const replacement = idioms[idiom];
-            str = str.replace(new RegExp(idiom, 'gi'), replacement);
-        }
-
-        return str;
     }
 }

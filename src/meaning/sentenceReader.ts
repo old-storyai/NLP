@@ -57,6 +57,16 @@ export default class SentenceReader {
         }
     }
 
+    getLastAction(): Action {
+        let i = this._idx;
+
+        while ((!this._sentenceBreaks.includes(i)) && i--)
+            if (this._understanding[i] instanceof Action)
+                return this._understanding[i] as Action;
+
+        return undefined;
+    }
+
     verbWasUsedBefore(): boolean {
         let i = this._idx;
 
