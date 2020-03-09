@@ -69,7 +69,9 @@ export default class Balance {
                 
                 word = word.replace(/([^\\]\w)$/, '$1\\b');
                 word = word.replace(/^(\w)/, '\\b$1');
-                if (new RegExp(word, 'gi').test(sentence))
+                let flags = 'g';
+                if (!/[A-Z]/.test(word)) flags += 'i';
+                if (new RegExp(word, flags).test(sentence))
                     weightPerCategory[category] += weight;
             }
         }
