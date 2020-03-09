@@ -71,7 +71,7 @@ describe('Balance class', () => {
             const b = new Balance(sampleSettingRegex);
 
             expect(b.getWeightDetails('YAAAAY we\'re going to DisneyLand!')).toStrictEqual({'excited': 60, 'dissapointed': 0, 'angry': 50});
-            expect(b.getWeightDetails('Meeeeeeh, this movie was not as good as I expected.')).toStrictEqual({'excited': 60, 'dissapointed': 80, 'angry': 50});
+            expect(b.getWeightDetails('Meeeeeeh, this movie was not as good as I expected.')).toStrictEqual({'excited': 0, 'dissapointed': 80, 'angry': 0});
             expect(b.getWeightDetails('I\'M SUPER ANGRY!!!!!')).toStrictEqual({'excited': 60, 'dissapointed': 0, 'angry': 110});
         });
     });
