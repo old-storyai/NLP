@@ -18,6 +18,8 @@ export default class SentenceAnalyser {
 
     constructor(str: string) {
 
+        str = SentenceAnalyser.transformIdioms(str);
+
         this._separatorQueue = [];
 
         const wg: WordGroup = Tokenizer.groupWords(str);
@@ -152,6 +154,9 @@ export default class SentenceAnalyser {
 
     /**
      * Verbs composed of multiple words
+     *
+     * TODO: Handle harder cases like:
+     *          "Turn the coffee maker on the counter on"
      */
     private handleComposedVerb() {
         const word = this._reader.currentWord as WordGroup;
@@ -162,26 +167,19 @@ export default class SentenceAnalyser {
         for (const composedVerb of Object.keys(composedVerbs)) {
             if (new RegExp(composedVerb, 'gi').test(word.toString())) {
                 expectedWord = new RegExp(
-                    composedVerbs[composedVerb].join('|'), 'gi'
+                    '\\b' + composedVerbs[composedVerb].join('|') + '\\b', 'gi'
                 );
             }
         }
 
         if (!!expectedWord) {
-            const [index, match] = this._reader.findAfter(expectedWord);
+            const [index, match] = this._reader.findRegexAfter(expectedWord);
 
             if (index>=0) {
                 this._reader.deleteWord(index);
                 word.append([match]);
             }
         }
-    }
-
-    /**
-     * Handle give a call to ... ==> call ...
-     */
-    private handleSpecialVerbs() {
-
     }
 
     private startNewSubsentence() {
@@ -233,5 +231,15 @@ export default class SentenceAnalyser {
 
         return cat;
     }
+    
+    static transformIdioms(str: string): string {
+        const idioms = Data.getData('idiomsReplacements');
 
+        for (const idiom of Object.keys(idioms)) {
+            const replacement = idioms[idiom];
+            str = str.replace(new RegExp(idiom, 'gi'), replacement);
+        }
+
+        return str;
+    }
 }

@@ -23,16 +23,22 @@ describe('SentenceAnalyser', () => {
             'turn off'
         );
 
-        // itAnalysesVerbs(
-        //     'Give a call',
-        //     new SentenceAnalyser('Give a call to my mom'),
-        //     'call'
-        // );
+        itAnalysesVerbs(
+            'Give a call to <PERSON>',
+            new SentenceAnalyser('Give a call to my mom'),
+            'call'
+        );
 
-        // itAnalysesVerbs(
-        //     'Give a <NOUN>',
-        //     new SentenceAnalyser('Give a present to my mom'),
-        //     'give'
-        // );
+        itAnalysesVerbs(
+            'Give <PERSON> a call',
+            new SentenceAnalyser('Give my mom a call'),
+            'call'
+        );
+
+        itAnalysesVerbs(
+            'Give a <NOUN>',
+            new SentenceAnalyser('Give a present to my mom'),
+            'give'
+        );
     });
 });

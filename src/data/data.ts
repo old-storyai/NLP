@@ -17,6 +17,7 @@ const filesPaths = {
     'verbMeaningInference': 'things/action/meaningInference_VB2NN.json',
     'composedVerbs':        'things/action/composedVerbs.json',
     'timeComponents':       'things/time/timeComponents.json',
+    'idiomsReplacements':   'idiomsReplacements.json',
 };
 
 export function getData(fileId: string): any {

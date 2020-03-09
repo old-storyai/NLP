@@ -72,8 +72,8 @@ export default class SentenceReader {
             this._sentenceBreaks.push(i);
     }
 
-    // Returns [index, word] | undefined
-    findAfter(regex: RegExp): [number, Word|WordGroup] {
+    // Returns [index, word] | [-1, undefined]
+    findRegexAfter(regex: RegExp): [number, Word|WordGroup] {
         for (let i=this._idx ; i<this._words.length ; i++) {
             if (regex.test(this._words[i].toString()))
                 return [i, this._words[i]];

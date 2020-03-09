@@ -25,6 +25,6 @@ let str = '';
 // str = 'Give Baptiste Zorzi a call';
 // str = 'Turn off the old stove next to the washing machine';
 // str = 'Turn the heater on when I leave';
-str = 'Turn the heater on';
+str = 'Send a Slack message to Frederick';
 
 new SentenceAnalyser(str).createMeanings();
