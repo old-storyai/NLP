@@ -6,8 +6,8 @@
         "cup": 60,
         "^an": 50,
         "^a": 50,
-        "^the": 30,
         "^this": 30,
+        "^the": 20,
         "the": 10,
         "^my": 10
     },
@@ -28,6 +28,10 @@
     },
     "location": {
         "place": 80,
+        "street": 75,
+        "avenue": 75,
+        "boulevard": 75,
+        "park": 60,
         "\\U\\w+": 50,
         "side": 35,
         "in(side)?": 35,

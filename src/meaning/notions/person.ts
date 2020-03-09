@@ -3,8 +3,6 @@ import {WordGroup, Word} from 'grammar/tokenizer';
 import Thing from './thing/thing';
 import {Meaning} from './meaning';
 
-import colors from 'colors';
-
 export default class Person extends Thing {
 
     // Person qualifiers
@@ -27,6 +25,7 @@ export default class Person extends Thing {
 
         this._personTitle = '';
 
+        this._modifiers = [];
         for (let word of this._wordGroup._words) {
             word = word as Word;
             if (word.isAdjective()) {

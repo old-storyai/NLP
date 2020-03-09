@@ -123,9 +123,13 @@ export default class SentenceAnalyser {
                 break;
 
             case 'location':
-                const loc = new Location(word, this._separatorQueue);
-                this._currentMeaning._location = loc;
-                this._reader.addMeaning(loc);
+                if (!!this._currentMeaning._location) {
+                    this._currentMeaning._location.addWords(word, this._separatorQueue);
+                } else {
+                    const loc = new Location(word, this._separatorQueue);
+                    this._currentMeaning._location = loc;
+                }
+                this._reader.addMeaning(this._currentMeaning._location);
                 break;
 
             case 'person':
@@ -211,7 +215,7 @@ export default class SentenceAnalyser {
                 rigWeights[cat] = (rigWeights[cat] || 0) + sepRig[cat];
         }
 
-        if (this._reader.previousWord.tag === 'G_VB') {
+        if ((!!this._reader.previousWord) && this._reader.previousWord.tag === 'G_VB') {
             //
             // Infering meaning from the preceding verb
             //   e.g. "call my brother"
@@ -228,6 +232,8 @@ export default class SentenceAnalyser {
 
         b.rig(rigWeights);
         const cat = b.categorize(this._reader.currentWord.toString());
+
+        console.log(this._reader.currentWord + '\t=> ', b.getWeightDetails(this._reader.currentWord.toString()));
 
         return cat;
     }

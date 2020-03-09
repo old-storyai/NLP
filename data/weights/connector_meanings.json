@@ -7,9 +7,11 @@
     },
     "location": {
         "near": 75,
+        "next to": 70,
         "in": 60,
         "from": 60,
         "across": 60,
+        "on": 25,
         "of": 5
     },
     "time": {

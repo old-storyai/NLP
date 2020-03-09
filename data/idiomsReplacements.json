@@ -1,0 +1,4 @@
+{
+    "give (.*) a call": "call $1",
+    "give a call to": "call"
+}
