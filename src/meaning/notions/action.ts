@@ -20,13 +20,14 @@ export default class Action extends Thing {
     protected processWords() {
         this.findTense();
 
+        this._verb = '';
         for (let word of this._wordGroup._words) {
             word = word as Word;
-            if (word.isVerb()) {
-                this._verb = word.toString();
+            if (word.isVerb() || word.is('IN')) {
+                this._verb += ' ' + word.toString().toLowerCase();
             }
         }
-        
+        this._verb = this._verb.trim();
     }
 
     findTense() {

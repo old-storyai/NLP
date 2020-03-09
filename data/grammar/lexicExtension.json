@@ -1,7 +1,7 @@
 {
-    "turn (on|off)": "VB",
-    "turns (on|off)": "VBZ",
-    "turned (on|off)": "VBD",
+    "turn": "VB",
+    "turns": "VBZ",
+    "turned": "VBD",
     "close": "VB",
     "closes": "VBZ",
     "closed": "VBD",

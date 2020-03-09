@@ -22,12 +22,12 @@ export default class SentenceAnalyser {
 
         const wg: WordGroup = Tokenizer.groupWords(str);
 
-        console.log(''+ wg.toNiceString());
+        console.log(wg.toNiceString());
         
         this._reader = new SentenceReader(wg.words);
     }
 
-    createMeanings() {
+    createMeanings(): Meaning[] {
 
         this._separatorQueue = [];
         this._allMeanings = [];
@@ -43,6 +43,7 @@ export default class SentenceAnalyser {
                     this.analyseNounGroup();
                     break;
                 case 'G_VB':
+                    this.handleComposedVerb();
                     const a = new Action(word as WordGroup, this._separatorQueue);
                     this._currentMeaning._action = a;
                     this._reader.addMeaning(a);
@@ -65,6 +66,7 @@ export default class SentenceAnalyser {
         this._allMeanings.push(this._currentMeaning);
 
         console.log('\n\nall_meanings: \n' + this._allMeanings.map(m=>m.toString()).join('\n\n'));
+        return this._allMeanings.filter(m => !m.isEmpty());
     }
 
     private analyseSeparator() {
@@ -148,6 +150,40 @@ export default class SentenceAnalyser {
         }
     }
 
+    /**
+     * Verbs composed of multiple words
+     */
+    private handleComposedVerb() {
+        const word = this._reader.currentWord as WordGroup;
+        const composedVerbs = Data.getData('composedVerbs');
+
+        let expectedWord: RegExp;
+
+        for (const composedVerb of Object.keys(composedVerbs)) {
+            if (new RegExp(composedVerb, 'gi').test(word.toString())) {
+                expectedWord = new RegExp(
+                    composedVerbs[composedVerb].join('|'), 'gi'
+                );
+            }
+        }
+
+        if (!!expectedWord) {
+            const [index, match] = this._reader.findAfter(expectedWord);
+
+            if (index>=0) {
+                this._reader.deleteWord(index);
+                word.append([match]);
+            }
+        }
+    }
+
+    /**
+     * Handle give a call to ... ==> call ...
+     */
+    private handleSpecialVerbs() {
+
+    }
+
     private startNewSubsentence() {
         this._allMeanings.push(this._currentMeaning);
         this._currentMeaning = new Meaning();
@@ -157,7 +193,6 @@ export default class SentenceAnalyser {
         if (/when|if/gi.test(this._reader.currentWord.toString()))
             this._currentMeaning._type = 'condition';
     }
-
 
     private guessGNNCategory(): string {
         const balanceConfig = Data.getData('nounGroupsMeanings');

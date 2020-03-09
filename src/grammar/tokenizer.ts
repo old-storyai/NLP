@@ -138,6 +138,47 @@ export class Tokenizer {
                 doEncounter = true;
         }
 
+        // Jeffrey Pollisvky
+        //   ⤷ Pollisvky is a NNP
+        let prevWord = words[0];
+        for (let i=0 ; i<words.length-1 ; i++) {
+            const word = words[i];
+
+            if (prevWord.is('NNP') && 
+                word.is('NN') &&
+                /^[A-Z]/.test(word.toString().charAt(0))
+            ) {
+                word.group = 'NNP';
+            }
+
+            prevWord = word;
+        }
+
+        // DT JJ !NN
+        //  ⤷ JJ is most likely a NN 
+        //   e.g. send a present to my mom
+        //             . '--.--' '' 
+        //            DT   JJ    TO
+        let dtEncounter = false;
+        for (let i=0 ; i<words.length-1 ; i++) {
+            const word = words[i];
+
+            if (dtEncounter &&
+                !word.isAdjective() &&
+                !word.isNoun() &&
+                prevWord.isAdjective()
+            ) {
+                prevWord.group = 'NN';
+            }
+
+            if (word.isDeterminer())
+                dtEncounter = true;
+            else if (!word.isAdjective())
+                dtEncounter = false;
+
+            prevWord = word;
+        }
+
         return words;
     }
 }

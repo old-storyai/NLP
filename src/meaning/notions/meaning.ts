@@ -49,6 +49,14 @@ export class Meaning {
     //                ======================== 
     _purpose?: Meaning|string;
 
+    isEmpty(): boolean {
+        let res = true;
+        for (const prop of Object.getOwnPropertyNames(this))
+            res = res && (!this[prop]);
+
+        return res;
+    }
+
     toString(): string {
         let out = '';
 

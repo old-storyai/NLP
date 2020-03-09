@@ -1,6 +1,7 @@
 {
     "item": {
         "^it$": 100,
+        "\\bTV\\b": 80,
         "door": 60,
         "cup": 60,
         "^an": 50,
@@ -12,7 +13,7 @@
     },
     "person": {
         "^(I|me|you|she|he|her|him|we|they)$": 100,
-        "^\\U\\w+$": 80,
+        "^([A-Z][a-z]+ ?)+$": 80,
         "boy": 75,
         "girl": 75,
         "husband": 75,

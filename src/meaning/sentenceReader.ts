@@ -72,9 +72,22 @@ export default class SentenceReader {
             this._sentenceBreaks.push(i);
     }
 
-    // getLastMentionnedPerson(): Person {
-    //     return new Person();
-    // }
+    // Returns [index, word] | undefined
+    findAfter(regex: RegExp): [number, Word|WordGroup] {
+        for (let i=this._idx ; i<this._words.length ; i++) {
+            if (regex.test(this._words[i].toString()))
+                return [i, this._words[i]];
+        }
+
+        return [-1, undefined];
+    }
+
+    deleteWord(i:number = this._idx): void { 
+        this._words.splice(i, 1);
+
+        if (i in this._understanding)
+            this._understanding.splice(i, 1);
+    }
 
     next(): boolean {
         if (this._idx < this._words.length-1) {

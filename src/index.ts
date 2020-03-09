@@ -19,10 +19,12 @@ let str = '';
 // str = 'she walked without looking and tumbled into the Seine';
 // str = 'The water was freezing, she spent a month sneezing, but she said she\'d  do it again';
 // str = 'Me and the son of the old lady who used to take care of me, we\'d go on adventures together';
-// str = 'Turn the heater on when I leave;
 // str = 'the boy who eats chocolate lives on the other side of the street');
 // str = 'Send me a text when the temperature drops lower than 20 degrees outside');
+// str = 'Send me a text on the 5th of july';
+// str = 'Give Baptiste Zorzi a call';
 // str = 'Turn off the old stove next to the washing machine';
-str = 'Send me a text on the 5th of july';
+// str = 'Turn the heater on when I leave';
+str = 'Turn the heater on';
 
 new SentenceAnalyser(str).createMeanings();

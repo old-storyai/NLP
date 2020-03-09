@@ -1,0 +1,20 @@
+{
+    "turn": [
+        "on", "off"
+    ],
+    "open": [
+        "up"
+    ],
+    "drop": [
+        "out"
+    ],
+    "heat": [
+        "up"
+    ],
+    "cool": [
+        "down"
+    ],
+    "crank": [
+        "up"
+    ]
+}
