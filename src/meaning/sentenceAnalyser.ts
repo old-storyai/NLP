@@ -74,12 +74,13 @@ export default class SentenceAnalyser {
         if (['and', 'if', 'when'].includes(word.toString()) || word.isPunctuation()) 
             this.startNewSubsentence();
 
-        if (word.toString() === 'of' &&
+        if ( word.toString() === 'of' &&
             this._reader.nextWord.group === 'G_NN' &&
-            this._reader.previousWord.group === 'G_NN') {
-            this._reader.next();
-            this.analyseNounGroup();
-            this._reader.prev();
+            this._reader.previousWord.group === 'G_NN'
+        ) {
+            // this._reader.next();
+            // this.analyseNounGroup();
+            // this._reader.prev();
             // this._reader.
         }
     }
@@ -133,8 +134,6 @@ export default class SentenceAnalyser {
                 this._reader.addMeaning(person);
                 break;
         }
-
-        console.log(word + ' || ' + category);
 
         //
         // TODO: replace the `includes` bellow by stemming!!!
@@ -191,8 +190,6 @@ export default class SentenceAnalyser {
 
             for (const cat of Object.keys(verbRig))
                 rigWeights[cat] = (rigWeights[cat] || 0) + verbRig[cat];
-
-            console.log('verbRig: ', verbRig);
         }
 
 

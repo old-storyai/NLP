@@ -36,14 +36,11 @@ export default class Value extends Thing {
             }
         }
 
-        console.log('var: ', this._wordGroup.toString());
-
         let matches = this._wordGroup.toString().match(/[\d.,]+/);
         if (matches.length)
             this._amount = Number.parseInt(matches[0]);
 
         matches = this._wordGroup.toString().match(/[\d.,]+([\w\s]+)|([\w]+)\s*$/);
-        console.log('matches: ', matches);
         if (matches.length > 1)
             this._unit = matches[1].trim();
     }

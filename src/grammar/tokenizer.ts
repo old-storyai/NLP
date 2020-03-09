@@ -28,10 +28,6 @@ export class Tokenizer {
         const wordGroup = Tokenizer.wordPerWord(sentence);
         const rules = Tokenizer.getData('grammarGroupRules');
 
-        console.log('wordGroup: ', wordGroup);
-        console.log('rules: ', rules);  // undefined
-        console.log('Data.getData: ', Data.getData);
-
         wordGroup.tokenize(rules);
 
         return wordGroup;
