@@ -31,9 +31,24 @@ export default class SentenceAnalyser {
     }
 
     createMeanings(): Meaning[] {
-
-        this._separatorQueue = [];
         this._allMeanings = [];
+        const all_meanings = [];
+
+        console.log('\n\nall_meanings: \n' + this._allMeanings.map(m=>m.toString()).join('\n\n'));
+
+        do {
+            const meaning = this.getOneMeaning();
+        } while (this._reader.next());
+
+        return this._allMeanings.filter(m => !m.isEmpty());
+    }
+
+    /**
+     * Search for one meaning on the sentence, when this meaning seems to end,
+     * it stops and returns the found meaning, and what remains of the sentence
+     */
+    getOneMeaning(): Meaning {
+        this._separatorQueue = [];
         this._currentMeaning = new Meaning();
 
         this.startNewMeaning();
@@ -59,19 +74,15 @@ export default class SentenceAnalyser {
                     break;
                 default:
                     // non-group: separator word
-                    
                     this._separatorQueue.push(word as Word);
-
                     this.analyseSeparator();
             }
             if (word.tag.slice(0, 2) === 'G_')
                 this._separatorQueue = [];
 
         } while (this._reader.next() && !endOfAnalysis);
-        this._allMeanings.push(this._currentMeaning);
 
-        console.log('\n\nall_meanings: \n' + this._allMeanings.map(m=>m.toString()).join('\n\n'));
-        return this._allMeanings.filter(m => !m.isEmpty());
+        return new Meaning()
     }
 
     private analyseSeparator() {
@@ -97,6 +108,9 @@ export default class SentenceAnalyser {
     }
 
     private analyseNounGroup() {
+        if (!this._reader.currentWord.isGroup() || !this._reader.currentWord.isNoun())
+            throw new Error('Trying to analyse an innapropriate word');
+
         const word = this._reader.currentWord as WordGroup;
 
         const category = this.guessGNNCategory();
@@ -167,6 +181,9 @@ export default class SentenceAnalyser {
      *          "Turn the coffee maker on the counter on"
      */
     private handleComposedVerb() {
+        if (!this._reader.currentWord.isGroup() || !this._reader.currentWord.isVerb())
+            throw new Error('Trying to analyse an innapropriate word');
+
         const word = this._reader.currentWord as WordGroup;
         const composedVerbs = Data.getData('composedVerbs');
 
@@ -201,6 +218,9 @@ export default class SentenceAnalyser {
     }
 
     private guessGNNCategory(): string {
+        if (!this._reader.currentWord.isGroup() || !this._reader.currentWord.isNoun())
+            throw new Error('Trying to guess G_NN meaning for non G_NN word');
+
         const balanceConfig = Data.getData('nounGroupsMeanings');
         const b = new Balance(balanceConfig);
 
@@ -236,6 +256,8 @@ export default class SentenceAnalyser {
 
         b.rig(rigWeights);
         const cat = b.categorize(this._reader.currentWord.toString());
+
+        console.log(b.getWeightDetails(this._reader.currentWord.toString()));
 
         return cat;
     }

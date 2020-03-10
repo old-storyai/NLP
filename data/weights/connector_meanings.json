@@ -3,7 +3,8 @@
         "of": 20
     },
     "person": {
-        "of": 15
+        "of": 15,
+        "on": -70
     },
     "location": {
         "near": 75,
