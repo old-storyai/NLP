@@ -15,6 +15,10 @@ export default class Word {
     get tag(): string { return this._tag.replace('$', 'S'); }
     set tag(tag:string) { this._tag = tag; }
 
+    isGroup(): boolean {
+        return false;
+    }
+
     is(tag: string): boolean {
         return tag === this._tag;
     }
@@ -35,6 +39,17 @@ export default class Word {
          *  - WDT: Wh-determiner (which, that)
          */
         return this.tag.slice(-2) === 'DT';
+    }
+
+    isInterrogativeWord(): boolean {
+        /**
+         * will match:
+         *  - WDT: Wh-determiner (which,that)
+         *  - WP:  Wh pronoun (who,what)
+         *  - WPS: Possessive (whose)
+         *  - WRB: Wh-adverb (how,where)
+         */
+        return this.tag.slice(0, 1) === 'W';
     }
 
     isAdjective(): boolean {

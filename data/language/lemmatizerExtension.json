@@ -1,0 +1,13 @@
+{
+    "'\\w+ used to (\\w+)": "{:$1:}",
+    "used to (\\w+)": "{:$1:}",
+    "used": "use",
+    "use": "use",
+
+    "have been (\\w+ing)": "{:$1:}",
+    "have (\\w+)": "{:$1:}",
+
+    "'(m|re|s)": "be",
+
+    "did": "do"
+}

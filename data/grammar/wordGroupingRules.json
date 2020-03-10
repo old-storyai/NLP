@@ -6,7 +6,7 @@
         " EX"
     ],
     "G_VB": [
-        "( MD( TO)?)?( VB[NPDZ]?)+"
+        "(( MD| VBN)( TO)?)?( VB[NPDZ]?)+( TO VB)?"
     ],
     "G_RB": [
         "( RB)+",

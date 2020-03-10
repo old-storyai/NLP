@@ -129,6 +129,18 @@ export class WordGroup {
         this.words.unshift(...wgs);
     }
 
+    isGroup(): boolean {
+        return true;
+    }
+
+    isVerb(): boolean {
+        return this.tag === 'G_VB';
+    }
+
+    isNoun(): boolean {
+        return this.tag === 'G_NN';
+    }
+
     toNiceString(): string {
         let str = '';
         for (const word of this._words) {

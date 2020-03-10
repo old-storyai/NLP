@@ -36,7 +36,9 @@ export default class SentenceAnalyser {
         this._allMeanings = [];
         this._currentMeaning = new Meaning();
 
-        this.startNewSubsentence();
+        this.startNewMeaning();
+
+        let endOfAnalysis = false;
 
         do {
             const word = this._reader.currentWord;
@@ -65,7 +67,7 @@ export default class SentenceAnalyser {
             if (word.tag.slice(0, 2) === 'G_')
                 this._separatorQueue = [];
 
-        } while (this._reader.next());
+        } while (this._reader.next() && !endOfAnalysis);
         this._allMeanings.push(this._currentMeaning);
 
         console.log('\n\nall_meanings: \n' + this._allMeanings.map(m=>m.toString()).join('\n\n'));
@@ -77,16 +79,20 @@ export default class SentenceAnalyser {
         const word = this._reader.currentWord as Word;
 
         if (['and', 'if', 'when'].includes(word.toString()) || word.isPunctuation()) 
-            this.startNewSubsentence();
+            this.startNewMeaning();
 
-        if ( word.toString() === 'of' &&
-            this._reader.nextWord.tag === 'G_NN' &&
-            this._reader.previousWord.tag === 'G_NN'
+        // if ( word.toString() === 'of' &&
+        //     this._reader.nextWord.tag === 'G_NN' &&
+        //     this._reader.previousWord.tag === 'G_NN'
+        // ) {
+        // }
+
+        if ( word.isInterrogativeWord() &&
+            this._reader.previousWord.isNoun() &&
+            this._reader.nextWord.isVerb()
         ) {
-            // this._reader.next();
-            // this.analyseNounGroup();
-            // this._reader.prev();
-            // this._reader.
+            // we begin a submeaning
+            console.log('=> SUBMEANING <=');
         }
     }
 
@@ -184,7 +190,7 @@ export default class SentenceAnalyser {
         }
     }
 
-    private startNewSubsentence() {
+    private startNewMeaning() {
         this._allMeanings.push(this._currentMeaning);
         this._currentMeaning = new Meaning();
         if (this._reader.currentWord.tag === 'G_VB')
@@ -230,8 +236,6 @@ export default class SentenceAnalyser {
 
         b.rig(rigWeights);
         const cat = b.categorize(this._reader.currentWord.toString());
-
-        console.log(this._reader.currentWord + '\t=> ', b.getWeightDetails(this._reader.currentWord.toString()));
 
         return cat;
     }
