@@ -3,7 +3,6 @@ import * as Data from 'data/data';
 
 export function disconjugateVerb(str: string): string {
 
-    console.log('str: ', str);
     const lemmatiserExtension = Data.getData('lemmatizerExtension');
 
     // Placing placeholders for the extension words
@@ -15,7 +14,6 @@ export function disconjugateVerb(str: string): string {
         const matches = str.match(regex);
         let idx = 0;
         if (!!matches) {
-            console.log('matches: ', matches);
             let m = matches[0];
             m = m.replace(regex, replacement);
 
