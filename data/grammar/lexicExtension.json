@@ -12,6 +12,7 @@
     "locks": "VBZ",
     "locked": "VBD",
     "lives": "VBZ",
+    "care": "VB",
 
     "\\w+ness": "NN",
 

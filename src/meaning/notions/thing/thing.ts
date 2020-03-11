@@ -15,9 +15,12 @@ export default class Thing {
     }
 
 
-    addWords(wg: WordGroup, prevWord: Word[] = []) {
+    addWords(w: WordGroup|Word, prevWord: Word[] = []) {
         this._wordGroup.append(prevWord);
-        this._wordGroup.append(wg._words);
+        if (w instanceof Word)
+            this._wordGroup.append([w]);
+        else
+            this._wordGroup.append(w._words);
 
         this.processWords();
     }
@@ -35,7 +38,7 @@ export default class Thing {
 
             const choosenColor = ALL_COLORS[(Math.random()*ALL_COLORS.length)<<0];
 
-            out += `${prop.replace(/^_+/, '').replace(/^\w/, c=>c.toUpperCase())}:` +
+            out += `${colors.reset(prop.replace(/^_+/, '').replace(/^\w/, c=>c.toUpperCase()))}:` +
                 `\t${colors[choosenColor](this[prop].toString().replace(/\n/g, '\n\t'))}\n`;
         }
 

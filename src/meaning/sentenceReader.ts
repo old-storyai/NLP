@@ -74,12 +74,10 @@ export default class SentenceReader {
 
     beginSubsentence(i:number = this._idx) {
         this._sentencesRangesTree.startNewSubRange(i);
-        console.log(`Starting Sub at ${colors.bgBlack(this._words[this._idx].toString())}`);
     }
 
     endSubsentence(i:number = this._idx) {
         this._sentencesRangesTree.endRangeForLowestChild(i);
-        console.log(`Ending Sub at ${colors.bgBlack(this._words[this._idx].toString())}`);
     }
 
     getWordAt(i: number): any {

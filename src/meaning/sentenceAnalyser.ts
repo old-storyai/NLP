@@ -100,6 +100,7 @@ export default class SentenceAnalyser {
         this._reader.endSubsentence();
 
         console.log('meaning: '+ meaning);
+        console.log('――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――');
 
         return meaning;
     }
@@ -107,13 +108,32 @@ export default class SentenceAnalyser {
     private analyseSeparator(): boolean {
 
         const word = this._reader.currentWord as Word;
+        const prev = this._reader.inCurrentSubSentence.previousWord || new Word('', '');
+        const next = this._reader.inCurrentSubSentence.nextWord || new Word('', '');
 
-        if (['and', 'if', 'when'].includes(word.toString()) || word.isPunctuation()) {
+        if (['if', 'when'].includes(word.toString()) ||
+            word.toString() === 'and' && (!prev.isNoun() || !next.isNoun()) ||
+            word.isPunctuation()
+        )
             return false;
+
+
+        if (['and', 'of'].includes(word.toString()) &&
+            !!prev && prev.isNoun() &&
+            !!next && next.isNoun()
+        ) {
+            const thing = this._reader.inWholeDocument.getLastMentionnedThing();
+            thing.addWords(next, this._separatorQueue);
+            this._reader.next();
+            this._separatorQueue = [];
+            this._reader.addMeaning(thing);
         }
-        
-        const prev = this._reader.inCurrentSubSentence.previousWord;
-        const next = this._reader.inCurrentSubSentence.nextWord;
+
+
+        //
+        // Handling subsentences!
+        //
+        // the lady who used to do that
         if ( word.isInterrogativeWord() &&
             !!prev && prev.isNoun() &&
             !!next && next.isVerb()
@@ -173,6 +193,7 @@ export default class SentenceAnalyser {
 
             case 'person':
                 const person = new Person(word, this._separatorQueue);
+
                 if (this._reader.inCurrentSubSentence.verbWasUsedBefore()) {
                     meaning._target = person;
                 } else {
@@ -266,6 +287,8 @@ export default class SentenceAnalyser {
 
         b.rig(rigWeights);
         const cat = b.categorize(this._reader.currentWord.toString());
+
+        // console.log(this._reader.currentWord + ' : ', b.getWeightDetails(this._reader.currentWord.toString()));
 
         return cat;
     }
