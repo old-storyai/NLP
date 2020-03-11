@@ -31,13 +31,16 @@ export default class SentenceAnalyser {
     }
 
     createMeanings(): Meaning[] {
+
         this._allMeanings = [];
-        const all_meanings = [];
+        const allMeanings = [];
 
         console.log('\n\nall_meanings: \n' + this._allMeanings.map(m=>m.toString()).join('\n\n'));
 
         do {
             const meaning = this.getOneMeaning();
+            allMeanings.push(meaning);
+
         } while (this._reader.next());
 
         return this._allMeanings.filter(m => !m.isEmpty());
@@ -49,23 +52,27 @@ export default class SentenceAnalyser {
      */
     getOneMeaning(): Meaning {
         this._separatorQueue = [];
-        this._currentMeaning = new Meaning();
-
-        this.startNewMeaning();
+        let meaning = new Meaning();
 
         let endOfAnalysis = false;
+
+        if (this._reader.currentWord.tag === 'G_VB')
+            meaning._type = 'order';
+
+        if (/when|if/gi.test(this._reader.currentWord.toString()))
+            meaning._type = 'condition';
 
         do {
             const word = this._reader.currentWord;
 
             switch (word.tag) {
                 case 'G_NN':
-                    this.analyseNounGroup();
+                    meaning = this.analyseNounGroup(meaning);
                     break;
                 case 'G_VB':
                     this.handleComposedVerb();
                     const a = new Action(word as WordGroup, this._separatorQueue);
-                    this._currentMeaning._action = a;
+                    meaning._action = a;
                     this._reader.addMeaning(a);
                     break;
                 case 'G_RB':
@@ -75,28 +82,28 @@ export default class SentenceAnalyser {
                 default:
                     // non-group: separator word
                     this._separatorQueue.push(word as Word);
-                    this.analyseSeparator();
+                    if (this.analyseSeparator())
+                        endOfAnalysis = true;
             }
             if (word.tag.slice(0, 2) === 'G_')
                 this._separatorQueue = [];
 
         } while (this._reader.next() && !endOfAnalysis);
 
-        return new Meaning()
+        console.log('meaning: ', meaning);
+
+        return meaning;
     }
 
-    private analyseSeparator() {
+    private analyseSeparator(): boolean {
 
         const word = this._reader.currentWord as Word;
 
-        if (['and', 'if', 'when'].includes(word.toString()) || word.isPunctuation()) 
-            this.startNewMeaning();
-
-        // if ( word.toString() === 'of' &&
-        //     this._reader.nextWord.tag === 'G_NN' &&
-        //     this._reader.previousWord.tag === 'G_NN'
-        // ) {
-        // }
+        if (['and', 'if', 'when'].includes(word.toString()) || word.isPunctuation()) {
+            // Should finish the current meaning
+            this._reader.addSentenceBreak();
+            return false;
+        }
 
         if ( word.isInterrogativeWord() &&
             this._reader.previousWord.isNoun() &&
@@ -105,9 +112,11 @@ export default class SentenceAnalyser {
             // we begin a submeaning
             console.log('=> SUBMEANING <=');
         }
+
+        return true;
     }
 
-    private analyseNounGroup() {
+    private analyseNounGroup(meaning: Meaning): Meaning {
         if (!this._reader.currentWord.isGroup() || !this._reader.currentWord.isNoun())
             throw new Error('Trying to analyse an innapropriate word');
 
@@ -118,47 +127,47 @@ export default class SentenceAnalyser {
         switch(category) {
 
             case 'time':
-                if (!this._currentMeaning._time) {
+                if (!meaning._time) {
                     const t = new Time(word as WordGroup, this._separatorQueue);
-                    this._currentMeaning._time = t;
+                    meaning._time = t;
                 } else {
-                    this._currentMeaning._time.addWords(word, this._separatorQueue);
+                    meaning._time.addWords(word, this._separatorQueue);
                 }
-                this._reader.addMeaning(this._currentMeaning._time);
+                this._reader.addMeaning(meaning._time);
                 break;
 
             case 'value':
                 const value = new Value(word, this._separatorQueue);
-                this._currentMeaning._value = value;
+                meaning._value = value;
                 this._reader.addMeaning(value);
                 break;
 
             case 'item':
                 const item = new Item(word, this._separatorQueue);
                 if (this._reader.verbWasUsedBefore()) {
-                    this._currentMeaning._item = item;
+                    meaning._item = item;
                 } else {
-                    this._currentMeaning._subject = item;
+                    meaning._subject = item;
                 }
                 this._reader.addMeaning(item);
                 break;
 
             case 'location':
-                if (!!this._currentMeaning._location) {
-                    this._currentMeaning._location.addWords(word, this._separatorQueue);
+                if (!!meaning._location) {
+                    meaning._location.addWords(word, this._separatorQueue);
                 } else {
                     const loc = new Location(word, this._separatorQueue);
-                    this._currentMeaning._location = loc;
+                    meaning._location = loc;
                 }
-                this._reader.addMeaning(this._currentMeaning._location);
+                this._reader.addMeaning(meaning._location);
                 break;
 
             case 'person':
                 const person = new Person(word, this._separatorQueue);
                 if (this._reader.verbWasUsedBefore()) {
-                    this._currentMeaning._target = person;
+                    meaning._target = person;
                 } else {
-                    this._currentMeaning._subject = person;
+                    meaning._subject = person;
                 }
                 this._reader.addMeaning(person);
                 break;
@@ -170,8 +179,10 @@ export default class SentenceAnalyser {
             prevWord.tag === 'MD' ||
             prevWord.tag === 'G_VB' && ['be', 'do'].includes(this._reader.getLastAction()._verb)
         )) {
-            this._currentMeaning._type = 'question';
+            meaning._type = 'question';
         }
+
+        return meaning;
     }
 
     /**
@@ -207,16 +218,6 @@ export default class SentenceAnalyser {
         }
     }
 
-    private startNewMeaning() {
-        this._allMeanings.push(this._currentMeaning);
-        this._currentMeaning = new Meaning();
-        if (this._reader.currentWord.tag === 'G_VB')
-            this._currentMeaning._type = 'order';
-
-        if (/when|if/gi.test(this._reader.currentWord.toString()))
-            this._currentMeaning._type = 'condition';
-    }
-
     private guessGNNCategory(): string {
         if (!this._reader.currentWord.isGroup() || !this._reader.currentWord.isNoun())
             throw new Error('Trying to guess G_NN meaning for non G_NN word');
@@ -245,6 +246,7 @@ export default class SentenceAnalyser {
             //   e.g. "call my brother"
             //
 
+            console.log('this._reader._understanding: ', this._reader._understanding);
             const lastVerb = this._reader.getLastAction()._verb;
             const b2 = new Balance(Data.getData('verbMeaningInference'));
             const verbRig = b2.getWeightDetails(lastVerb);
@@ -256,8 +258,6 @@ export default class SentenceAnalyser {
 
         b.rig(rigWeights);
         const cat = b.categorize(this._reader.currentWord.toString());
-
-        console.log(b.getWeightDetails(this._reader.currentWord.toString()));
 
         return cat;
     }

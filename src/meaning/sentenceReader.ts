@@ -1,6 +1,12 @@
 import {WordGroup, Word} from 'grammar/tokenizer';
+import Range from './range/range';
 
 import {Time, Person, Location, Item, Action, Meaning} from './notions/meaning';
+
+enum SearchScope {
+    local= 0,
+    global= 1
+}
 
 /**
  * This class helps to read a sentence. 
@@ -13,11 +19,16 @@ export default class SentenceReader {
     _idx: number;
     _sentenceBreaks: number[];
 
+    _searchScope: SearchScope;
+    _sentencesRangesTree: Range;
+
     constructor(wg: (WordGroup|Word)[]) {
         this._words = wg;
         this._understanding = [];
         this._idx = 0;
         this._sentenceBreaks = [];
+
+        this._sentencesRangesTree = new Range(0, undefined);
     }
 
     get currentWord(): (Word|WordGroup) {
@@ -36,6 +47,26 @@ export default class SentenceReader {
             return this._words[this._idx+1];
         else
             return undefined;
+    }
+
+    get inWholeDocument(): SentenceReader {
+        this._searchScope = SearchScope.global;
+        return this;
+    }
+
+    get inCurrentSentence(): SentenceReader {
+        this._searchScope = SearchScope.local;
+        return this;
+    }
+
+    get currentSubsentenceBegging(): number {
+        return 0;
+    }
+
+    beginSubsentence(i:number = this._idx) {
+    }
+
+    endSubsentence(i:number = this._idx) {
     }
 
     getWordAt(i: number): any {
