@@ -3,7 +3,7 @@ import Range from 'meaning/range/range';
 describe('SubSentence Range', () => {
     describe('Lowest child search', () => {
         function itFindsLowestChild(range: Range, pos:number, [expectedBeg, expectedEnd]: [number, number]) {
-            it('Should be find the lowest available child for a specific position',() => {
+            it('Should find the lowest available child for a specific position',() => {
                 const kid = range.getLowestChildForPos(pos);
 
                 expect(kid.start).toBe(expectedBeg);
@@ -13,8 +13,7 @@ describe('SubSentence Range', () => {
 
         itFindsLowestChild(
             range('( ()(()   ))'),
-            //       ^
-            2,
+            2,  //   ^
             [2, 3]
         );
 
@@ -29,8 +28,6 @@ describe('SubSentence Range', () => {
             21, //                      ^
             [0, 21]
         );
-
-        console.log('STRING' + range('( (  () ) )'));
     });
 });
 
@@ -40,13 +37,12 @@ describe('SubSentence Range', () => {
  * @param {string} rawIn The raw representation of the range, here's an example: "( (() ) () )"
  */
 function range(rawIn: string) {
-    let base:Range = new Range(0, undefined),
-        currRange: Range = base;
-
-    base.endRange(rawIn.length);
+    const base:Range = new Range(0, undefined);
+    let currRange: Range = base;
+    base.endRange(rawIn.length-1);
 
     for (let idx=0 ; idx<rawIn.length ; idx++) {
-        let cara = rawIn[idx];
+        const cara = rawIn[idx];
 
         if (cara === '(')
             currRange = currRange.startNewSubRange(idx);

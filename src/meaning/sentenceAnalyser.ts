@@ -1,3 +1,4 @@
+import colors from 'colors';
 import Balance from 'balance/balance';
 import * as Data from 'data/data';
 import * as Normalizer from 'language/normalizer';
@@ -35,8 +36,6 @@ export default class SentenceAnalyser {
         this._allMeanings = [];
         const allMeanings = [];
 
-        console.log('\n\nall_meanings: \n' + this._allMeanings.map(m=>m.toString()).join('\n\n'));
-
         do {
             const meaning = this.getOneMeaning();
             allMeanings.push(meaning);
@@ -48,13 +47,15 @@ export default class SentenceAnalyser {
 
     /**
      * Search for one meaning on the sentence, when this meaning seems to end,
-     * it stops and returns the found meaning, and what remains of the sentence
+     * it stops and returns the found meaning
      */
     getOneMeaning(): Meaning {
         this._separatorQueue = [];
         let meaning = new Meaning();
 
-        let endOfAnalysis = false;
+        let endOfSentence = false;
+
+        this._reader.beginSubsentence();
 
         if (this._reader.currentWord.tag === 'G_VB')
             meaning._type = 'order';
@@ -71,9 +72,15 @@ export default class SentenceAnalyser {
                     break;
                 case 'G_VB':
                     this.handleComposedVerb();
-                    const a = new Action(word as WordGroup, this._separatorQueue);
-                    meaning._action = a;
-                    this._reader.addMeaning(a);
+                    if (!meaning._action) {
+                        const a = new Action(word as WordGroup, this._separatorQueue);
+                        meaning._action = a;
+                        this._reader.addMeaning(a);
+                    } else {
+                        this._reader.prev(); // To go back, we don't want this word in this sentence
+                        this._reader.prev(); // To cancel the next() bellow
+                        endOfSentence = true;
+                    }
                     break;
                 case 'G_RB':
 
@@ -82,15 +89,17 @@ export default class SentenceAnalyser {
                 default:
                     // non-group: separator word
                     this._separatorQueue.push(word as Word);
-                    if (this.analyseSeparator())
-                        endOfAnalysis = true;
+                    if (!this.analyseSeparator())
+                        endOfSentence = true;
             }
             if (word.tag.slice(0, 2) === 'G_')
                 this._separatorQueue = [];
 
-        } while (this._reader.next() && !endOfAnalysis);
+        } while (this._reader.next() && !endOfSentence);
 
-        console.log('meaning: ', meaning);
+        this._reader.endSubsentence();
+
+        console.log('meaning: '+ meaning);
 
         return meaning;
     }
@@ -100,17 +109,17 @@ export default class SentenceAnalyser {
         const word = this._reader.currentWord as Word;
 
         if (['and', 'if', 'when'].includes(word.toString()) || word.isPunctuation()) {
-            // Should finish the current meaning
-            this._reader.addSentenceBreak();
             return false;
         }
-
+        
+        const prev = this._reader.inCurrentSubSentence.previousWord;
+        const next = this._reader.inCurrentSubSentence.nextWord;
         if ( word.isInterrogativeWord() &&
-            this._reader.previousWord.isNoun() &&
-            this._reader.nextWord.isVerb()
+            !!prev && prev.isNoun() &&
+            !!next && next.isVerb()
         ) {
-            // we begin a submeaning
-            console.log('=> SUBMEANING <=');
+            const thing = this._reader.inWholeDocument.getLastMentionnedThing();
+            thing._addition = this.getOneMeaning();
         }
 
         return true;
@@ -144,7 +153,7 @@ export default class SentenceAnalyser {
 
             case 'item':
                 const item = new Item(word, this._separatorQueue);
-                if (this._reader.verbWasUsedBefore()) {
+                if (this._reader.inCurrentSubSentence.verbWasUsedBefore()) {
                     meaning._item = item;
                 } else {
                     meaning._subject = item;
@@ -164,7 +173,7 @@ export default class SentenceAnalyser {
 
             case 'person':
                 const person = new Person(word, this._separatorQueue);
-                if (this._reader.verbWasUsedBefore()) {
+                if (this._reader.inCurrentSubSentence.verbWasUsedBefore()) {
                     meaning._target = person;
                 } else {
                     meaning._subject = person;
@@ -173,7 +182,7 @@ export default class SentenceAnalyser {
                 break;
         }
 
-        const prevWord = this._reader.previousWord;
+        const prevWord = this._reader.inCurrentSubSentence.previousWord;
         if (['person', 'item'].includes(category) &&
             !!prevWord && (
             prevWord.tag === 'MD' ||
@@ -240,13 +249,12 @@ export default class SentenceAnalyser {
                 rigWeights[cat] = (rigWeights[cat] || 0) + sepRig[cat];
         }
 
-        if ((!!this._reader.previousWord) && this._reader.previousWord.tag === 'G_VB') {
+        if ((!!this._reader.inCurrentSubSentence.previousWord) && this._reader.inCurrentSubSentence.previousWord.tag === 'G_VB') {
             //
             // Infering meaning from the preceding verb
             //   e.g. "call my brother"
             //
 
-            console.log('this._reader._understanding: ', this._reader._understanding);
             const lastVerb = this._reader.getLastAction()._verb;
             const b2 = new Balance(Data.getData('verbMeaningInference'));
             const verbRig = b2.getWeightDetails(lastVerb);

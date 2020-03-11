@@ -27,7 +27,7 @@ export default class Range {
             p = p.parent;
         }
 
-        let properParent:Range = this.getLowestChildForPos(startPos);
+        const properParent:Range = this.getLowestChildForPos(startPos);
 
         const r = new Range(startPos, properParent);
         if (!!endPos) r.endRange(endPos);
@@ -78,8 +78,9 @@ export default class Range {
             } else
                 out += ' ';
 
-            if ((!!this.end && i>this.end) || (!this.end && Object.keys(kidsIndex).length>0)) break;
+            if ((!!this.end && i>=this.end) || (!this.end && Object.keys(kidsIndex).length>0)) break;
         }
-        return `(${out})`;
+
+        return `(${out.slice(1, -1)})`;
     }
 }

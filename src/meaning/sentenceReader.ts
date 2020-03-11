@@ -1,3 +1,4 @@
+import colors from 'colors';
 import {WordGroup, Word} from 'grammar/tokenizer';
 import Range from './range/range';
 
@@ -36,14 +37,22 @@ export default class SentenceReader {
     }
 
     get previousWord(): (Word|WordGroup) {
-        if (this._idx-1 >= 0)
+        let stop = 0;
+        if (this._searchScope === SearchScope.local)
+            stop = this.currentSubsentence.start;
+
+        if (this._idx-1 >= stop)
             return this._words[this._idx-1];
         else
             return undefined;
     }
 
     get nextWord(): (Word|WordGroup) {
-        if (this._idx+1 < this._words.length)
+        let stop = this._words.length;
+        if (this._searchScope === SearchScope.local)
+            stop = this.currentSubsentence.end || stop;
+
+        if (this._idx+1 < stop)
             return this._words[this._idx+1];
         else
             return undefined;
@@ -54,19 +63,23 @@ export default class SentenceReader {
         return this;
     }
 
-    get inCurrentSentence(): SentenceReader {
+    get inCurrentSubSentence(): SentenceReader {
         this._searchScope = SearchScope.local;
         return this;
     }
 
-    get currentSubsentenceBegging(): number {
-        return 0;
+    get currentSubsentence(): Range {
+        return this._sentencesRangesTree.getLowestChildForPos(this._idx);
     }
 
     beginSubsentence(i:number = this._idx) {
+        this._sentencesRangesTree.startNewSubRange(i);
+        console.log(`Starting Sub at ${colors.bgBlack(this._words[this._idx].toString())}`);
     }
 
     endSubsentence(i:number = this._idx) {
+        this._sentencesRangesTree.endRangeForLowestChild(i);
+        console.log(`Ending Sub at ${colors.bgBlack(this._words[this._idx].toString())}`);
     }
 
     getWordAt(i: number): any {
@@ -79,7 +92,11 @@ export default class SentenceReader {
     getLastMentionnedThing(): Person|Item {
         let i = this._idx;
 
-        while (i--) {
+        let stop = 0;
+        if (this._searchScope === SearchScope.local)
+            stop = this.currentSubsentence.start;
+
+        while (stop < i--) {
             if (this._understanding[i] instanceof Person)
                 return this._understanding[i] as Person;
 
@@ -91,7 +108,11 @@ export default class SentenceReader {
     getLastAction(): Action {
         let i = this._idx;
 
-        while ((!this._sentenceBreaks.includes(i)) && i--)
+        let stop = 0;
+        if (this._searchScope === SearchScope.local)
+            stop = this.currentSubsentence.start;
+
+        while (stop < i--)
             if (this._understanding[i] instanceof Action)
                 return this._understanding[i] as Action;
 
@@ -101,13 +122,20 @@ export default class SentenceReader {
     verbWasUsedBefore(): boolean {
         let i = this._idx;
 
-        while ((!this._sentenceBreaks.includes(i)) && i--)
+        let stop = 0;
+        if (this._searchScope === SearchScope.local)
+            stop = this.currentSubsentence.start;
+
+        while (stop < i--)
             if (this._understanding[i] instanceof Action)
                 return true;
 
         return false;
     }
     
+    /**
+     * TODO Replace with ranges mechanism
+     */
     addSentenceBreak(i:number = this._idx) {
         if (!this._sentenceBreaks.includes(i)) 
             this._sentenceBreaks.push(i);
@@ -115,7 +143,12 @@ export default class SentenceReader {
 
     // Returns [index, word] | [-1, undefined]
     findRegexAfter(regex: RegExp): [number, Word|WordGroup] {
-        for (let i=this._idx ; i<this._words.length ; i++) {
+
+        let stop = this._words.length;
+        if (this._searchScope === SearchScope.local)
+            stop = this.currentSubsentence.end;
+
+        for (let i=this._idx ; i<stop ; i++) {
             if (regex.test(this._words[i].toString()))
                 return [i, this._words[i]];
         }
@@ -128,6 +161,10 @@ export default class SentenceReader {
 
         if (i in this._understanding)
             this._understanding.splice(i, 1);
+    }
+
+    hasFinished(): boolean {
+        return this._idx === this._words.length-1;
     }
 
     next(): boolean {
