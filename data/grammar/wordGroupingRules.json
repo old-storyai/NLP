@@ -9,7 +9,7 @@
         "(( MD| VBN)( TO)?)?( VB[NPDZ]?)+( TO VB)?"
     ],
     "G_RB": [
-        "( RB)+",
+        "( RB)+( JJ)*",
         " VBG"
     ]
 }

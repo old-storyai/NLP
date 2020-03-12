@@ -65,6 +65,6 @@ export class Meaning {
                 `\t${this[prop].toString().replace(/\n/g, '\n\t')}\n`;
         }
 
-        return out;
+        return '\n' + out;
     }
 }

@@ -46,7 +46,7 @@
         "celcius|fahrenheit": 80,
         "meters?": 70,
         "liters?": 70,
-        "^\\d+\\s\\w\\+": 60
+        "^\\d+\\s\\w+": 60
     },
     "time": {
         "\\d+\\s?[ap]m": 100,
@@ -54,12 +54,7 @@
         "(january|february|march|april|may|june|july|august|september|october|november|december)": 85,
         "(monday|thesday|wednesday|thursday|friday|saturday|sunday)": 85,
         "year": 80,
-        "week": 80,
         "time": 80,
-        "seconds?": 80,
-        "month": 80,
-        "minutes?": 80,
-        "hours?": 80,
         "tomorrow": 80,
         "yesterday": 80,
         "\\w*noon\\w*": 80,

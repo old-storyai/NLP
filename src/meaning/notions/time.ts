@@ -4,40 +4,6 @@ import * as Data from 'data/data';
 import {Meaning} from './meaning';
 import Thing from './thing/thing';
 
-/**
- * all the times category:
- *
- *   - range (from september 4th to february 2nd)
- *
- *   - from / until
- *
- *   - simple date
- *
- *   - repetition (every day at 5AM)
- *
- *       - repetition + range: (the first monday of each month for 2 year)
- *
- *   each: repetiton
- *   for: range
- *
- *   X of each Y: X is a precision of the repetition 
- *
- *
- *   {
- *     repetiton: {
- *       nature: {
- *         weekDay: 0 => On monday
- *       },
- *       delta: {
- *         month: 1 => every 1 month
- *       }
- *     },
- *     range: [
- *       now(),
- *       now() + 2 years
- *     ]
- *   }
- */
 export default class Time extends Thing {
 
     _raw: string;
@@ -45,12 +11,15 @@ export default class Time extends Thing {
     // after, before, during
     _modifiers: [string];
 
-    _additions?: Meaning;
+    _addition?: Meaning;
 
     _weekDay: number;
-    _day: number;
-    _month: number;
-    _year: number;
+    _day:     number;
+    _month:   number;
+    _year:    number;
+    _hour:    number;
+    _minute:  number;
+    _second:  number;
 
     _isRepetition: boolean;
 
@@ -90,6 +59,15 @@ export default class Time extends Thing {
                             break;
                         case 'year':
                             this._year = Number(match);
+                            break;
+                        case 'hour':
+                            this._hour = Number(match);
+                            break;
+                        case 'minute':
+                            this._minute = Number(match);
+                            break;
+                        case 'second':
+                            this._second = Number(match);
                             break;
                     }
                     break;

@@ -28,6 +28,8 @@ export class Tokenizer {
         const wordGroup = Tokenizer.wordPerWord(sentence);
         const rules = Tokenizer.getData('grammarGroupRules');
 
+        console.log('wordGroup: ', wordGroup);
+
         wordGroup.tokenize(rules);
 
         return wordGroup;
@@ -96,8 +98,8 @@ export class Tokenizer {
         // e.g. the Heating system, Heating = JJ
         for (let i=1 ; i<words.length ; i++) {
             const word = words[i];
-            const lastWord = words[i-1];
-            if (word.isVerb() && (lastWord.isDeterminer() || lastWord.isAdjective())) {
+            const prevWord = words[i-1];
+            if (word.isVerb() && (prevWord.isDeterminer() || prevWord.isAdjective())) {
                 words[i].tag = 'JJ';
             }
         }
