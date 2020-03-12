@@ -2,6 +2,8 @@ import pos from 'pos';
 import * as Data from 'data/data';
 import {WordGroup, Word} from './wordGroup/wordGroup';
 
+import StringParser from 'stringParser/stringParser';
+
 export {WordGroup, Word};
 
 /**
@@ -53,40 +55,26 @@ export class Tokenizer {
         //
         // Extending the lexic with our words
         // 
-        // Replacing matches with placeholders
         const extension = Data.getData('lexicExtension');
-        const replacements = [];
-        let idx=0;
-        Object.keys(extension).forEach(word => {
-            sentence = sentence.replace(
-                new RegExp(word, 'gi'),
-                match => {
-                    replacements[idx] = [match, extension[word]];
-                    return `::${idx++}::`;
-                }
-            );
-        });
+        let words:Word[] = [];
 
-        // Tagging the words
-        let taggedWords = tagger.tag(
-            sentence.trim().split(/[^\w':;,.]+/)
+        new StringParser(extension).parseString(
+            sentence,
+            (match, tag) => {
+                words.push(new Word(match, tag));
+            },
+            unmatch => {
+                console.log('unmatch: ', unmatch.trim().split(/[^\w':;,.]+/));
+                tagger.tag(
+                    unmatch.trim().split(/[^\w':;,.]+/)
+                ).forEach(([word, tag]) => {
+                    words.push(new Word(word, tag));
+                });
+            }
         );
 
-        // Placing back the extended words in their placeholders
-        taggedWords = taggedWords.map(([word, tag]) => {
-            if(/^::\d+::$/.test(word)) {
-                const i = word.replace(/^::|::$/g, '') as number;
-                return replacements[i];
-            }
-            return [word, tag];
-        });
-
-        // Creating Word instances
-        let words = taggedWords.map(w => new Word(w[0], w[1]));
-
-        words = Tokenizer.correctPosErrors(words);
-
-        return new WordGroup(words);
+        words = Tokenizer.correctPosErrors(words as [Word]);
+        return new WordGroup(words as [Word]);
     }
 
     /**

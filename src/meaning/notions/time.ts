@@ -13,13 +13,13 @@ export default class Time extends Thing {
 
     _addition?: Meaning;
 
-    _weekDay: number;
-    _day:     number;
-    _month:   number;
-    _year:    number;
-    _hour:    number;
-    _minute:  number;
-    _second:  number;
+    _weekDay: string;
+    _day:     string;
+    _year:    string;
+    _month:   string;
+    _hour:    string;
+    _minute:  string;
+    _second:  string;
 
     _isRepetition: boolean;
 
@@ -45,29 +45,29 @@ export default class Time extends Thing {
                     if (tmp !== null && tmp.length > 0)
                         match = result;
                 }
-
-                if (!!match) {
+                
+                if (!!match.length) {
                     switch(component) {
                         case 'weekDay':
-                            this._weekDay = Number(match);
+                            this._weekDay = (match);
                             break;
                         case 'day':
-                            this._day = Number(match);
+                            this._day = (match);
                             break;
                         case 'month':
-                            this._month = Number(match);
+                            this._month = (match);
                             break;
                         case 'year':
-                            this._year = Number(match);
+                            this._year = (match);
                             break;
                         case 'hour':
-                            this._hour = Number(match);
+                            this._hour = (match);
                             break;
                         case 'minute':
-                            this._minute = Number(match);
+                            this._minute = (match);
                             break;
                         case 'second':
-                            this._second = Number(match);
+                            this._second = (match);
                             break;
                     }
                     break;

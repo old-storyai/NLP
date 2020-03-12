@@ -21,16 +21,17 @@ let str = '';
 // str = 'she walked without looking and tumbled into the Seine';
 // str = 'The water was freezing, she spent a month sneezing, but she said she\'d  do it again';
 // str = 'Me and the son of the old lady who used to take care of me, we\'d go on adventures together';
-// str = 'The boy who used to eat white hazelnut chocolate lives on the other side of the street';
+str = 'The boy who used to eat white hazelnut chocolate lives on the other side of the street';
 // str = 'I\'m used to eat chocolate all day long';
 // str = 'I\'m the president of the United States of America';
-str = 'Send me a message on Slack when the temperature drops lower than 20 degrees outside';
+// str = 'Send me a message on Slack when the temperature drops lower than 20 degrees outside';
 // str = 'Send me a text on the 5th of july';
 // str = 'Give Baptiste Zorzi a call on the 5th of december';
 // str = 'Turn off the old stove next to the washing machine';
 // str = 'Turn the heater on when I leave the house';
 // str = 'Send a Slack message to Frederick';
 // str = 'Send me a text when the fridge door is opened for more than 5 minutes';
+// str = 'Was it raining on the 5th of january 2 minutes and 6 days after noon?';
 
 new SentenceAnalyser(str).createMeanings().forEach(meaning => {
     console.log('――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――');

@@ -27,6 +27,14 @@ export default class Word {
         return this.tag.slice(0, 2) === 'VB';
     }
 
+    isSoftPunctuation(): boolean {
+        return /[,;:]/.test(this.tag);
+    }
+
+    isHardPunctuation(): boolean {
+        return /[.?!]/.test(this.tag);
+    }
+
     isPunctuation(): boolean {
         return /[.,?!;:]/.test(this.tag);
     }

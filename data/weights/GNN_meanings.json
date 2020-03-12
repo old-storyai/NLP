@@ -51,10 +51,16 @@
     "time": {
         "\\d+\\s?[ap]m": 100,
         "\\d+\\s?o'clock": 100,
+        "\\d+[\/-]\\d+([\/-]\\d{2,4})?": 100,
+        "\\d+:\\d+(:\\d)?": 100,
+        "^this (week|month|year)$": 100,
+        "midnight": 85,
+        "noon": 85,
         "(january|february|march|april|may|june|july|august|september|october|november|december)": 85,
         "(monday|thesday|wednesday|thursday|friday|saturday|sunday)": 85,
-        "year": 80,
+        "(in \\d+ |next )?(seconds?|minutes?|hours?|days?|weeks?|months?|years?)( ago)?": 80,
         "time": 80,
+        "today": 80,
         "tomorrow": 80,
         "yesterday": 80,
         "\\w*noon\\w*": 80,
@@ -64,3 +70,4 @@
         "^for": 25
     }
 }
+

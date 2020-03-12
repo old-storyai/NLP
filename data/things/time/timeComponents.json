@@ -1,50 +1,69 @@
 {
     "month": {
-        "jan(uary)?": 0,
-        "feb(ruary)?": 1,
-        "mar(ch)?": 2,
-        "apr(il)?": 3,
-        "may": 4,
-        "jun(e)?": 5,
-        "jul(y)?": 6,
-        "aug(ust)?": 7,
-        "sep(tember)?": 8,
-        "oct(ober)?": 9,
-        "nov(ember)?": 10,
-        "dec(ember)?": 11,
+        "jan(uary)?": "0",
+        "feb(ruary)?": "1",
+        "mar(ch)?": "2",
+        "apr(il)?": "3",
+        "may": "4",
+        "jun(e)?": "5",
+        "jul(y)?": "6",
+        "aug(ust)?": "7",
+        "sep(tember)?": "8",
+        "oct(ober)?": "9",
+        "nov(ember)?": "10",
+        "dec(ember)?": "11",
 
-        "\\d+[/\\-\\.](\\d+)[/\\-\\.]\\d+": "$1"
+        "this month": "R0",
+        "next month": "R1",
+        "last month": "R-1",
+        "(\\d+) months?": "R$1",
+
+        "(\\d+)[/\\-\\.]\\d+([/\\-\\.]\\d+)?": "$1"
     },
     "year": {
         "(\\d{4})": "$1",
-        "\\d+[/\\-\\.]\\d+[/\\-\\.](\\d+)": "$1"
+        "\\d+[/\\-\\.]\\d+[/\\-\\.](\\d+)": "$1",
+
+        "this year": "R0",
+        "next year": "R1",
+        "last year": "R-1",
+        "(\\d+) years?": "R$1"
     },
     "day": {
         "(\\d+)st": "$1",
         "(\\d+)nd": "$1",
         "(\\d+)rd": "$1",
         "(\\d+)th": "$1",
-        "(\\d+)[/\\-\\.]\\d+[/\\-\\.]\\d+": "$1"
+        "\\d+[/\\-\\.](\\d+)([/\\-\\.]\\d+)?": "$1",
+
+        "today": "R0",
+        "tomorrow": "R1",
+        "yesterday": "R-1",
+        "(\\d+) days?": "R$1"
     },
     "weekDay": {
-        "mon(day)?": 0,
-        "tue(sday)?": 1,
-        "wed(nesday)?": 2,
-        "thu(rsday)?": 3,
-        "fri(day)?": 4,
-        "sat(urday)?": 5,
-        "sun(day)?": 6
+        "mon(day)?\\b": "R0",
+        "tue(sday)?\\b": "R1",
+        "wed(nesday)?\\b": "R2",
+        "thu(rsday)?\\b": "R3",
+        "fri(day)?\\b": "R4",
+        "sat(urday)?\\b": "R5",
+        "sun(day)?\\b": "R6"
     },
     "hour": {
-        "(\\d)+ hours?": "$1",
-        "(\\d+):\\d+(:\\d+)?": "$1"
+        "midnight": "0",
+        "noon": "12",
+        "(\\d)+ hours?": "R$1",
+        "(\\d+):\\d+(:\\d+)?": "$1",
+        "(\\d+)AM": "$1",
+        "(\\d+)PM": "{{12+$1}}"
     },
     "minute": {
-        "(\\d)+ minutes?": "$1",
+        "(\\d)+ minutes?": "R$1",
         "\\d+:(\\d+)(:\\d+)?": "$1"
     },
     "second": {
-        "(\\d)+ seconds?": "$1",
+        "(\\d)+ seconds?": "R$1",
         "\\d+:\\d+(:\\d+)": "$1"
     }
 }

@@ -113,8 +113,8 @@ export default class SentenceAnalyser {
 
         if (!this._reader.isAtFirstWordOfSubSentence() && (
             ['if', 'when'].includes(word.toString()) ||
-            word.toString() === 'and' && (!prev.isNoun() || !next.isNoun()) ||
-            word.isPunctuation()
+            (word.isSoftPunctuation() || word.toString() === 'and') && (!prev.isNoun() || !next.isNoun()) ||
+            word.isHardPunctuation()
         )) {
             this._reader.prev();
             return false;
