@@ -18,6 +18,7 @@ export default class Value extends Thing {
     _amount: number;
     _unit: string;
     _modifier: string;
+    _addition: Meaning;
 
     protected processWords() {
 

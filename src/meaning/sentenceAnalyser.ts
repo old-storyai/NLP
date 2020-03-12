@@ -33,7 +33,6 @@ export default class SentenceAnalyser {
 
     createMeanings(): Meaning[] {
 
-        this._allMeanings = [];
         const allMeanings = [];
 
         do {
@@ -42,7 +41,7 @@ export default class SentenceAnalyser {
 
         } while (this._reader.next());
 
-        return this._allMeanings.filter(m => !m.isEmpty());
+        return allMeanings.filter(m => !m.isEmpty()) as Meaning[];
     }
 
     /**
@@ -97,10 +96,11 @@ export default class SentenceAnalyser {
 
         } while (this._reader.next() && !endOfSentence);
 
-        this._reader.endSubsentence();
+        if (endOfSentence)
+            this._reader.prev();
 
-        console.log('meaning: '+ meaning);
-        console.log('――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――');
+
+        this._reader.endSubsentence();
 
         return meaning;
     }
@@ -111,11 +111,14 @@ export default class SentenceAnalyser {
         const prev = this._reader.inCurrentSubSentence.previousWord || new Word('', '');
         const next = this._reader.inCurrentSubSentence.nextWord || new Word('', '');
 
-        if (['if', 'when'].includes(word.toString()) ||
+        if (!this._reader.isAtFirstWordOfSubSentence() && (
+            ['if', 'when'].includes(word.toString()) ||
             word.toString() === 'and' && (!prev.isNoun() || !next.isNoun()) ||
             word.isPunctuation()
-        )
+        )) {
+            this._reader.prev();
             return false;
+        }
 
 
         if (['and', 'of'].includes(word.toString()) &&
@@ -288,7 +291,7 @@ export default class SentenceAnalyser {
         b.rig(rigWeights);
         const cat = b.categorize(this._reader.currentWord.toString());
 
-        // console.log(this._reader.currentWord + ' : ', b.getWeightDetails(this._reader.currentWord.toString()));
+        console.log(this._reader.currentWord + ' : ', b.getWeightDetails(this._reader.currentWord.toString()));
 
         return cat;
     }

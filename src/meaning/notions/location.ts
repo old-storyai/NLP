@@ -10,7 +10,7 @@ export default class Location extends Thing {
 
     // The place where my sister an I used to go shopping
     //                 ==================================
-    _additions?: Meaning;
+    _addition?: Meaning;
 
     _placeTitle: string;
 

@@ -33,7 +33,7 @@ export default class Thing {
         const ALL_COLORS = [ 'blue', 'green', 'magenta', 'red', 'yellow' ];
 
         for (const prop of Object.keys(this)) {
-            // if (prop === '_wordGroup') continue;
+            if (prop === '_wordGroup') continue;
             if (this[prop] instanceof Object && !Object.keys(this[prop]).length) continue;
 
             const choosenColor = ALL_COLORS[(Math.random()*ALL_COLORS.length)<<0];

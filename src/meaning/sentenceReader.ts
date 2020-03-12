@@ -2,7 +2,7 @@ import colors from 'colors';
 import {WordGroup, Word} from 'grammar/tokenizer';
 import Range from './range/range';
 
-import {Time, Person, Location, Item, Action, Meaning} from './notions/meaning';
+import {Time, Person, Location, Item, Action, Meaning, Value} from './notions/meaning';
 
 enum SearchScope {
     local= 0,
@@ -73,11 +73,17 @@ export default class SentenceReader {
     }
 
     beginSubsentence(i:number = this._idx) {
+        // console.log('Starting SUB: '+ this._words[this._idx]);
         this._sentencesRangesTree.startNewSubRange(i);
     }
 
     endSubsentence(i:number = this._idx) {
+        // console.log('Ending SUB: '+ this._words[this._idx]);
         this._sentencesRangesTree.endRangeForLowestChild(i);
+    }
+
+    isAtFirstWordOfSubSentence(): boolean {
+        return this.currentSubsentence.start === this._idx;
     }
 
     getWordAt(i: number): any {
@@ -85,9 +91,9 @@ export default class SentenceReader {
     }
 
     /**
-     * This gives the last mentionned Item or Person
+     * This gives the last understood element
      */
-    getLastMentionnedThing(): Person|Item {
+    getLastMentionnedThing(): Person|Item|Location|Time|Value {
         let i = this._idx;
 
         let stop = 0;
@@ -100,6 +106,15 @@ export default class SentenceReader {
 
             if (this._understanding[i] instanceof Item)
                 return this._understanding[i] as Item;
+
+            if (this._understanding[i] instanceof Location)
+                return this._understanding[i] as Location;
+
+            if (this._understanding[i] instanceof Time)
+                return this._understanding[i] as Time;
+
+            if (this._understanding[i] instanceof Value)
+                return this._understanding[i] as Value;
         }
     }
 

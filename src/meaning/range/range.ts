@@ -19,6 +19,14 @@ export default class Range {
         return out || this;
     }
 
+    getLowestUnclosedChildForPos(pos: number): Range {
+        if (this.start>pos || !!this.end)
+            return undefined;
+
+        const out = this.children.reduce((acc, kid)=>kid.getLowestUnclosedChildForPos(pos) || acc, undefined);
+        return out || this;
+    }
+
     startNewSubRange(startPos: number, endPos:number = undefined): Range {
         let p:Range = this;
         while (p !== undefined) {
@@ -37,11 +45,14 @@ export default class Range {
     }
 
     endRangeForLowestChild(pos: number) {
-        this.getLowestChildForPos(pos).endRange(pos);
+        const r = this.getLowestUnclosedChildForPos(pos);
+        if (!r)
+            throw new Error('No opened range can be closed at that position');
+        r.endRange(pos);
     }
 
     endRange(pos: number): Range {
-        if (pos<=this.start)
+        if (pos<this.start)
             throw new Error('Cannot end a range before or at its starting point');
 
         let p = this.parent;

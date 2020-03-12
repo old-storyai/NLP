@@ -36,9 +36,8 @@ export default class Word {
          * will match:
          *  - DT:  Classic determiner (the, some)
          *  - PDT: Pre-determiner (all, both)
-         *  - WDT: Wh-determiner (which, that)
          */
-        return this.tag.slice(-2) === 'DT';
+        return this.tag.slice(-2) === 'DT' && this.tag.slice(0,1) !== 'W';
     }
 
     isInterrogativeWord(): boolean {
