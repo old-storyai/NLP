@@ -7,18 +7,18 @@ import fs from 'fs';
 
 const basePath = './data';
 const filesPaths = {
-    'nounGroupsMeanings': 'weights/GNN_meanings.json',
-    'connectorMeanings': 'weights/connector_meanings.json',
+    'nounGroupsMeanings': 'weights/GNN_meanings.bal.json',
+    'connectorMeanings':  'weights/connector_meanings.bal.json',
 
-    'lexicExtension': 'grammar/lexicExtension.json',
-    'grammarGroupRules': 'grammar/wordGroupingRules.json',
-    'lemmatizerExtension':  'language/lemmatizerExtension.json',
+    'lexicExtension':      'grammar/lexicExtension.sp.json',
+    'grammarGroupRules':   'grammar/wordGroupingRules.json',
+    'lemmatizerExtension': 'language/lemmatizerExtension.sp.json',
 
     'value_modifiers':      'things/value/modifiers.json',
-    'verbMeaningInference': 'things/action/meaningInference_VB2NN.json',
+    'verbMeaningInference': 'things/action/meaningInference_VB2NN.bal.json',
     'composedVerbs':        'things/action/composedVerbs.json',
-    'timeComponents':       'things/time/timeComponents.json',
-    'idiomsReplacements':   'idiomsReplacements.json',
+    'timeComponents':       'things/time/timeComponents.sp.json',
+    'idiomsReplacements':   'idiomsReplacements.sp.json',
 };
 
 export function getData(fileId: string): any {
