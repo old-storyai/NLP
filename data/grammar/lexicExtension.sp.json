@@ -38,8 +38,10 @@
     "(january|february|march|april|may|june|july|august|september|october|november|december)": "NN",
     "mars": "NN",
     "right now": "NN",
-    "\\d+[AP]M": "NN",
     "\\d+[ap]m": "NN",
+    "\\d{4}": "NN",
+    "morning": "NN",
+    "ago": "NN",
 
     "\\?": "?",
     "\\!": "."

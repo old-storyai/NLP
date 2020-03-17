@@ -36,55 +36,91 @@ export default class StringParser {
      * Parses a string, in search for elements present in its settings.
      *
      * @param {string}     rawString:               The string to search in
-     * @param {Function}   matchesCallback:         function to be called with each matches. Is called with (match, replacement)
-     * @param {Function}   nonMatchesCallback:      function to be called with parts of the input that don't get matches
+     * @param {Function}   matchesCallback:         function to be called with each allMatches. Is called with (match, replacement)
+     * @param {Function}   nonMatchesCallback:      function to be called with parts of the input that don't get allMatches
      * @param {Function[]} operationBlocksCallback: functions to be called with the operation operators within a match (See notes on top of file)
+     * @param {boolean}    allowOverlappingMatches: Is it possible for a part of the text to be matched twice?
      */
-    parseString(rawString: string, matchesCallback: (match:string, repl:string)=>void, nonMatchesCallback?: (string)=>void, operationBlocksCallback?: Function[]) {
+    parseString(
+        rawString: string,
+        matchesCallback: (match:string, repl:string)=>void,
+        nonMatchesCallback?: (string)=>void,
+        operationBlocksCallback?: Function[],
+        allowOverlappingMatches:boolean = true
+    ) {
+        rawString = rawString.trim();
         if (!nonMatchesCallback)
             nonMatchesCallback = () => '';
         if (!operationBlocksCallback)
             operationBlocksCallback = [];
 
-        let idx = 0;
-        const matches:[string, string][] = [];
+        let allMatches: {
+            start: number, 
+            end: number,
+            matchedStr: string,
+            replacement: string
+        }[] = [];
         Object.keys(this._settings).forEach(word => {
             const replacement = this._settings[word];
-            rawString = rawString.replace(
-                new RegExp(word, 'gi'),
-                match => {
-                    matches[idx] = [match, ''];
 
-                    const repl = match
-                        .replace(new RegExp(word, 'gi'), replacement)
-                        .replace(/\{=\{[0-9\-/*+]+\}\}/g, operation => {
-                            operation = operation.replace(/[{}=]/g, '');
-                            return eval(operation);
-                        })
-                        .replace(/\{o\d+\{[^}]+\}\}/, arg => {
-                            const opeNum = Number( arg.match(/^\{o(\d+)/)[1] );
-                            arg = arg.replace(/^\{o\d+\{|\}\}/g, '');
-                            if (opeNum in operationBlocksCallback)
-                                return operationBlocksCallback[opeNum](arg);
-                            return arg;
+            word = word.replace(/([^\\]\w)$/, '$1\\b');
+            word = word.replace(/^(\w)/, '\\b$1');
+            const regex = new RegExp(word, 'gi');
+            let match:RegExpExecArray;
+            while ((match = regex.exec(rawString)) !== null) {
+                const repl = match[0]
+                    .replace(new RegExp(word, 'gi'), replacement)
+                    .replace(/\{=\{[0-9\-/*+]+\}\}/g, operation => {
+                        operation = operation.replace(/[{}=]/g, '');
+                        return eval(operation);
+                    })
+                    .replace(/\{o\d+\{[^}]+\}\}/g, arg => {
+                        const opeNum = Number( arg.match(/^\{o(\d+)/)[1] );
+                        arg = arg.replace(/^\{o\d+\{|\}\}/g, '');
+                        const args = arg.split(',').map(val => {
+                            if (!isNaN(Number(val))) return Number(val);
+                            try {
+                                return JSON.parse(val);
+                            } catch(e) {
+                                // Not a json...
+                            }
+                            return val.trim();
                         });
+                        console.log('args: ', args);
+                        if (opeNum in operationBlocksCallback)
+                            return operationBlocksCallback[opeNum](...args);
+                        return arg;
+                    });
 
-                    matches[idx][1] = repl;
-                    return `||::${idx++}::||`;
-                }
-            );
-        });
-
-        rawString.split('||').forEach(part => {
-            if (!part.trim().length) return;
-
-            if (/::\d+::/.test(part)) {
-                const idx = Number( part.replace(/:/g, '') );
-                matchesCallback(...matches[idx]);
-            } else {
-                nonMatchesCallback(part);
+                allMatches.push({
+                    'start':       match.index,
+                    'end':         match.index + match[0].length,
+                    'matchedStr':  match[0],
+                    'replacement': repl
+                });
             }
         });
-    }
+        allMatches = allMatches.sort((a,b) => a.start-b.start);
 
+
+        if (!allMatches.length) {
+            nonMatchesCallback(rawString);
+        } else {
+            let pos=0;
+            for (const match of allMatches) {
+                if (allowOverlappingMatches || pos < match.start) {
+                    const nonMatch = rawString.slice(pos, match.start).trim();
+                    if (!!nonMatch)
+                        nonMatchesCallback(nonMatch);
+                    matchesCallback( match.matchedStr, match.replacement);
+
+                    pos = (match.end)<pos? pos : (match.end);
+                }
+            }
+
+            if (pos < rawString.length) {
+                nonMatchesCallback(rawString.slice(pos));
+            }
+        }
+    }
 }

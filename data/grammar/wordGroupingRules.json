@@ -1,7 +1,7 @@
 {
     "G_NN": [
         "( NN_S( NNP?S?)*)( NN_E)?",
-        "( DT| PRPS| CD)*( JJ[RS]?)*( NNP?S?( CD)*)+( NN_E)?",
+        "( DT| PRPS| CD)*( JJ[RS]?)*( NNP?S?)+( NN_E)?",
         " PRPS?",
         " EX"
     ],

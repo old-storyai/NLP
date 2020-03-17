@@ -1,11 +1,7 @@
- 
+import prompt from 'prompt';
 import SentenceAnalyser from './meaning/sentenceAnalyser';
 
-
-
-
 let str = '';
-
 // str = 'Will it be warmer than 70 degrees near the Golden Gate bridge after 5pm the day after tomorrow?';
 // str = 'When the fridge doors from the kitchen next to the living room in August or during the high season are left widely open, send me a text message on my smartphone using the slack app';
 // str = 'Call my mom to tell her that I feel sick today';
@@ -21,7 +17,7 @@ let str = '';
 // str = 'she walked without looking and tumbled into the Seine';
 // str = 'The water was freezing, she spent a month sneezing, but she said she\'d  do it again';
 // str = 'Me and the son of the old lady who used to take care of me, we\'d go on adventures together';
-str = 'The boy who used to eat white hazelnut chocolate lives on the other side of the street';
+// str = 'The boy who used to eat white hazelnut chocolate lives on the other side of the street';
 // str = 'I\'m used to eat chocolate all day long';
 // str = 'I\'m the president of the United States of America';
 // str = 'Send me a message on Slack when the temperature drops lower than 20 degrees outside';
@@ -31,10 +27,26 @@ str = 'The boy who used to eat white hazelnut chocolate lives on the other side 
 // str = 'Turn the heater on when I leave the house';
 // str = 'Send a Slack message to Frederick';
 // str = 'Send me a text when the fridge door is opened for more than 5 minutes';
-// str = 'Was it raining on the 5th of january 2 minutes and 6 days after noon?';
+// str = 'Was it raining on the 18/02/1997 at 18:15?';
+// str = 'Send me a message on every month on monday at 6:18:37 after the 6th of december until 2021';
+str = 'Send me a message 6 months after christmas';
 
 new SentenceAnalyser(str).createMeanings().forEach(meaning => {
     console.log('――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――');
     console.log(meaning.toString());
-
 });
+
+// newSentence();
+
+function newSentence() {
+    prompt.get('sentence', function(err, result) {
+        if (err) throw new Error(err);
+
+        new SentenceAnalyser(result.sentence).createMeanings().forEach(meaning => {
+            console.log('――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――');
+            console.log(meaning.toString());
+        });
+
+        newSentence();
+    });
+}

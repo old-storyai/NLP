@@ -64,13 +64,14 @@ export class Tokenizer {
                 words.push(new Word(match, tag));
             },
             unmatch => {
-                console.log('unmatch: ', unmatch.trim().split(/[^\w':;,.]+/));
                 tagger.tag(
                     unmatch.trim().split(/[^\w':;,.]+/)
                 ).forEach(([word, tag]) => {
                     words.push(new Word(word, tag));
                 });
-            }
+            },
+            [],
+            false
         );
 
         words = Tokenizer.correctPosErrors(words as [Word]);

@@ -50,12 +50,19 @@
     },
     "time": {
         "\\d+\\s?[ap]m": 100,
+        "\\d+h\\d+": 100,
         "\\d+\\s?o'clock": 100,
         "\\d+[\/-]\\d+([\/-]\\d{2,4})?": 100,
         "\\d+:\\d+(:\\d)?": 100,
+        "^\\d{4}$": 100,
         "^this (week|month|year)$": 100,
+        "^eve$": 90,
+        "christmas": 85,
+        "new year": 85,
         "midnight": 85,
         "noon": 85,
+        "afternoon": 85,
+        "morning": 85,
         "(january|february|march|april|may|june|july|august|september|october|november|december)": 85,
         "(monday|thesday|wednesday|thursday|friday|saturday|sunday)": 85,
         "(in \\d+ |next )?(seconds?|minutes?|hours?|days?|weeks?|months?|years?)( ago)?": 80,
@@ -66,6 +73,7 @@
         "\\w*noon\\w*": 80,
         "^at": 65,
         "\\d+th": 65,
+        "^every \\w+": 35,
         "season": 30,
         "^for": 25
     }

@@ -26,7 +26,8 @@ export function disconjugateVerb(str: string): string {
             },
             [
                 arg => lemmatizeWordPerWord(arg)
-            ]
+            ],
+            false
         );
 
     return out;
