@@ -100,7 +100,11 @@ export default class StringParser {
                 });
             }
         });
-        allMatches = allMatches.sort((a,b) => a.start-b.start);
+        allMatches = allMatches.sort((a,b) => {
+            let res = a.start-b.start;
+            if (res === 0) res = a.end-b.end;
+            return res;
+        });
 
 
         if (!allMatches.length) {

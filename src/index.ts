@@ -29,7 +29,9 @@ let str = '';
 // str = 'Send me a text when the fridge door is opened for more than 5 minutes';
 // str = 'Was it raining on the 18/02/1997 at 18:15?';
 // str = 'Send me a message on every month on monday at 6:18:37 after the 6th of december until 2021';
-str = 'Send me a message 6 months after christmas';
+// str = 'Send me a message 6 months after christmas';
+// str = 'Send me a message 6 months, 18 days and 3 hours before the 5th of july 2020 at 6PM';
+str = 'Send me flowers every month on monday between january 2025 and february 2030';
 
 new SentenceAnalyser(str).createMeanings().forEach(meaning => {
     console.log('――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――');

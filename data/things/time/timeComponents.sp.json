@@ -18,7 +18,7 @@
     "next month":     "M={o0{month, 1}}",
     "last month":     "M={o0{month, -1}}",
     "(\\d+) months?": "M~$1",
-    "[^\\d] months?": "M~1",
+    "every months?": "M~1",
 
 
     "(\\d{4})": "Y=$1",
@@ -28,7 +28,7 @@
     "next year":     "Y={o0{year, 1}}",
     "last year":     "Y={o0{year, -1}}",
     "(\\d+) years?": "Y~$1",
-    "[^\\d] years?":    "Y~1",
+    "every years?":    "Y~1",
 
 
     "(\\d+)st": "D=$1",
@@ -41,7 +41,7 @@
     "tomorrow": "D={o0{day,1}}",
     "yesterday": "D{o0{day,-1}}",
     "(\\d+) days?": "D~$1",
-    "[^\\d] days?": "D~1",
+    "every days?": "D~1",
 
 
 
@@ -58,7 +58,7 @@
     "sundays?":      "w=6",
 
 
-    "[^\\d] weeks?": "D~7",
+    "every weeks?": "D~7",
     "(\\d+) weeks?": "D~{={$1*7}}",
     "this week": "W={o0{week, 0, start}}",
     "next week": "W={o0{week, 1, start}}",
