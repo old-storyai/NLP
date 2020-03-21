@@ -1,4 +1,14 @@
 {
+    "(^| )(\\d+)( |$)": "~$2",
+
+    "(\\d{4})": "Y=$1",
+    "\\d+[/\\-\\.]\\d+[/\\-\\.](\\d+)": "Y=$1",
+
+    "years?": "~Y",
+    "this year":     "Y={o0{year, 0}}",
+    "every years?":    "Y~1",
+
+
 
     "jan(uary)?":   "M=0",
     "feb(ruary)?":  "M=1",
@@ -12,57 +22,28 @@
     "oct(ober)?":   "M=9",
     "nov(ember)?":  "M=10",
     "dec(ember)?":  "M=11",
-    "(\\d+)[/\\-\\.]\\d+([/\\-\\.]\\d+)?": "M=$1",
+    "\\d+[/\\-\\.](\\d+)([/\\-\\.]\\d+)?": "M={={$1-1}}",
 
     "this month":     "M={o0{month, 0}}",
-    "next month":     "M={o0{month, 1}}",
-    "last month":     "M={o0{month, -1}}",
-    "(\\d+) months?": "M~$1",
+    "months?": "~M",
     "every months?": "M~1",
-
-
-    "(\\d{4})": "Y=$1",
-    "\\d+[/\\-\\.]\\d+[/\\-\\.](\\d+)": "Y=$1",
-
-    "this year":     "Y={o0{year, 0}}",
-    "next year":     "Y={o0{year, 1}}",
-    "last year":     "Y={o0{year, -1}}",
-    "(\\d+) years?": "Y~$1",
-    "every years?":    "Y~1",
 
 
     "(\\d+)st": "D=$1",
     "(\\d+)nd": "D=$1",
     "(\\d+)rd": "D=$1",
     "(\\d+)th": "D=$1",
-    "\\d+[/\\-\\.](\\d+)([/\\-\\.]\\d+)?": "D=$1",
+    "(\\d+)[/\\-\\.]\\d+([/\\-\\.]\\d+)?": "D=$1",
 
     "today": "D={o0{day,0}}",
-    "tomorrow": "D={o0{day,1}}",
-    "yesterday": "D{o0{day,-1}}",
-    "(\\d+) days?": "D~$1",
+    "tomorrow": "D={o0{day,0}} ++> D~1",
+    "yesterday": "D={o0{day,0}} --> D~1",
+    "days?": "~D",
     "every days?": "D~1",
 
-
-
-    "next (monday|tuesday|wednesday|thursday|friday|saturday|sunday)": "<++ D={o0{week, 0}} <-- D={o0{week, 1}}",
-    "last (monday|tuesday|wednesday|thursday|friday|saturday|sunday)": "<++ D={o0{week, -1}} <-- D={o0{week, 0}}",
-    "(\\d+) (monday|tuesday|wednesday|thursday|friday|saturday|sunday)s?": "<++ D={o0{week, {={$1-1}}}} <-- D={o0{ week, $1 }}",
-
-    "mondays?":      "w=0",
-    "tuesdays?":     "w=1",
-    "wednesdays?":   "w=2",
-    "thursdays?":    "w=3",
-    "fridays?":      "w=4",
-    "saturdays?":    "w=5",
-    "sundays?":      "w=6",
-
-
+    "this week": "W={o0{week, 0, start}}",
     "every weeks?": "D~7",
     "(\\d+) weeks?": "D~{={$1*7}}",
-    "this week": "W={o0{week, 0, start}}",
-    "next week": "W={o0{week, 1, start}}",
-    "last week": "W={o0{week, -1, start}}",
 
 
     "midnight": "h=0",
@@ -72,24 +53,24 @@
     "(\\d+)AM": "h=$1",
     "(\\d+)PM": "h={={12+$1}}",
 
-    "(\\d)+ hours?": "h~$1",
+    "hours?": "~h",
 
 
     "\\d+:(\\d+)(:\\d+)?": "m=$1",
     "\\d+h(\\d+)": "m=$1",
-    "(\\d)+ minutes?": "m~$1",
+    "minutes?": "~m",
 
 
-    "\\d+:\\d+(:\\d+)": "s=$1",
-    "(\\d)+ seconds?": "s~$1",
+    "\\d+:\\d+:(\\d+)": "s=$1",
+    "seconds?": "~s",
 
 
 
     "after": "<++",
     "before": "<--",
 
-    "ago": "<-- X={o0{d,0}}",
-    "in": "<++ X={o0{d,0}}",
+    "ago": "<-- ?={o0{d,0}}",
+    "in": "?={o0{d,0}} ++>",
 
     "every": "%",
     "each": "%",
@@ -102,12 +83,23 @@
     "from": "<++",
     "to": "<--",
 
-    "christmas": "M=11 D=25",
-    "new year": "M=0 D=1",
-    "eve": "D-1",
+    "next": "~1",
+    "last": "~-1",
+
     "night": "h=19",
     "tonight": "h=19 D={o0{day,0}}",
     "this (morning|afternoon)": "D={o0{day,0}}",
     "morning": "h=9",
-    "afternoon": "h=15"
+    "afternoon": "h=15",
+
+    "mondays?":    "@2000-01-03#D%D~7",
+    "tuesdays?":   "@2000-01-04#D%D~7",
+    "wednesdays?": "@2000-01-05#D%D~7",
+    "thursdays?":  "@2000-01-06#D%D~7",
+    "fridays?":    "@2000-01-07#D%D~7",
+    "saturdays?":  "@2000-01-08#D%D~7",
+    "sundays?":    "@2000-01-09#D%D~7",
+    "christmas": "@2000-12-25#D%Y~1",
+    "new year":  "@2000-01-01T00:00:00#D%Y~1",
+    "Baptiste 's birthday":  "@1997-12-18T00:00:00#D%Y~1"
 }

@@ -71,7 +71,8 @@ export default class StringParser {
                 const repl = match[0]
                     .replace(new RegExp(word, 'gi'), replacement)
                     .replace(/\{=\{[0-9\-/*+]+\}\}/g, operation => {
-                        operation = operation.replace(/[{}=]/g, '');
+                        // taking off brackets and leading zeros
+                        operation = operation.replace(/[{}=]/g, '').replace(/(^|[^0-9])0+([1-9][0-9]*)[^0-9]/g, '$1');
                         return eval(operation);
                     })
                     .replace(/\{o\d+\{[^}]+\}\}/g, arg => {
@@ -86,7 +87,6 @@ export default class StringParser {
                             }
                             return val.trim();
                         });
-                        console.log('args: ', args);
                         if (opeNum in operationBlocksCallback)
                             return operationBlocksCallback[opeNum](...args);
                         return arg;

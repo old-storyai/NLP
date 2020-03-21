@@ -28,10 +28,14 @@ let str = '';
 // str = 'Send a Slack message to Frederick';
 // str = 'Send me a text when the fridge door is opened for more than 5 minutes';
 // str = 'Was it raining on the 18/02/1997 at 18:15?';
-// str = 'Send me a message on every month on monday at 6:18:37 after the 6th of december until 2021';
-// str = 'Send me a message 6 months after christmas';
-// str = 'Send me a message 6 months, 18 days and 3 hours before the 5th of july 2020 at 6PM';
-str = 'Send me flowers every month on monday between january 2025 and february 2030';
+// str = 'send me a text at 6pm on the 2nd monday after christmas 2021';
+// str = 'Send me a message 6 months after last christmas';
+str = 'Send me a message 7 days before Baptiste\'s birthday';
+// str = 'Send me a message 3 days before next christmas';
+// str = 'Send me flowers every christmas at noon for 8 years from 2028';
+// str = 'Send me flowers in 5 sundays at 6:09';
+// str = 'Was it raining from christmas 1997 at 18:25 for 18 days and 2 hours every minute';
+// str = 'send me texts every christmas at 18:25 for 18 days and 2 hours';
 
 new SentenceAnalyser(str).createMeanings().forEach(meaning => {
     console.log('――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――');

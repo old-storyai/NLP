@@ -1,0 +1,142 @@
+import TimeComponent from './timeComponent';
+
+import DurationComponent   from './durationComponent';
+import DateComponent       from './dateComponent';
+import RepetitionComponent from './repetitionComponent';
+import TimeInfos           from './timeInfos';
+
+enum Operator{
+    'more'        = 'more',
+    'less'        = 'less',
+    'moreReverse' = 'moreReverse',
+    'lessReverse' = 'lessReverse',
+    'repetition'  = 'repetition',
+    'fromStart'   = 'fromStart',
+}
+
+export default class OperatorComponent implements TimeComponent {
+
+    operator: Operator;
+
+    constructor(rawIn: string) {
+        this.operator = {
+            '<++': Operator.more,
+            '<--': Operator.less,
+            '++>': Operator.moreReverse,
+            '-->': Operator.lessReverse,
+            '%'  : Operator.repetition,
+            '$'  : Operator.fromStart
+        }[rawIn] || undefined;
+
+        if (!this.operator)
+            throw new Error('Wrong operator: ' + rawIn);
+    }
+
+    isAddition(): boolean {
+        return this.operator === Operator.less ||
+            this.operator === Operator.more;
+    }
+
+    operate(prevs: TimeComponent[], nexts: TimeComponent[], infos: TimeInfos): [ TimeComponent[], TimeComponent[], ] {
+        return this[`operate_${this.operator}`](prevs, nexts, infos);
+    }
+
+    private operate_more(prevs: TimeComponent[], nexts: TimeComponent[], infos: TimeInfos, subtract: boolean = false): [ TimeComponent[], TimeComponent[], ] {
+        if (nexts[0] instanceof RepetitionComponent) {
+            const rep = (nexts[0] as RepetitionComponent);
+            nexts[0] = rep.getNOccurencesAfter((rep.amount? rep.amount : 1));
+        }
+        if (! (nexts[0] instanceof DateComponent))
+            return [prevs, nexts];
+
+        const prev = prevs[prevs.length-1];
+        const next = nexts[0] as DateComponent;
+
+        if (prev instanceof DurationComponent) {
+            // It's an addition.....
+            infos.exactDate = next.addTime(prev, !subtract);
+            nexts.shift();
+            prevs.pop();
+        } else if (prev instanceof RepetitionComponent) {
+            const rep = prev as RepetitionComponent;
+            if (!!rep.amount)
+                infos.exactDate = rep.getNOccurencesAfter(rep.amount * (subtract?-1:1), next);
+            else
+                infos.exactDate = rep.getNextOccurence(next);
+            nexts.shift();
+            prevs.pop();
+        } else {
+            // It's a range up
+            if (subtract)
+                infos.end = next;
+            else
+                infos.start = next;
+            nexts.shift();
+        }
+
+        return [prevs, nexts];
+    }
+
+    private operate_less(prevs: TimeComponent[], nexts: TimeComponent[], infos: TimeInfos): [ TimeComponent[], TimeComponent[], ] {
+        return this.operate_more(prevs, nexts, infos, true);
+    }
+
+    private operate_moreReverse(prevs: TimeComponent[], nexts: TimeComponent[], infos: TimeInfos): [ TimeComponent[], TimeComponent[], ] {
+        const prev = prevs.pop();
+        const next = nexts.shift();
+        prevs.push(next);
+        nexts.unshift(prev);
+        return this.operate_more(prevs, nexts, infos);
+    }
+
+    private operate_lessReverse(prevs: TimeComponent[], nexts: TimeComponent[], infos: TimeInfos): [ TimeComponent[], TimeComponent[], ] {
+        const prev = prevs.pop();
+        const next = nexts.shift();
+        prevs.push(next);
+        nexts.unshift(prev);
+        return this.operate_less(prevs, nexts, infos);
+    }
+
+    private operate_repetition(prevs: TimeComponent[], nexts: TimeComponent[], infos: TimeInfos): [ TimeComponent[], TimeComponent[], ] {
+
+        if (nexts[0] instanceof DurationComponent) {
+            infos.repetitionDelta= new RepetitionComponent(nexts[0] as DurationComponent);
+            nexts.shift();
+        } else if (nexts[0] instanceof RepetitionComponent) {
+            infos.repetitionDelta = nexts[0] as RepetitionComponent;
+            nexts.shift();
+        }
+
+        if (!!infos.repetitionDelta) {
+            let infoAdded = true;
+            while (infoAdded) {
+                infoAdded = false;
+                if (nexts[0] instanceof RepetitionComponent && !(nexts[0] as RepetitionComponent).amount) {
+                    infos.repetitionDelta.event = nexts[0] as RepetitionComponent;
+                    nexts.shift();
+                    infoAdded = true;
+                }
+                if (nexts[0] instanceof DateComponent) {
+                    infos.repetitionDelta.dateSample = nexts[0] as DateComponent;
+                    nexts.shift();
+                    infoAdded = true;
+                }
+            }
+        }
+
+        return [prevs, nexts];
+    }
+
+    private operate_fromStart(prevs: TimeComponent[], nexts: TimeComponent[], infos: TimeInfos): [ TimeComponent[], TimeComponent[], ] {
+
+        if (nexts[0] instanceof DurationComponent) {
+            infos.duration = nexts.shift() as DurationComponent;
+        } else {
+        }
+        return [prevs, nexts];
+    }
+
+    toString() {
+        return this.operator.toString();
+    }
+}

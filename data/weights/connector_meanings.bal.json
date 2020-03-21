@@ -21,7 +21,8 @@
         "during": 50,
         "before": 50,
         "for": 40,
-        "in": 40
+        "in": 40,
+        "on": 25
     },
     "value": {
         "below": 80,

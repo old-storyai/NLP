@@ -72,7 +72,7 @@
         "yesterday": 80,
         "\\w*noon\\w*": 80,
         "^at": 65,
-        "\\d+th": 65,
+        "\\d+(st|nd|rd|th)": 65,
         "^every \\w+": 35,
         "season": 30,
         "^for": 25
