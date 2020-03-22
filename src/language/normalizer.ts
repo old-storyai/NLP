@@ -30,7 +30,7 @@ export function disconjugateVerb(str: string): string {
             false
         );
 
-    return out;
+    return out.trim();
 }
 
 export function replaceIdioms(str: string): string {

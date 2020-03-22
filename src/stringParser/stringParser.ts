@@ -49,6 +49,8 @@ export default class StringParser {
         allowOverlappingMatches:boolean = true
     ) {
         rawString = rawString.trim();
+        if (!matchesCallback)
+            matchesCallback = () => '';
         if (!nonMatchesCallback)
             nonMatchesCallback = () => '';
         if (!operationBlocksCallback)
@@ -70,14 +72,15 @@ export default class StringParser {
             while ((match = regex.exec(rawString)) !== null) {
                 const repl = match[0]
                     .replace(new RegExp(word, 'gi'), replacement)
-                    .replace(/\{=\{[0-9\-/*+]+\}\}/g, operation => {
+                    .replace(/\{=\{[0-9\-/*+\s]+\}\}/g, operation => {
                         // taking off brackets and leading zeros
                         operation = operation.replace(/[{}=]/g, '').replace(/(^|[^0-9])0+([1-9][0-9]*)[^0-9]/g, '$1');
                         return eval(operation);
                     })
-                    .replace(/\{o\d+\{[^}]+\}\}/g, arg => {
+                    .replace(/\{o\d+\{[^]+?\}\}+/g, arg => {
                         const opeNum = Number( arg.match(/^\{o(\d+)/)[1] );
-                        arg = arg.replace(/^\{o\d+\{|\}\}/g, '');
+                        console.log(`arg: ${arg}`);
+                        arg = arg.replace(/^\{o\d+\{|\}\}$/g, '');
                         const args = arg.split(',').map(val => {
                             if (!isNaN(Number(val))) return Number(val);
                             try {
@@ -102,7 +105,7 @@ export default class StringParser {
         });
         allMatches = allMatches.sort((a,b) => {
             let res = a.start-b.start;
-            if (res === 0) res = a.end-b.end;
+            if (res === 0 && allowOverlappingMatches) res = a.end-b.end;
             return res;
         });
 
@@ -112,10 +115,11 @@ export default class StringParser {
         } else {
             let pos=0;
             for (const match of allMatches) {
-                if (allowOverlappingMatches || pos < match.start) {
+                if (allowOverlappingMatches || pos <= match.start) {
                     const nonMatch = rawString.slice(pos, match.start).trim();
                     if (!!nonMatch)
                         nonMatchesCallback(nonMatch);
+
                     matchesCallback( match.matchedStr, match.replacement);
 
                     pos = (match.end)<pos? pos : (match.end);
