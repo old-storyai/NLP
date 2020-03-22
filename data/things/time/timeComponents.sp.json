@@ -6,7 +6,6 @@
 
     "years?": "~Y",
     "this year":     "Y={o0{year, 0}}",
-    "every years?":    "Y~1",
 
 
 
@@ -26,7 +25,6 @@
 
     "this month":     "M={o0{month, 0}}",
     "months?": "~M",
-    "every months?": "M~1",
 
 
     "(\\d+)st": "D=$1",
@@ -39,7 +37,6 @@
     "tomorrow": "D={o0{day,0}} ++> D~1",
     "yesterday": "D={o0{day,0}} --> D~1",
     "days?": "~D",
-    "every days?": "D~1",
 
     "this week": "W={o0{week, 0, start}}",
     "every weeks?": "D~7",
@@ -72,8 +69,8 @@
     "ago": "<-- ?={o0{d,0}}",
     "in": "?={o0{d,0}} ++>",
 
-    "every": "%",
-    "each": "%",
+    "every": "% ~1",
+    "each": "% ~1",
 
     "for": "$",
     "until": "<--",

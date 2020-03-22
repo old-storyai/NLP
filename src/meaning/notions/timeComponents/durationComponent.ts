@@ -3,9 +3,18 @@ import moment from 'moment';
 
 const DURATION_UNITS = [ 's', 'm', 'h', 'd', 'M', 'Y' ];
 
+/**
+ * Represents a duration. (e.g. 3 months, 2 days, 6 hours and 49 seconds)
+ */
 export default class DurationComponent implements TimeComponent {
     duration: moment.Duration;
 
+    /**
+     * Creates a new DurationComponent that equals this amount of milliseconds
+     *
+     * @param millis The amount of milliseconds
+     * @return The created DurationComponent
+     */
     static fromMilliseconds(mills: number): DurationComponent {
         mills *= mills<0?-1:1;
         const dc = new DurationComponent({});
@@ -13,6 +22,9 @@ export default class DurationComponent implements TimeComponent {
         return dc;
     }
 
+    /**
+     * @param dur An object containing all the duration informations (e.g. {'d': 7, 'h': 5})
+     */
     constructor(
         dur: {
             s?: number, m?: number, h?: number,
@@ -28,6 +40,13 @@ export default class DurationComponent implements TimeComponent {
         this.duration = moment.duration(dur);
     }
 
+    /**
+     * Take informations from another duration
+     *
+     * @param other The duration to take infos from
+     *
+     * @note All the overlapping informations of this duration will be overwritten by the infos of the new one
+     */
     mergeWith(other: DurationComponent) {
         DURATION_UNITS.forEach(timeUnit => {
             if (other.duration.get(timeUnit as any) !== 0) {
@@ -37,6 +56,12 @@ export default class DurationComponent implements TimeComponent {
         });
     }
 
+    /**
+     * Multiplies this duration, and gives the result as a new duration
+     *
+     * @param num The factor by which this duration shoujld be multiplied
+     * @return The newly created duration
+     */
     multiplyBy(num: number): DurationComponent {
         const out = new DurationComponent({});
         const obj = this.asObject(true);
@@ -49,8 +74,14 @@ export default class DurationComponent implements TimeComponent {
         return out;
     }
 
-    asObject(durationUnits:boolean = false): {seconds?: number, minutes?: number, hours?: number,
-            days?: number, weeks?: number, months?: number, years?: number}
+    /**
+     * Get an object representation of this duration
+     * 
+     * @param durationUnits Should the result be given with duration type units ('d' instead of 'D' for days)
+     * @return An object representing this duration
+     */
+    asObject(durationUnits:boolean = false): {s?: number, m?: number, h?: number,
+            d?: number, D?: number, M?: number, Y?: number}
     {
         const out = {};
 
@@ -64,6 +95,11 @@ export default class DurationComponent implements TimeComponent {
         return out;
     }
 
+    /**
+     * Erases the given units of this duration
+     *
+     * @param units The units to erase
+     */
     eraseUnits(units) {
         for (let unit of units) {
             if (unit) {
@@ -75,7 +111,12 @@ export default class DurationComponent implements TimeComponent {
             }
         }
     }
-
+    
+    /**
+     * Checks if this duration is empty (less than a second)
+     *
+     * @return True if it's empty, false otherwise
+     */
     isEmpty(): boolean {
         return this.duration.asSeconds() === 0;
     }
