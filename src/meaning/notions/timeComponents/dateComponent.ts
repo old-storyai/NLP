@@ -37,6 +37,10 @@ export default class DateComponent implements TimeComponent {
         return dc;
     }
 
+    private static verifyTimeStr(timeStr: string): boolean {
+        return /\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d/.test(timeStr);
+    }
+
     /**
      * @param unit    A unit to add upon construction
      * @param timeStr Can be a full date, or a simple number corresponding to the given unit
@@ -49,14 +53,16 @@ export default class DateComponent implements TimeComponent {
     constructor(unit: string='', timeStr: string|number = '') {
         this.fixedUnits = [];
         if (unit === '?') {
-            this.moment = moment(timeStr);
-            if (!this.moment.isValid())
+            if (DateComponent.verifyTimeStr(timeStr as string))
+                this.moment = moment(timeStr);
+            else
                 throw new Error('Can\'t use the "?" operator with non complete date! ('+timeStr+')');
         } else {
 
             if (!!unit && !!timeStr) {
-                this.moment = moment(timeStr);
-                if (!this.moment.isValid())
+                if (DateComponent.verifyTimeStr(timeStr as string))
+                    this.moment = moment(timeStr);
+                else
                     this.moment = this.defaultMoment;
                 this.addInfo(unit, timeStr);
             } else {

@@ -42,6 +42,7 @@
         "^my": 5
     },
     "value": {
+        "^\".*\"$": 100,
         "\\d+\\s*degrees?": 90,
         "celcius|fahrenheit": 80,
         "meters?": 70,

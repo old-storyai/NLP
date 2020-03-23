@@ -21,6 +21,8 @@
 
     "\\w+ 's birthday": "NN",
 
+    "\".*\"": "NN",
+
     "right\\s+now": "RB",
 
     "tomorrow": "NN_S",

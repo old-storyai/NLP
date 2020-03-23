@@ -188,6 +188,11 @@ export class Time extends Thing {
 
         prevs.forEach(remainingComp => {
             if (remainingComp instanceof DateComponent) {
+                if (!remainingComp.hasConsistentFixedUnits()) {
+                    remainingComp = remainingComp.toRepetition().getNextOccurence(
+                        this.timeInfos.start?this.timeInfos.start:undefined
+                    );
+                }
                 if (!this.timeInfos.exactDate)
                     this.timeInfos.exactDate = remainingComp;
                 else
