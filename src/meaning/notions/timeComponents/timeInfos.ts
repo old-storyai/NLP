@@ -22,8 +22,6 @@ export default class TimeInfos {
         if (!!this._start) this._start.mergeWith(s);
         else this._start = s;
 
-        this._start.minimize();
-
         if (!!this.end) {
             this.duration = this.start.diff(this.end);
         } else if (!!this.duration) {
@@ -36,8 +34,6 @@ export default class TimeInfos {
     set end(e) {
         if (!!this._end) this._end.mergeWith(e);
         else this._end = e;
-
-        this._end.maximize();
 
         if (!!this.start) {
             this.duration = this.start.diff(this.end);

@@ -18,13 +18,13 @@ describe('Word class', () => {
 
     describe('Genre detection', () => {
 
-        it('is...() functions', () => {
+        describe('is...() functions', () => {
             const w = new Word('Hi there', 'VB');
 
             const validTags = {
                 'isVerb': ['VB', 'VBZ'],
                 'isPunctuation': ['.', ',', '?', '!', ';', ':'],
-                'isDeterminer': ['DT', 'PDT', 'WDT'],
+                'isDeterminer': ['DT', 'PDT'],
                 'isAdjective': ['JJ', 'JJR', 'JJS'],
                 'isAdverb': ['RB', 'RBR', 'RBS'],
                 'isNoun': ['NN', 'NNS', 'NNP', 'NNPS'],
@@ -32,8 +32,10 @@ describe('Word class', () => {
 
             for (const func of Object.keys(validTags)) {
                 for (const tag of validTags[func]) {
-                    w.tag = tag;
-                    expect(w[func]()).toBe(true);
+                    it(`${func}: ${tag}`, () => {
+                        w.tag = tag;
+                        expect(w[func]()).toBe(true);
+                    });
                 }
             }
         });

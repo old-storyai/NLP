@@ -14,8 +14,9 @@ import RepetitionComponent from './timeComponents/repetitionComponent';
 import OperatorComponent from './timeComponents/operatorComponent';
 import TimeInfos from './timeComponents/timeInfos';
 
+export {TimeComponent, DurationComponent, DateComponent, RepetitionComponent, OperatorComponent, TimeInfos};
 
-export default class Time extends Thing {
+export class Time extends Thing {
 
     _raw: string;
 
@@ -106,8 +107,6 @@ export default class Time extends Thing {
                     prevComps.shift(); // We take it off because it makes no sense
                     prev = prevComps[0];
                 }
-
-
                 if (prev instanceof DurationComponent) {
                     prev.mergeWith(comp);
                     return;
@@ -133,12 +132,13 @@ export default class Time extends Thing {
             pendingStr = '';
         });
         prevComps = prevComps.filter(comp => !!comp).reverse();
+
+        //
+        // Some more elements grouping
+        //
         for (let idx=0 ; idx<prevComps.length ; idx++) {
             let elem = prevComps[idx];
 
-            // if (elem instanceof DateComponent) {
-            //     elem = elem.toRepetition() || elem;
-            // }
             if (elem instanceof RepetitionComponent) {
                 if (prevComps[idx-1] instanceof DateComponent) {
                     // e.g. 6pm on Christmas
@@ -156,7 +156,6 @@ export default class Time extends Thing {
                     const date = prevComps[idx+1] as DateComponent;
                     date.minimize();
                     if (!elem.addSamplePrecisions(date)) {
-                        console.log(`elem: ${elem}`);
                         elem = elem.getNOccurencesAfter(elem.amount, date);
                     }
 
@@ -170,13 +169,16 @@ export default class Time extends Thing {
         let prevs = [];
         let nexts = prevComps.slice(0);
 
+        //
+        // Actual calculations with operators
+        //
         while (nexts.length) {
             const curr = nexts.shift();
 
-            console.log('________________________________________________');
-            console.log(prevs.map(comp=>comp.toString()).join(' --- '));
+            console.log(`prevs: ${prevs}`);
             console.log(`curr: ${curr}`);
-            console.log(nexts.map(comp=>comp.toString()).join(' --- '));
+            console.log(`nexts: ${nexts}`);
+            console.log('╾──────────────────────────────────────────────────╼');
 
             if (curr instanceof OperatorComponent)
                 [prevs, nexts] = curr.operate(prevs, nexts, this.timeInfos);
@@ -210,6 +212,13 @@ export default class Time extends Thing {
         if (!!this.timeInfos.repetitionDelta && !this.timeInfos.start) {
             this.timeInfos.start = DateComponent.now();
         }
+
+        if (!!this.timeInfos.exactDate)
+            this.timeInfos.exactDate.toDefaultIfPrecisionAbove('D');
+        if (!!this.timeInfos.start)
+            this.timeInfos.start.minimize();
+        if (!!this.timeInfos.end)
+            this.timeInfos.end.maximize();
     }
 
     private parseTimeCodeComponent(rawIn: string): TimeComponent|number|string {

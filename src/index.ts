@@ -29,9 +29,10 @@ let str = '';
 // str = 'Send me a text when the fridge door is opened for more than 5 minutes';
 // str = 'Was it raining on the 18/02/1997 at 18:15?';
 // str = 'send me a text at 6pm on the 2nd monday after christmas 2021';
+str = 'send me a text in 5 minutes';
 // str = 'Send me a message 6 months after last christmas';
 // str = 'Send me a message 7 days before Baptiste\'s birthday';
-str = 'Send me a message on the 1st monday of each month';
+// str = 'Send me a message on the 1st monday of each month';
 // str = 'Send me a message 3 days before next christmas';
 // str = 'Send me flowers every christmas at noon for 8 years from 2028';
 // str = 'Send me flowers in 5 sundays at 6:09';
@@ -43,7 +44,8 @@ new SentenceAnalyser(str).createMeanings().forEach(meaning => {
     console.log(meaning.toString());
 });
 
-// newSentence();
+if (process.argv.includes('--interactive'))
+    newSentence();
 
 function newSentence() {
     prompt.get('sentence', function(err, result) {

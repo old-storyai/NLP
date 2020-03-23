@@ -79,7 +79,6 @@ export default class StringParser {
                     })
                     .replace(/\{o\d+\{[^]+?\}\}+/g, arg => {
                         const opeNum = Number( arg.match(/^\{o(\d+)/)[1] );
-                        console.log(`arg: ${arg}`);
                         arg = arg.replace(/^\{o\d+\{|\}\}$/g, '');
                         const args = arg.split(',').map(val => {
                             if (!isNaN(Number(val))) return Number(val);

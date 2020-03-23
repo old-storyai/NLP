@@ -1,4 +1,4 @@
-import Time from './time';
+import {Time} from './time';
 import Person from './person';
 import Location from './location';
 import Value from './value';

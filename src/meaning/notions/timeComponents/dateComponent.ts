@@ -38,7 +38,7 @@ export default class DateComponent implements TimeComponent {
     }
 
     /**
-     * @param unit A unit to add upon construction
+     * @param unit    A unit to add upon construction
      * @param timeStr Can be a full date, or a simple number corresponding to the given unit
      *
      * @example 
@@ -53,8 +53,11 @@ export default class DateComponent implements TimeComponent {
             if (!this.moment.isValid())
                 throw new Error('Can\'t use the "?" operator with non complete date! ('+timeStr+')');
         } else {
+
             if (!!unit && !!timeStr) {
-                this.moment = this.defaultMoment;
+                this.moment = moment(timeStr);
+                if (!this.moment.isValid())
+                    this.moment = this.defaultMoment;
                 this.addInfo(unit, timeStr);
             } else {
                 this.moment = moment();
@@ -150,6 +153,37 @@ export default class DateComponent implements TimeComponent {
             }
         }
     }
+
+    /**
+     * Transforms all unfixed values to their default values if the lowest fixed unit
+     * of this date is above the given unit
+     */
+    toDefaultIfPrecisionAbove(limit: string) {
+        for (const unit of TIME_UNITS) {
+            if (limit === unit)
+                break;
+            if (this.fixedUnits.includes(unit))
+                return;
+        }
+        this.unfixedValuesToDefault();
+    }
+
+    toObject(displayReady:boolean = false): {Y: number|string, M: number|string, D: number|string, h: number|string, m: number|string, s: number|string } {
+        const buildResult = (num: number, requiredCharsAmount:number = 2): string|number => {
+            if (!displayReady) return num;
+            let out = String(num);
+            out = '0'.repeat(requiredCharsAmount - out.length) + out;
+            return out;
+        };
+        return {
+            Y: buildResult(this.moment.year(),    4),
+            M: buildResult(this.moment.month(),   2),
+            D: buildResult(this.moment.date(),    2),
+            h: buildResult(this.moment.hour(),    2),
+            m: buildResult(this.moment.minute(),  2),
+            s: buildResult(this.moment.second(),  2)
+        };
+    }
     
     /**
      * Calculate a new date by adding the given duration to this date
@@ -220,7 +254,9 @@ export default class DateComponent implements TimeComponent {
     /**
      * Adds 'infos' to this date (new units values)
      *
-     * @param unit The precision of the given value
+     * @param unit The precision of the given value. All precisions equal OR 
+     *              ABOVE the given precision will be fixed!
+     *
      * @param num  Might be a full date, or a number representing only the
      *              value of the unit
      */
