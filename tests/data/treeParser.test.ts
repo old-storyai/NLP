@@ -44,7 +44,7 @@ describe('TreeParser class', () => {
         function itFindsParentOfMatched(testName: string, objIn: object, rx: RegExp, expectedResult: string) {
             it(testName, () => {
                 const tp = new TreeParser(objIn);
-                expect(tp.findParentsOfMatched(rx)).toBe(expectedResult);
+                expect(tp.findParentOfMatched(rx)).toBe(expectedResult);
             });
         }
 

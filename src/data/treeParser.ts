@@ -40,7 +40,7 @@ export default class TreeParser {
         }
     }
 
-    findParentsOfMatched(rx: RegExp): string {
+    findParentOfMatched(rx: RegExp): string {
         for (const key of Object.keys(this._tree)) {
             const children = this._tree[key];
 
