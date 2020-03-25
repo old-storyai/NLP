@@ -11,12 +11,12 @@ const filesPaths = {
     'connectorMeanings':  'weights/connector_meanings.bal.json',
 
     'lexicExtension':      'grammar/lexicExtension.sp.json',
-    'grammarGroupRules':   'grammar/wordGroupingRules.json',
+    'grammarGroupRules':   'grammar/wordGroupingRules.tp.json',
     'lemmatizerExtension': 'language/lemmatizerExtension.sp.json',
 
-    'value_modifiers':      'things/value/modifiers.json',
+    'value_modifiers':      'things/value/modifiers.tp.json',
     'verbMeaningInference': 'things/action/meaningInference_VB2NN.bal.json',
-    'composedVerbs':        'things/action/composedVerbs.json',
+    'composedVerbs':        'things/action/composedVerbs.tp.json',
     'timeComponents':       'things/time/timeComponents.sp.json',
     'idiomsReplacements':   'idiomsReplacements.sp.json',
 };

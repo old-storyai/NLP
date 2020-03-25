@@ -1,5 +1,6 @@
 import colors from 'colors';
-import Balance from 'balance/balance';
+import Balance from 'data/balance';
+import TreeParser from 'data/treeParser';
 import * as Data from 'data/data';
 import * as Normalizer from 'language/normalizer';
 import {Tokenizer, WordGroup, Word} from 'grammar/tokenizer';
@@ -228,25 +229,20 @@ export default class SentenceAnalyser {
         if (!this._reader.currentWord.isGroup() || !this._reader.currentWord.isVerb())
             throw new Error('Trying to analyse an innapropriate word');
 
-        const word = this._reader.currentWord as WordGroup;
-        const composedVerbs = Data.getData('composedVerbs');
+        const words = this._reader.currentWord as WordGroup;
+        const tp = new TreeParser(Data.getData('composedVerbs'));
+        const secondParts = tp.findChildrenOfMatching(words.toString());
 
-        let expectedWord: RegExp;
+        if (!!secondParts) {
+            const expectedWord = new RegExp(
+                '\\b' + secondParts.join('|') + '\\b', 'gi'
+            );
 
-        for (const composedVerb of Object.keys(composedVerbs)) {
-            if (new RegExp(composedVerb, 'gi').test(word.toString())) {
-                expectedWord = new RegExp(
-                    '\\b' + composedVerbs[composedVerb].join('|') + '\\b', 'gi'
-                );
-            }
-        }
-
-        if (!!expectedWord) {
             const [index, match] = this._reader.findRegexAfter(expectedWord);
 
             if (index>=0) {
                 this._reader.deleteWord(index);
-                word.append([match]);
+                words.append([match]);
             }
         }
     }
@@ -255,8 +251,7 @@ export default class SentenceAnalyser {
         if (!this._reader.currentWord.isGroup() || !this._reader.currentWord.isNoun())
             throw new Error('Trying to guess G_NN meaning for non G_NN word');
 
-        const balanceConfig = Data.getData('nounGroupsMeanings');
-        const b = new Balance(balanceConfig);
+        const b = new Balance(Data.getData('nounGroupsMeanings'));
 
         const rigWeights = {};
         if (this._separatorQueue.length) {

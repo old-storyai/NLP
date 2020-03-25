@@ -1,5 +1,6 @@
 import colors from 'colors/safe';
 
+import TreeParser from 'data/treeParser';
 import Word from './word/word';
 export {Word};
 

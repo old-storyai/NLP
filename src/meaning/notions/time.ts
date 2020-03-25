@@ -5,7 +5,7 @@ import * as Data from 'data/data';
 
 import {Meaning} from './meaning';
 import Thing from './thing/thing';
-import StringParser from 'stringParser/stringParser';
+import StringParser from 'data/stringParser';
 
 import TimeComponent from './timeComponents/timeComponent';
 import DurationComponent from './timeComponents/durationComponent';
@@ -36,8 +36,7 @@ export class Time extends Thing {
 
         const str = new WordGroup([...this._conns, ...this._wordGroup.words] as [Word], '').toString();
 
-        const timeComps = Data.getData('timeComponents');
-        new StringParser(timeComps)
+        new StringParser(Data.getData('timeComponents'))
             .parseString(
                 str,
                 (_, timeMeaning) => {

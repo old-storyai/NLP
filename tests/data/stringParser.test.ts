@@ -1,4 +1,4 @@
-import StringParser from 'stringParser/stringParser';
+import StringParser from 'data/stringParser';
 
 const settingsSample = {
     '\\d+': 'VB',

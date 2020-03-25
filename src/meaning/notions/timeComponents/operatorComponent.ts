@@ -200,9 +200,12 @@ export default class OperatorComponent implements TimeComponent {
      */
     private operate_fromStart(prevs: TimeComponent[], nexts: TimeComponent[], infos: TimeInfos): [ TimeComponent[], TimeComponent[], ] {
 
-        if (nexts[0] instanceof DurationComponent) {
+        if (nexts[0] instanceof DurationComponent)
             infos.duration = nexts.shift() as DurationComponent;
-        }
+
+//         if (nexts[0] instanceof DurationComponent)
+//             infos.duration = nexts.shift() as DurationComponent;
+
         return [prevs, nexts];
     }
 

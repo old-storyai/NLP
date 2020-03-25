@@ -7,7 +7,9 @@ describe('Time class', () => {
     function itRecognizesTime(
         testName: string,
         dateWordGroup: WordGroup,
-        expectedNextDate: DateComponent
+        expectedNextDate: DateComponent,
+        expectedStart?: DateComponent,
+        expectedEnd?: DateComponent
     ) {
         const t = new Time(dateWordGroup, []);
         const infos = t.timeInfos;
@@ -20,10 +22,22 @@ describe('Time class', () => {
             );
         }
 
+        const format = 'DD-MM-YYYY HH:mm:ss';
         it(`${testName} ( "${dateWordGroup.toString()}" )`, () => {
-            const format = 'DD-MM-YYYY HH:mm:ss';
             expect(nextDate.moment.format(format)).toBe(expectedNextDate.moment.format(format));
         });
+
+        if (!!expectedStart) {
+            it(`${testName} - start ( "${dateWordGroup.toString()}" )`, () => {
+                expect(infos.start.format(format)).toBe(expectedStart.moment.format(format));
+            });
+        }
+
+        if (!!expectedEnd) {
+            it(`${testName} - end ( "${dateWordGroup.toString()}" )`, () => {
+                expect(infos.end.format(format)).toBe(expectedEnd.moment.format(format));
+            });
+        }
     }
     
     describe('Simple absolute dates', () => {
@@ -71,7 +85,7 @@ describe('Time class', () => {
             datecomp`2023-02-13T09:00:00`
         );
     });
-    
+
     describe('Relative Dates', () => {
         itRecognizesTime(
             'next ...',
@@ -82,7 +96,7 @@ describe('Time class', () => {
         itRecognizesTime(
             'in ...',
             wordgrp`In 2 years`,
-            datecomp`${now`Y${'+2Y'}`}-03-23T09:00:00`
+            datecomp`${now`Y${'+2Y'}`}-${now`M${'+0D'}`}-${now`D${'+0D'}`}T09:00:00`
         );
     });
     
@@ -184,6 +198,6 @@ function now(unit: TemplateStringsArray, to_add: string): string {
         return out;
     };
 
-    return addLeadingzeros(Number(out[u]), (u==='Y'?4:2));
+    return addLeadingzeros(Number(out[u]) + (u==='M'?1:0), (u==='Y'?4:2));
 
 }

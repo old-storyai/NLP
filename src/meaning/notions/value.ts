@@ -2,6 +2,7 @@ import colors from 'colors';
 
 import {WordGroup, Word} from 'grammar/tokenizer';
 import * as Data from 'data/data';
+import TreeParser from 'data/treeParser';
 
 import {Meaning} from './meaning';
 import Thing from './thing/thing';
@@ -24,18 +25,9 @@ export default class Value extends Thing {
     protected processWords() {
 
         if (this._conns.length) {
-
-            const modifiers = Data.getData('value_modifiers');
             const blob = this._conns.map(sep=>sep.toString()).join(' ');
-
-            for (const modifier of Object.keys(modifiers)) {
-                const matchingWords = modifiers[modifier];
-
-                for (const matchingWord of matchingWords) {
-                    if (new RegExp(matchingWord).test(blob))
-                        this._modifier = modifier;
-                }
-            }
+            const tp = new TreeParser(Data.getData('value_modifiers'));
+            this._modifier = tp.findParentOfMatching(blob);
         }
 
         let matches = this._wordGroup.toString().match(/[\d.,]+/);

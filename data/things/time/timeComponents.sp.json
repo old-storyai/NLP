@@ -80,8 +80,8 @@
     "from": "<++",
     "to": "<--",
 
-    "next": "?={o0{d,0}} ++> ~1",
-    "last": "?={o0{d,0}} --> ~-1",
+    "(?<!for the |from |until |between |and |to )next": "?={o0{d,0}} ++> ~1",
+    "(?<!for the |from |until |between |and |to )last": "?={o0{d,0}} --> ~-1",
 
     "night": "h=19",
     "tonight": "h=19 D={o0{day,0}}",

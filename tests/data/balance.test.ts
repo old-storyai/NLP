@@ -1,5 +1,5 @@
 
-const Balance = require('balance/balance').default;
+const Balance = require('data/balance').default;
 
 const sampleSetting = {
     'yes': {

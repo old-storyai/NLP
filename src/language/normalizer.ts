@@ -1,7 +1,7 @@
 import {lemmatizer} from 'lemmatizer';
 import * as Data from 'data/data';
 
-import StringParser from 'stringParser/stringParser';
+import StringParser from 'data/stringParser';
 
 export function disconjugateVerb(str: string): string {
 

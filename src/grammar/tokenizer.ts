@@ -2,7 +2,7 @@ import pos from 'pos';
 import * as Data from 'data/data';
 import {WordGroup, Word} from './wordGroup/wordGroup';
 
-import StringParser from 'stringParser/stringParser';
+import StringParser from 'data/stringParser';
 
 export {WordGroup, Word};
 
@@ -28,10 +28,10 @@ export class Tokenizer {
      */
     static groupWords(sentence: string): WordGroup {
         const wordGroup = Tokenizer.wordPerWord(sentence);
-        const rules = Tokenizer.getData('grammarGroupRules');
 
         console.log('wordGroup: ', wordGroup);
 
+        const rules = Tokenizer.getData('grammarGroupRules');
         wordGroup.tokenize(rules);
 
         return wordGroup;
