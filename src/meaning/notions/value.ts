@@ -1,8 +1,8 @@
 import colors from 'colors';
 
-import {WordGroup, Word} from 'grammar/tokenizer';
-import * as Data from 'data/data';
-import TreeParser from 'data/treeParser';
+import {WordGroup, Word} from '../../grammar/tokenizer';
+import * as Data from '../../data/data';
+import TreeParser from '../../data/treeParser';
 
 import {Meaning} from './meaning';
 import Thing from './thing/thing';

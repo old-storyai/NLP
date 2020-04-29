@@ -1,4 +1,4 @@
-import {WordGroup, Word} from 'grammar/tokenizer';
+import {WordGroup, Word} from '../../grammar/tokenizer';
 
 import Thing from './thing/thing';
 import {Meaning} from './meaning';

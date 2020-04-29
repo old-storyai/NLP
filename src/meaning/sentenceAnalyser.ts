@@ -1,9 +1,9 @@
 import colors from 'colors';
-import Balance from 'data/balance';
-import TreeParser from 'data/treeParser';
-import * as Data from 'data/data';
-import * as Normalizer from 'language/normalizer';
-import {Tokenizer, WordGroup, Word} from 'grammar/tokenizer';
+import Balance from '../data/balance';
+import TreeParser from '../data/treeParser';
+import * as Data from '../data/data';
+import * as Normalizer from '../language/normalizer';
+import {Tokenizer, WordGroup, Word} from '../grammar/tokenizer';
 
 import SentenceReader from './sentenceReader';
 import {Time, Person, Location, Value, Item, Action, Meaning} from './notions/meaning';
@@ -285,8 +285,6 @@ export default class SentenceAnalyser {
 
         b.rig(rigWeights);
         const cat = b.categorize(this._reader.currentWord.toString());
-
-        console.log(this._reader.currentWord + ' : ', b.getWeightDetails(this._reader.currentWord.toString()));
 
         return cat;
     }

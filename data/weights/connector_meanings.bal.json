@@ -14,16 +14,16 @@
         "in": 60,
         "from": 60,
         "across": 60,
-        "on": 25,
+        "on": 50,
         "of": 5
     },
     "time": {
         "after": 50,
         "during": 50,
         "before": 50,
+        "on": 50,
         "for": 40,
-        "in": 40,
-        "on": 25
+        "in": 40
     },
     "value": {
         "below": 80,

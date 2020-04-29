@@ -7,7 +7,7 @@ import Action from './action';
 
 export {Time, Person, Location, Value, Item, Action};
 
-import {WordGroup, Word} from 'grammar/tokenizer';
+import {WordGroup, Word} from '../../grammar/tokenizer';
 
 export class Meaning {
 

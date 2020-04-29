@@ -1,7 +1,7 @@
 import {lemmatizer} from 'lemmatizer';
-import * as Data from 'data/data';
+import * as Data from '../data/data';
 
-import StringParser from 'data/stringParser';
+import StringParser from '../data/stringParser';
 
 export function disconjugateVerb(str: string): string {
 
@@ -42,4 +42,18 @@ export function replaceIdioms(str: string): string {
     }
 
     return str;
+}
+
+export function identifyImportantWords(str: string): string[] {
+    const stopWords = Data.getData('stopWords');
+
+    const regex = stopWords.map(word => `\\b${word}\\b`).join('|');
+
+    const res = str
+        .replace(/[a-zA-Z_-]/, ' ')
+        .replace(new RegExp(regex, 'gi'), ' ')
+        .trim()
+        .split(/\s+/);
+
+    return res;
 }
