@@ -286,8 +286,6 @@ export default class SentenceAnalyser {
         b.rig(rigWeights);
         const cat = b.categorize(this._reader.currentWord.toString());
 
-        console.log(this._reader.currentWord + ' : ', b.getWeightDetails(this._reader.currentWord.toString()));
-
         return cat;
     }
 }

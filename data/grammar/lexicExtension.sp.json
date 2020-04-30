@@ -13,6 +13,9 @@
     "locked": "VBD",
     "lives": "VBZ",
     "care": "VB",
+    "answer": "VB",
+
+    "show": "VB",
 
     "\\w+ness": "NN",
 
@@ -21,7 +24,7 @@
 
     "\\w+ 's birthday": "NN",
 
-    "\".*\"": "NN",
+    "\".*?\"": "NN",
 
     "right\\s+now": "RB",
 

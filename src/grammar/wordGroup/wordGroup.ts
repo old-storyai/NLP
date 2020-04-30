@@ -1,6 +1,5 @@
 import colors from 'colors/safe';
 
-import TreeParser from 'data/treeParser';
 import Word from './word/word';
 export {Word};
 
@@ -146,7 +145,7 @@ export class WordGroup {
         let str = '';
         for (const word of this._words) {
             if (word instanceof WordGroup) {
-                let colorize;
+                let colorize: Function;
                 switch (word.tag) {
                     case 'G_NN':
                         colorize = colors.blue;

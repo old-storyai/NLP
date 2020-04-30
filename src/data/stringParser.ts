@@ -24,7 +24,6 @@
  * # Notes:
  *     The functions will be called in the order of the given string.
  */
-
 export default class StringParser {
     _settings: {[tag: string]: string};
 

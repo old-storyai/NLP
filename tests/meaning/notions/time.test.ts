@@ -184,7 +184,6 @@ function now(unit: TemplateStringsArray, to_add: string): string {
         const [, num, unit] = blob.match(/^([+-]\d+)([a-zA-Z])/);
         arg[unit] = Number(num);
     });
-    console.log(`stringify: ${JSON.stringify(arg)}`);
     const out = DateComponent.now().addTime(
         new DurationComponent(arg)
     ).toObject(true);

@@ -29,7 +29,7 @@ export class Tokenizer {
     static groupWords(sentence: string): WordGroup {
         const wordGroup = Tokenizer.wordPerWord(sentence);
 
-        console.log('wordGroup: ', wordGroup);
+        // console.log('wordGroup: ', wordGroup);
 
         const rules = Tokenizer.getData('grammarGroupRules');
         wordGroup.tokenize(rules);
