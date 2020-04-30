@@ -1,8 +1,8 @@
 import pos from 'pos';
-import * as Data from 'data/data';
+import * as Data from '../data/data';
 import {WordGroup, Word} from './wordGroup/wordGroup';
 
-import StringParser from 'data/stringParser';
+import StringParser from '../data/stringParser';
 
 export {WordGroup, Word};
 

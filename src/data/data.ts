@@ -4,9 +4,12 @@
  */
 
 import fs from 'fs';
+import path from 'path';
+import {BASEPATH} from 'pathGiver';
 
-const basePath = './data';
 const filesPaths = {
+    'stopWords': 'stopWords.json',
+
     'nounGroupsMeanings': 'weights/GNN_meanings.bal.json',
     'connectorMeanings':  'weights/connector_meanings.bal.json',
 
@@ -22,7 +25,7 @@ const filesPaths = {
 };
 
 export function getData(fileId: string): any {
-    const fileFullPath  = basePath + '/' + filesPaths[fileId];
+    const fileFullPath  = path.join(BASEPATH , 'data/', filesPaths[fileId]);
     let rawContents;
     try {
         rawContents = fs.readFileSync(fileFullPath);

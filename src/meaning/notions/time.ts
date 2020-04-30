@@ -1,11 +1,11 @@
 import moment from 'moment';
 
-import {WordGroup, Word} from 'grammar/tokenizer';
-import * as Data from 'data/data';
+import {WordGroup, Word} from '../../grammar/tokenizer';
+import * as Data from '../../data/data';
 
 import {Meaning} from './meaning';
 import Thing from './thing/thing';
-import StringParser from 'data/stringParser';
+import StringParser from '../../data/stringParser';
 
 import TimeComponent from './timeComponents/timeComponent';
 import DurationComponent from './timeComponents/durationComponent';

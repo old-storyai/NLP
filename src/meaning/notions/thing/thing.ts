@@ -1,6 +1,6 @@
 import colors from 'colors';
 
-import {WordGroup, Word} from 'grammar/tokenizer';
+import {WordGroup, Word} from '../../../grammar/tokenizer';
 
 export default class Thing {
 

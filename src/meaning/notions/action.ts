@@ -1,5 +1,5 @@
-import {WordGroup, Word} from 'grammar/tokenizer';
-import * as Normalizer from 'language/normalizer';
+import {WordGroup, Word} from '../../grammar/tokenizer';
+import * as Normalizer from '../../language/normalizer';
 
 import Thing from './thing/thing';
 import {Meaning} from './meaning';
