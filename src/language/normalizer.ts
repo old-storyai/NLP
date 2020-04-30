@@ -49,6 +49,12 @@ export function identifyImportantWords(str: string): string[] {
 
     const regex = stopWords.map(word => `\\b${word}\\b`).join('|');
 
-    const res = str .replace(/[^a-zA-Z_-]+/g, ' ') .replace(new RegExp(regex, 'gi'), ' ') .trim() .split(/\s+/); 
+    const res = str
+        .replace(/[^a-zA-Z_-]+/g, ' ')
+        .replace(new RegExp(regex, 'gi'), ' ')
+        .trim()
+        .split(/\s+/)
+        .map(word => lemmatizer(word)); 
+
     return res;
 }
