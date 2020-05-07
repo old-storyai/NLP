@@ -10,12 +10,14 @@ import {BASEPATH} from 'pathGiver';
 const filesPaths = {
     'stopWords': 'stopWords.json',
 
+
     'nounGroupsMeanings': 'weights/GNN_meanings.bal.json',
     'connectorMeanings':  'weights/connector_meanings.bal.json',
 
     'lexicExtension':      'grammar/lexicExtension.sp.json',
     'grammarGroupRules':   'grammar/wordGroupingRules.tp.json',
     'lemmatizerExtension': 'language/lemmatizerExtension.sp.json',
+    'contextRules':        'language/context.sp.json',
 
     'value_modifiers':      'things/value/modifiers.tp.json',
     'verbMeaningInference': 'things/action/meaningInference_VB2NN.bal.json',

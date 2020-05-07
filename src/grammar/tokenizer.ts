@@ -148,7 +148,7 @@ export class Tokenizer {
         // DT JJ !NN
         //  ⤷ JJ is most likely a NN 
         //   e.g. send a present to my mom
-        //             . '--.--' '' 
+        //             ' '--.--' '' 
         //            DT   JJ    TO
         let dtEncounter = false;
         for (let i=0 ; i<words.length-1 ; i++) {

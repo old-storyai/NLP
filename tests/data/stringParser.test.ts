@@ -17,13 +17,15 @@ describe('StringParser class', () => {
             expectedMatches?: string[],
             expectedReplacements?: string[],
             expectedNonMatches?: string[],
-            allowOverlappingMatches: boolean = true
+            allowOverlappingMatches: boolean = true,
+            dictionnary = {},
+            parallelSentence = []
         ) {
             it(`${testName} ( "${input}" )`, () => {
                 const nonMatches = [];
                 const matches = [];
                 const replacements = [];
-                new StringParser(settings).parseString(
+                new StringParser(settings, dictionnary).parseString(
                     input,
                     (match, replacement) => {
                         matches.push(match);
@@ -33,7 +35,8 @@ describe('StringParser class', () => {
                         nonMatches.push(nonMatch);
                     },
                     [],
-                    allowOverlappingMatches
+                    allowOverlappingMatches,
+                    parallelSentence
                 );
 
                 if (!!expectedMatches)
@@ -161,6 +164,166 @@ describe('StringParser class', () => {
                 ['1916'],
             );
         });
+
+        describe('Dictionnary', () => {
+            itFindsMatches(
+                'Dictionnary usage',
+                {
+                    'turned {{:notIn:}} to': 'Yep',
+                },
+                '1891 turned out to be a good year',
+                ['turned out to'],
+                undefined,
+                undefined,
+                undefined,
+                {
+                    notIn: '(out)'
+                }
+            );
+
+            itFindsMatches(
+                'Dictionnary usage multiples',
+                {
+                    '{{:turn-variations:}} {{:notIn:}} to': 'Yep',
+                },
+                '1891 turned out to be a good year',
+                ['turned out to'],
+                undefined,
+                undefined,
+                undefined,
+                {
+                    notIn: '(out)',
+                    'turn-variations': '(turn|turns|turned|barrel Roll)'
+                }
+            );
+
+            itFindsMatches(
+                'Dictionnary usage doesn\'t collide with capture counts',
+                {
+                    '{{:turn-variations:}} {{:notIn:}} (to)': '$1',
+                },
+                '1891 turned out to be a good year',
+                ['turned out to'],
+                ['to'],
+                undefined,
+                undefined,
+                {
+                    notIn: '(o(u(t)))',
+                    'turn-variations': '(turn|turns|turned|barrel Roll)'
+                }
+            );
+
+            itFindsMatches(
+                'Dictionnary items can be recursive',
+                {
+                    '{{:composed-verb:}} (to)': '$1',
+                },
+                '1891 turned out to be a good year',
+                ['turned out to'],
+                ['to'],
+                undefined,
+                undefined,
+                {
+                    'turn-variations': '(turn|turns|turned|barrel Roll)',
+                    'in-out': '(in|out)',
+                    'composed-verb': '{{:turn-variations:}} {{:in-out:}}',
+                }
+            );
+
+            itFindsMatches(
+                'Dictionnary items can be recursive - circular reference is replaced by nothing',
+                {
+                    '{{:a:}} (to)': '$1',
+                },
+                '1891 turned out to be a good year',
+                [' to'],
+                ['to'],
+                undefined,
+                undefined,
+                {
+                    'a': '{{:b:}}',
+                    'b': '{{:c:}}',
+                    'c': '{{:a:}}',
+                }
+            );
+        });
+
+        describe('word index', () => {
+            itFindsMatches(
+                'Index of word in the sentence',
+                {
+                    '(turned) out (to)': '{IDX{1}}',
+                },
+                '1891 turned out to be a good year',
+                ['turned out to'],
+                ['1'],
+                undefined,
+                undefined,
+                {
+                    notIn: '(out)'
+                }
+            );
+
+            itFindsMatches(
+                'Index of word in the sentence',
+                {
+                    'be a (really )?good (year)': '{IDX{1}}',
+                },
+                '1891 turned out to be a good year',
+                undefined,
+                ['6'],
+                undefined,
+                undefined,
+                {
+                    notIn: '(out)'
+                }
+            );
+
+            itFindsMatches(
+                'Index of word in the sentence',
+                {
+                    '(be) .* (good year)': '{IDX{2}}',
+                },
+                '1891 turned out to be a good year',
+                undefined,
+                ['6'],
+                undefined,
+                undefined,
+                {
+                    notIn: '(out)'
+                }
+            );
+        });
+
+        describe('Parallel set', () => {
+            itFindsMatches(
+                'parallel set works as expected',
+                {
+                    '{{!date!}} (\\w+)': '$1',
+                },
+                '1891 turned out to be a good year',
+                ['1891 turned'],
+                ['turned'],
+                undefined,
+                undefined,
+                undefined,
+                ['date', 'verb', 'notIn', 'word', 'word', 'word', 'notBad', 'year']
+            );
+
+            itFindsMatches(
+                'parallel set works as expected - complex regex',
+                {
+                    '(?:{{!word!}} ){3}(\\w+)': '$1',
+                },
+                '1891 turned out to be a good year',
+                ['to be a good'],
+                ['good'],
+                undefined,
+                undefined,
+                undefined,
+                ['date', 'verb', 'notIn', 'word', 'word', 'word', 'notBad', 'year']
+            );
+        });
     });
 
     describe('Functions calls', () => {
@@ -268,5 +431,29 @@ describe('StringParser class', () => {
             ]
         );
 
+        it('Calls the named callbacks as well', () => {
+
+            const operations = {
+                ope1: jest.fn(),
+                ope2: jest.fn(),
+                ope345: jest.fn()
+            };
+            
+            new StringParser({
+                '(\\d{4})':         '{o<ope1>{$1}}',
+                'turned ... to be': '{o<ope2>{{"test123": "321tset"}}}',
+                '... to be':        '{o<ope345>{foo}}',
+                'years?':           '3'
+            }).parseString(
+                '1891 turned out to be a good year',
+                undefined,
+                undefined,
+                operations
+            );
+
+            expect(operations.ope1).toHaveBeenCalledWith(1891);
+            expect(operations.ope2).toHaveBeenCalledWith({test123: '321tset'});
+            expect(operations.ope345).toHaveBeenCalledWith('foo');
+        });
     });
 });

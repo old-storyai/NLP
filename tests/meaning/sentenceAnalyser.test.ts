@@ -3,7 +3,8 @@ import SentenceAnalyser from 'meaning/sentenceAnalyser';
 describe('SentenceAnalyser', () => {
 
     describe('Verbs analysis', () => {
-        function itAnalysesVerbs(testName: string, sa: SentenceAnalyser, expectedVerb: string): void {
+        function itAnalysesVerbs(testName: string, sentence: string, expectedVerb: string): void {
+            const sa = new SentenceAnalyser(sentence);
             it(testName, () => {
                 expect(
                     sa.createMeanings()[0]._action._verb
@@ -13,31 +14,31 @@ describe('SentenceAnalyser', () => {
 
         itAnalysesVerbs(
             'Composed verbs, separated',
-            new SentenceAnalyser('Turn the heater on'),
+            'Turn the heater on',
             'turn on'
         );
 
         itAnalysesVerbs(
             'composed verbs, joined',
-            new SentenceAnalyser('Turn off the TV'),
+            'Turn off the TV',
             'turn off'
         );
 
         itAnalysesVerbs(
             'Give a call to <PERSON>',
-            new SentenceAnalyser('Give a call to my mom'),
+            'Give a call to my mom',
             'call'
         );
 
         itAnalysesVerbs(
             'Give <PERSON> a call',
-            new SentenceAnalyser('Give my mom a call'),
+            'Give my mom a call',
             'call'
         );
 
         itAnalysesVerbs(
             'Give a <NOUN>',
-            new SentenceAnalyser('Give a present to my mom'),
+            'Give a present to my mom',
             'give'
         );
     });

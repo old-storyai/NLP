@@ -15,6 +15,12 @@ export default class Word {
     get tag(): string { return this._tag.replace('$', 'S'); }
     set tag(tag:string) { this._tag = tag; }
 
+    getSimplifiedTag() {
+        if (this.isDeterminer()) return 'DT';
+
+        return this.tag.slice(0,2);
+    }
+
     isGroup(): boolean {
         return false;
     }

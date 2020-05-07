@@ -35,6 +35,10 @@ export class WordGroup {
         return this._tag;
     }
 
+    getSimplifiedTag(): string {
+        return this.tag.replace('G_', '');
+    }
+
     /**
      * Allows to look for specific grammar formation in a word group
      *
