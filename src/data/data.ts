@@ -5,7 +5,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import {BASEPATH} from 'pathGiver';
+import {BASEPATH} from '../pathGiver';
 
 const filesPaths = {
     'stopWords': 'stopWords.json',
