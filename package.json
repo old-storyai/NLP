@@ -1,5 +1,5 @@
 {
-  "name": "nlp",
+  "name": "NLP",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -39,5 +39,9 @@
   },
   "dependencies": {
     "fs": "0.0.1-security"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:storyscript/NLP.git"
   }
 }
