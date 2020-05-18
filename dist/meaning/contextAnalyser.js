@@ -16,18 +16,29 @@ var tokenizer_1 = require("../grammar/tokenizer");
 var ContextAnalyser = /** @class */ (function () {
     function ContextAnalyser(sent) {
         this._sentence = sent;
+        this._groups = [];
     }
     ContextAnalyser.prototype.handleThing = function (match, index, category, weight) {
-        console.log(category, '=>', match, "(" + index + ")");
         var length = String(match).split(/\s+/).length;
+        this._groups.push({
+            start: index,
+            end: index + length - 1,
+            category: category,
+            text: match
+        });
         return '';
     };
     ContextAnalyser.prototype.handleSentenceType = function (sentence_type) {
-        console.log('type = ', sentence_type);
         return '';
     };
-    ContextAnalyser.prototype.handleFilter = function (filterName, filterType) {
-        console.log('filter => ', filterType, filterName);
+    ContextAnalyser.prototype.handleFilter = function (filterType, filterBy, filterByIdx, filtered, filteredIdx) {
+        this._groups.push({
+            filterType: filterType,
+            filterBy: filterBy,
+            filterByIdx: filterByIdx,
+            data: filtered,
+            dataIdx: filteredIdx
+        });
         return '';
     };
     ContextAnalyser.prototype.handleReference = function (category, many, genre) {
@@ -36,10 +47,9 @@ var ContextAnalyser = /** @class */ (function () {
             str += ' ' + (many ? 'multi' : 'solo');
         if (genre !== undefined)
             str += ' ' + (genre ? 'F' : 'M');
-        console.log(str);
         return '';
     };
-    ContextAnalyser.prototype.createGroups = function () {
+    ContextAnalyser.prototype.analyse = function () {
         var _a = Data.getData('contextRules'), definitions = _a.definitions, matches = _a.matches;
         var tokens = tokenizer_1.Tokenizer.wordPerWord(this._sentence);
         var sentence = [];
@@ -50,16 +60,17 @@ var ContextAnalyser = /** @class */ (function () {
                 parallelSet.push(word.getSimplifiedTag());
             });
         });
-        console.log(sentence);
-        console.log(parallelSet);
         new stringParser_1.default(matches, definitions)
             .parseString(sentence.join(' '), function (match, replacement) {
         }, function () { }, {
-            'meaning-element': this.handleThing,
-            'sentence-type': this.handleSentenceType,
-            'reference': this.handleReference,
-            'filter': this.handleFilter
+            'meaning-element': this.handleThing.bind(this),
+            'sentence-type': this.handleSentenceType.bind(this),
+            'reference': this.handleReference.bind(this),
+            'filter': this.handleFilter.bind(this)
         }, true, parallelSet);
+        return {
+            groups: this._groups
+        };
     };
     return ContextAnalyser;
 }());

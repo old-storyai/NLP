@@ -39,11 +39,11 @@ export default class ContextAnalyser {
         return '';
     }
 
-    private handleSentenceType(sentence_type: string) {
+    private handleSentenceType(sentence_type) {
         return '';
     }
 
-    private handleFilter(filterType: ('filter'|'sort'), filterBy: string, filterByIdx: number, filtered: string, filteredIdx: number) {
+    private handleFilter(filterType, filterBy, filterByIdx, filtered, filteredIdx) {
         this._groups.push({
             filterType: filterType,
             filterBy: filterBy,
@@ -56,7 +56,7 @@ export default class ContextAnalyser {
         return '';
     }
 
-    private handleReference(category: string, many?: boolean, genre?: boolean) {
+    private handleReference(category, many, genre) {
         let str = 'Ref => ' + category;
         if (many !== undefined)
             str += ' ' + (many?'multi':'solo');
@@ -87,10 +87,10 @@ export default class ContextAnalyser {
                 },
                 () => {},
                 {
-                    'meaning-element': (...args) => this.handleThing(...args),
-                    'sentence-type':   (...args) => this.handleSentenceType(...args),
-                    'reference':       (...args) => this.handleReference(...args),
-                    'filter':          (...args) => this.handleFilter(...args)
+                    'meaning-element': this.handleThing.bind(this),
+                    'sentence-type':   this.handleSentenceType.bind(this),
+                    'reference':       this.handleReference.bind(this),
+                    'filter':          this.handleFilter.bind(this)
                 },
                 true,
                 parallelSet

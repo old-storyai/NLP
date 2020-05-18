@@ -14,4 +14,6 @@ var sentenceAnalyser_1 = __importDefault(require("./meaning/sentenceAnalyser"));
 exports.SentenceAnalyser = sentenceAnalyser_1.default;
 var Normalizer = __importStar(require("./language/normalizer"));
 exports.Normalizer = Normalizer;
+var contextAnalyser_1 = __importDefault(require("./meaning/contextAnalyser"));
+exports.ContextAnalyser = contextAnalyser_1.default;
 //# sourceMappingURL=index.js.map

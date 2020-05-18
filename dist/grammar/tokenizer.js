@@ -63,7 +63,7 @@ var Tokenizer = /** @class */ (function () {
         new stringParser_1.default(extension).parseString(sentence, function (match, tag) {
             words.push(new wordGroup_1.Word(match, tag));
         }, function (unmatch) {
-            tagger.tag(unmatch.trim().split(/[^\w':;,.]+/)).forEach(function (_a) {
+            tagger.tag(unmatch.trim().split(/[^\w':;,.#]+/)).forEach(function (_a) {
                 var word = _a[0], tag = _a[1];
                 words.push(new wordGroup_1.Word(word, tag));
             });

@@ -38,7 +38,7 @@ var StringParser = /** @class */ (function () {
         if (!(word in dictionnary))
             return '';
         // To avoid circular references:
-        if (count > 100)
+        if (count > 50)
             return '';
         var def = dictionnary[word];
         def = def.replace(/\{\{:.*?:\}\}/g, function (match) {
@@ -118,9 +118,10 @@ var StringParser = /** @class */ (function () {
                     }
                     var captureNum = Number(chara);
                     var res = lhs.replace(new RegExp("^.*?(\\((?!\\?).*?){" + (captureNum - 1) + "}\\((?!\\?)"), function (m) {
-                        var regex = /(\)[?*]?|\((?:\?:)?)?(.*?)(?=\)[?*]*|\((\?:)?)/g;
+                        var regex = /(\)[?*+]*|\((?:\?[:!])?|\|)?(.*?)(?=\)[?*+]*|\((?:\?[:!])?|\|)/g;
                         m = m.replace(regex, '$1(?<@@@>$2)');
                         var count = 0;
+                        m = m.replace(/\(\?<@@@>\)/g, '');
                         m = m.replace(/@@@/g, function () { return 'S' + count++; });
                         return m;
                     });
