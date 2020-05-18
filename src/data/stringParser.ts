@@ -36,7 +36,7 @@ export default class StringParser {
     getDefinitionOf(word, dictionnary, count = 0): string {
         if (!(word in dictionnary)) return '';
         // To avoid circular references:
-        if (count > 100) return '';
+        if (count > 50) return '';
 
         let def = dictionnary[word];
 
@@ -136,9 +136,10 @@ export default class StringParser {
                         }
                         const captureNum = Number(chara);
                         const res = lhs.replace(new RegExp(`^.*?(\\((?!\\?).*?){${captureNum-1}}\\((?!\\?)`), m => {
-                            const regex = /(\)[?*]?|\((?:\?:)?)?(.*?)(?=\)[?*]*|\((\?:)?)/g;
+                            const regex = /(\)[?*+]*|\((?:\?[:!])?|\|)?(.*?)(?=\)[?*+]*|\((?:\?[:!])?|\|)/g;
                             m = m.replace(regex, '$1(?<@@@>$2)');
                             let count = 0;
+                            m = m.replace(/\(\?<@@@>\)/g, '');
                             m = m.replace(/@@@/g, () => 'S' + count++);
                             return m;
                         });

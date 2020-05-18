@@ -2,30 +2,56 @@ import * as Data from 'data/data';
 import StringParser from 'data/stringParser';
 import {Tokenizer, WordGroup, Word} from '../grammar/tokenizer';
 
+interface Info {
+    start: number;
+    end: number;
+    text: string;
+    category: string;
+}
+interface Filter {
+    filterType: 'filter|sort';
+    filterBy: string;
+    filterByIdx: number;
+    data: string;
+    dataIdx: number;
+}
+
 export default class ContextAnalyser {
 
-    _sentence: string
+    _sentence: string;
+    _groups: (Info|Filter)[];
 
     constructor(sent: string) {
         this._sentence = sent;
+        this._groups = [];
     }
 
     private handleThing(match, index, category, weight) {
-        console.log(category, '=>', match, `(${index})`);
-
         const length = String(match).split(/\s+/).length;
+
+        this._groups.push({
+            start: index,
+            end: index + length - 1,
+            category: category,
+            text: match
+        });
 
         return '';
     }
 
     private handleSentenceType(sentence_type: string) {
-        console.log('type = ', sentence_type);
-
         return '';
     }
 
-    private handleFilter(filterName: string, filterType: ('filter'|'name')) {
-        console.log('filter => ', filterType, filterName);
+    private handleFilter(filterType: ('filter'|'sort'), filterBy: string, filterByIdx: number, filtered: string, filteredIdx: number) {
+        this._groups.push({
+            filterType: filterType,
+            filterBy: filterBy,
+            filterByIdx: filterByIdx,
+            data: filtered,
+            dataIdx: filteredIdx
+        });
+
 
         return '';
     }
@@ -38,12 +64,10 @@ export default class ContextAnalyser {
         if (genre !== undefined)
             str += ' ' + (genre?'F':'M');
 
-        console.log(str);
-
         return '';
     }
 
-    createGroups() {
+    analyse(): {groups: (Info|Filter)[]} {
         const {definitions, matches} = Data.getData('contextRules');
 
         const tokens = Tokenizer.wordPerWord(this._sentence);
@@ -56,9 +80,6 @@ export default class ContextAnalyser {
             });
         });
 
-        console.log(sentence);
-        console.log(parallelSet);
-
         new StringParser(matches, definitions)
             .parseString(
                 sentence.join(' '),
@@ -66,13 +87,17 @@ export default class ContextAnalyser {
                 },
                 () => {},
                 {
-                    'meaning-element': this.handleThing,
-                    'sentence-type': this.handleSentenceType,
-                    'reference': this.handleReference,
-                    'filter': this.handleFilter
+                    'meaning-element': (...args) => this.handleThing(...args),
+                    'sentence-type':   (...args) => this.handleSentenceType(...args),
+                    'reference':       (...args) => this.handleReference(...args),
+                    'filter':          (...args) => this.handleFilter(...args)
                 },
                 true,
                 parallelSet
             );
+
+        return {
+            groups: this._groups
+        };
     }
 }

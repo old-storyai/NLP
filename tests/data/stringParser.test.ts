@@ -231,26 +231,25 @@ describe('StringParser class', () => {
             );
 
             itFindsMatches(
-                'Dictionnary items can be recursive - circular reference is replaced by nothing',
+                'Dictionnary items can be recursive - circular reference works to some extent',
                 {
-                    '{{:a:}} (to)': '$1',
+                    '({{:a:}} to)': '$1',
                 },
                 '1891 turned out to be a good year',
-                [' to'],
-                ['to'],
+                [' turned out to'],
+                [' turned out to'],
                 undefined,
                 undefined,
                 {
-                    'a': '{{:b:}}',
-                    'b': '{{:c:}}',
-                    'c': '{{:a:}}',
+                    'a': '[turdt]?{{:b:}}',
+                    'b': '[ne ou]?{{:a:}}',
                 }
             );
         });
 
         describe('word index', () => {
             itFindsMatches(
-                'Index of word in the sentence',
+                'Index of word in the sentence - v1',
                 {
                     '(turned) out (to)': '{IDX{1}}',
                 },
@@ -265,7 +264,7 @@ describe('StringParser class', () => {
             );
 
             itFindsMatches(
-                'Index of word in the sentence',
+                'Index of word in the sentence - v2',
                 {
                     'be a (really )?good (year)': '{IDX{1}}',
                 },
@@ -280,7 +279,7 @@ describe('StringParser class', () => {
             );
 
             itFindsMatches(
-                'Index of word in the sentence',
+                'Index of word in the sentence - v3',
                 {
                     '(be) .* (good year)': '{IDX{2}}',
                 },

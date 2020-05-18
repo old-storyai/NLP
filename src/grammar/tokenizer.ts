@@ -65,7 +65,7 @@ export class Tokenizer {
             },
             unmatch => {
                 tagger.tag(
-                    unmatch.trim().split(/[^\w':;,.]+/)
+                    unmatch.trim().split(/[^\w':;,.#]+/)
                 ).forEach(([word, tag]) => {
                     words.push(new Word(word, tag));
                 });
