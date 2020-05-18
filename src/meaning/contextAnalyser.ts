@@ -1,5 +1,5 @@
-import * as Data from 'data/data';
-import StringParser from 'data/stringParser';
+import * as Data from '../data/data';
+import StringParser from '../data/stringParser';
 import {Tokenizer, WordGroup, Word} from '../grammar/tokenizer';
 
 interface Info {
