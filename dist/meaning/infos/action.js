@@ -36,7 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Normalizer = __importStar(require("../../language/normalizer"));
-var thing_1 = __importDefault(require("./thing/thing"));
+var info_1 = __importDefault(require("./info/info"));
 var Tense;
 (function (Tense) {
     Tense["past"] = "past";
@@ -52,6 +52,6 @@ var Action = /** @class */ (function (_super) {
         this._verb = Normalizer.disconjugateVerb(this._wordGroup.toString());
     };
     return Action;
-}(thing_1.default));
+}(info_1.default));
 exports.default = Action;
 //# sourceMappingURL=action.js.map

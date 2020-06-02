@@ -10,6 +10,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.WordGroup = exports.Word = void 0;
 var safe_1 = __importDefault(require("colors/safe"));
 var word_1 = __importDefault(require("./word/word"));
 exports.Word = word_1.default;
@@ -27,14 +28,14 @@ var WordGroup = /** @class */ (function () {
             var s = this._words.map(function (w) { return w.tag; }).join(' ');
             return " " + s + " ";
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(WordGroup.prototype, "words", {
         get: function () {
             return this._words;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(WordGroup.prototype, "tag", {
@@ -48,7 +49,7 @@ var WordGroup = /** @class */ (function () {
         get: function () {
             return this._tag;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     WordGroup.prototype.getSimplifiedTag = function () {

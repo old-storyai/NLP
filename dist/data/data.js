@@ -7,6 +7,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getData = void 0;
 var fs_1 = __importDefault(require("fs"));
 var path_1 = __importDefault(require("path"));
 var pathGiver_1 = require("../pathGiver");
@@ -18,10 +19,10 @@ var filesPaths = {
     'grammarGroupRules': 'grammar/wordGroupingRules.tp.json',
     'lemmatizerExtension': 'language/lemmatizerExtension.sp.json',
     'contextRules': 'language/context.sp.json',
-    'value_modifiers': 'things/value/modifiers.tp.json',
-    'verbMeaningInference': 'things/action/meaningInference_VB2NN.bal.json',
-    'composedVerbs': 'things/action/composedVerbs.tp.json',
-    'timeComponents': 'things/time/timeComponents.sp.json',
+    'value_modifiers': 'infos/value/modifiers.tp.json',
+    'verbMeaningInference': 'infos/action/meaningInference_VB2NN.bal.json',
+    'composedVerbs': 'infos/action/composedVerbs.tp.json',
+    'timeComponents': 'infos/time/timeComponents.sp.json',
     'idiomsReplacements': 'idiomsReplacements.sp.json',
 };
 function getData(fileId) {

@@ -35,23 +35,36 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var Normalizer = __importStar(require("../../language/normalizer"));
-var thing_1 = __importDefault(require("./thing/thing"));
-var Tense;
-(function (Tense) {
-    Tense["past"] = "past";
-    Tense["present"] = "present";
-    Tense["future"] = "future";
-})(Tense || (Tense = {}));
-var Action = /** @class */ (function (_super) {
-    __extends(Action, _super);
-    function Action() {
+var Data = __importStar(require("../../data/data"));
+var treeParser_1 = __importDefault(require("../../data/treeParser"));
+var info_1 = __importDefault(require("./info/info"));
+/**
+ * call me as soon as the sun rises
+ *         '---.----' '-----.-----'
+ *          modifier     addition
+ */
+var Value = /** @class */ (function (_super) {
+    __extends(Value, _super);
+    function Value() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Action.prototype.processWords = function () {
-        this._verb = Normalizer.disconjugateVerb(this._wordGroup.toString());
+    Value.prototype.processWords = function () {
+        if (this._conns.length) {
+            var blob = this._conns.map(function (sep) { return sep.toString(); }).join(' ');
+            var tp = new treeParser_1.default(Data.getData('value_modifiers'));
+            this._modifier = tp.findParentOfMatching(blob);
+        }
+        var matches = this._wordGroup.toString().match(/[\d.,]+/);
+        if (matches !== null)
+            this._amount = Number.parseInt(matches[0]);
+        matches = this._wordGroup.toString().match(/[\d.,]+([\w\s]+)|([\w]+)\s*$/);
+        if (matches !== null && matches.length > 1)
+            this._unit = matches[1].trim();
+        matches = this._wordGroup.toString().match(/"(.*)"/);
+        if (matches !== null && matches.length > 1)
+            this._txt = matches[1].trim();
     };
-    return Action;
-}(thing_1.default));
-exports.default = Action;
-//# sourceMappingURL=action.js.map
+    return Value;
+}(info_1.default));
+exports.default = Value;
+//# sourceMappingURL=value.js.map

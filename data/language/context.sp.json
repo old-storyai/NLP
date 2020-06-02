@@ -2,11 +2,13 @@
     "definitions": { 
         "punctuation": "{{!?!}}|{{!.!}}|{{!,!}}",
 
-        "grammar-person": "({{!NN!}} |{{!PR!}} |{{!DT!}} )+",
         "grammar-noun-group": "(({{!NN!}}|{{!JJ!}}|{{!RB!}}|{{:identifier:}}) ?)+",
 
-        "identifier": "the|a|an|any|all|my|your|their|her|his|this|those",
-        "possessive": "my|your|her|his|their|our",
+        "person-qualifier": "\\b(me|him|her|them)\\b",
+        "identifier": "\\b(the|a|an|any|all|my|your|their|her|his|this|those)\\b",
+        "possessive": "\\b(my|your|her|his|their|our)\\b",
+
+        "stopper": "{{:punctuation:}}|\\bor\\b|$",
 
         "number-1-9": "one|two|three|four|five|six|seven|eight|nine|[1-9]",
         "number-10-19": "ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|[1-9]{{:number-1-9:}}",
@@ -18,11 +20,12 @@
         "_number": "{{:number-1-9999:}}",
         "number": "((thousands?|hundreds?|ninety|eighty|seventy|sixty|fifty|fourty|thirty|twenty|nineteen|eighteen|seventeen|sixteen|fifteen|fourteen|thirteen|twelve|eleven|ten|nine|eight|seven|six|five|four|three|two|one|and|[0-9]) ?)+",
 
+        "person-example": "(mom|dad|father|sibling|person|customer|client|employee|m[ae]n|wom[ae]n|lady|gentlem[ae]n|investor)s?",
+        "person": "{{:person-qualifier:}}|({{:possessive:}}|{{:identifier:}})?( {{!JJ!}})*( {{!NN!}})* {{:person-example:}}",
+        "location-example": "(home|place|room|building|place|park|outside|inside)s?",
+        "location": "{{:location-example:}}|({{:possessive:}}|{{:identifier:}})?( {{!JJ!}})*( {{!NN!}})* {{:location-example:}}",
 
-        "message": "(message|text|telegram)s?",
-        "person": "(person|customer|client|employee|m[ae]n|wom[ae]n)s?",
         "unit": "((\\b|(?<=\\d))(n(ano)?|m(illi)?|c(enti)?|d(eca)?|k(ilo)?|t(era)?)(l(iter)?|m(eter)?|g(ram)?|b(yte)?|b(it)?|o(ctet)?)s?\\b)",
-
 
         "when": "when|as soon as|at the moment",
         "where": "where",
@@ -32,39 +35,54 @@
         "be": "am|is|are|were|used to be|will be|'s",
         "do": "do|does|did|'d|would do|would have done",
         "have": "have|had|'d'",
-        "action": "send|show|provide|tell",
+        "action-to-person": "send|show|provide|call|give|present",
+        "action-to-location": "(get|arrive|move|travel|come)s?",
 
-        "service-object": "(?:message|call|ticket|operation|account)s?",
+        "service-object": "(message|call|ticket|operation|account)s?",
+        "service": "\\b(slack|email|intercom|stripe|facebook|messenger|what( ' )?s[ -]?app|uber)\\b",
 
         "time-units": "(decade|year|month|week|day|hour|minute|second)s?",
-        "time-special": "tomorrow|yesterday",
+        "time-special": "\\b(tomorrow|yesterday|tonight|at noon)( afternoon| morning| night)?",
         "time-event": "(({{!JJ!}}|{{!NN!}}) ?)*(christmas|birthday|new year|eves?|appointment|meeting)(({{!JJ!}}|{{!NN!}}) ?)*",
-        "time-relative-to-event": "(after|before|during|from|past) {{:time-event:}}",
-        "time-relative-to-action": "(once|as soon as|after|before|from the moment|from when) (?:(?!={{:punctuation:}}).)*({{:punctuation:}}|$)",
-        "time-relative-to-now": "((in )?(a |{{:number:}}+ )?|(next |last )?)({{:time-units:}}|{{:time-special:}})( ago| from now)?",
+        "time-repetiton": "daily|weekly|monthly|every ({{:time-event:}}|{{:time-units:}}|{{:time-weekday:}}|{{:time-month:}}|{{:time-seaons:}})",
+        "time-relative-to-event": "\\b(after|before|during|from|past|at) {{:time-event:}}",
+        "time-relative-to-action": "(once|as soon as|after|before|from the moment|from when|when) (?:(?!{{:stopper:}}).)*{{:stopper:}}",
+        "time-relative-to-now": "\\b((in )?(a |{{:number:}}+ )?|(next |last )?)({{:time-units:}}|{{:time-special:}})( ago| from now)?",
         "time-hour-mins": "{{:number-1-19:}}([:h]{{:number-1-99:}}+)? ?(PM|AM)?",
-        "time-day": "the \\d+(st|nd|rd|th)",
+        "time-day": "\\d+(st|nd|rd|th)",
         "time-weekday": "monday|tuesday|wednesday|thursday|friday|saturday|sunday",
+        "time-seaons": "summer|winter|spring|automn|fall",
         "time-month": "january|february|march|april|may|june|july|august|september|october|november|december",
         "time-year": "\\d{4}",
-        "time-absolute": "((in |on the |at )({{:time-weekday:}}|{{:time-day:}}|{{:time-month:}}|{{:time-year:}}|{{:time-hour-mins:}}) ?)+",
-        "time-any": "(({{:time-relative-to-now:}} ?|{{:time-relative-to-action:}} ?|{{:time-relative-to-event:}} ?|{{:time-absolute:}} ?)+)"
+        "time-absolute": "(\\b(in |on the |at |this |of )?({{:time-weekday:}}|{{:time-seaons:}}|{{:time-day:}}|{{:time-month:}}|{{:time-year:}}|{{:time-hour-mins:}}) ?)+",
+        "time-any": "(({{:time-relative-to-now:}} ?|{{:time-relative-to-event:}} ?|{{:time-absolute:}} ?|{{:time-repetiton:}} ?)+)"
     },
     "matches": {
-        "give a call to ({{:grammar-person:}})": "{o<meaning-element>{$1, {IDX{1}}, person, 100}}{o<sentence-type>{order}}",
-        "{{:action:}} ((\\w+ )+)({{:identifier:}} (?:\\w+ )*{{:message:}}|{{:possessive:}})": "{o<meaning-element>{$1, {IDX{1}}, person, 100}}{o<sentence-type>{order}}",
+        "give a call to ({{:person:}})": "{o<meaning-element>{$1, {IDX{1}}, person, 100}}{o<sentence-type>{order}}",
+        "{{:action-to-person:}} ({{:person:}}|({{!NN!}} ?)+)(?!.*\\bto\\b)({{:identifier:}} ({{!NN!}} )*)": "{o<meaning-element>{$1, {IDX{1}}, person, 100}}{o<sentence-type>{order}}",
+        "{{:action-to-person:}} .*? to ({{!NN!}})": "{o<meaning-element>{$1, {IDX{1}}, person, 100}}{o<sentence-type>{order}}",
+        "{{:action-to-location:}} ({{:location:}})(?!.*\\b(?:to|at)\\b)": "{o<meaning-element>{$1, {IDX{1}}, location, 100}}{o<sentence-type>{order}}",
+        "{{:action-to-location:}} .*? ?(?:to|at) (({{:possessive:}}|{{:identifier:}})? {{!NN!}})": "{o<meaning-element>{$1, {IDX{1}}, location, 100}}",
+
+        "{{:service:}}": "{o<meaning-element>{$&, {IDX{&}}, service, 100}}",
+        "(?:via|using) (\\w+)": "{o<meaning-element>{$1, {IDX{1}}, service, 100}}",
+
+        "{{:person:}}": "{o<meaning-element>{$&, {IDX{&}}, person, 100}}",
  
-        "{{:identifier:}} (\\w+) {{:service-object:}}": "{o<meaning-element>{$1, {IDX{1}}, service, 100}}",
+        "{{:identifier:}} (\\w+) {{:service-object:}}": "{o<meaning-element>{$&, {IDX{&}}, item, 100}}",
 
         "{{:identifier:}} {{:service-object:}}": "{o<meaning-element>{$&, {IDX{&}}, item, 100}}",
 
         "({{:number:}} ?|a ){{:unit:}}": "{o<meaning-element>{$&, {IDX{&}}, value, 100}}",
 
 
+        "{{:action-to-person:}}|{{:action-to-location:}}": "{o<meaning-element>{$&, {IDX{&}}, service, 100}}",
+
+
         "#\\w+": "{o<meaning-element>{$&, {IDX{&}}, value, 100}}",
 
 
-        "{{:do:}} {{:grammar-person:}} {{:have:}}": "{o<sentence-type>{question}}",
+        "{{:do:}} {{:person:}} {{:have:}}": "{o<sentence-type>{question}}",
         "(?:^|{{:punctuation:}} ?)(?!={{:do:}}|{{:have:}}){{!VB!}}": "{o<sentence-type>{order}}",
 
         "them": "{o<reference>{item|person, true}}",
@@ -75,15 +93,13 @@
 
         "({{:grammar-noun-group:}} )?filtered by (\\w+(?: {{!NN!}}| {{!JJ!}})*)": "{o<meaning-element>{$1, {IDX{1}}, data, 100}}{o<filter>{filter, $2, {IDX{2}}, $1, {IDX{1}}}}",
         "({{:grammar-noun-group:}} )?sorted by (\\w+(?: {{!NN!}}| {{!JJ!}})*)": "{o<meaning-element>{$1, {IDX{1}}, data, 100}}{o<filter>{sort, $2, {IDX{2}}, $1, {IDX{1}}}}",
-        "filter (.*) by (\\w+(?: {{!NN!}}| {{!JJ!}})*)": "{o<meaning-element>{$1, {IDX{1}}, data, 100}}{o<filter>{filter, $2, {IDX{2}}, $1, {IDX{1}}}}",
-        "sort (.*) by (\\w+(?: {{!NN!}}| {{!JJ!}})*)": "{o<meaning-element>{$1, {IDX{1}}, data, 100}}{o<filter>{sort, $2, {IDX{2}}, $1, {IDX{1}}}}",
+        "filter (.*) by (\\w+(?: {{!NN!}}| {{!JJ!}})*)": "{o<meaning-element>{$1, {IDX{1}}, data, 100}}",
+        "sort (.*) by (\\w+(?: {{!NN!}}| {{!JJ!}})*)": "{o<meaning-element>{$1, {IDX{1}}, data, 100}}",
 
 
         "{{:do:}} ([\\w ]+?) {{!VB!}}": "{o<meaning-element>{$1, {IDX{1}}, person, 100}}{o<sentence-type>{question}}",
 
-
         "\".*?\"": "{o<meaning-element>{$&, {IDX{&}}, value, 100}}",
-        "(?:{{:identifier:}} )?(?:{{!JJ!}} |{{!NN!}} )*?{{:person:}}": "{o<meaning-element>{$&, {IDX{&}}, person, 100}}",
 
         "{{:time-any:}}": "{o<meaning-element>{$&, {IDX{&}}, time, 100}}"
     }

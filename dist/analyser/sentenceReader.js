@@ -3,8 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var range_1 = __importDefault(require("./range/range"));
-var meaning_1 = require("./infos/meaning");
+var range_1 = __importDefault(require("../meaning/range/range"));
+var meaning_1 = require("../meaning/infos/meaning");
 var SearchScope;
 (function (SearchScope) {
     SearchScope[SearchScope["local"] = 0] = "local";

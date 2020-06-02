@@ -22,9 +22,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var Data = __importStar(require("../data/data"));
-var stringParser_1 = __importDefault(require("../data/stringParser"));
-var tokenizer_1 = require("../grammar/tokenizer");
+var Data = __importStar(require("./data/data"));
+var stringParser_1 = __importDefault(require("./data/stringParser"));
+var tokenizer_1 = require("./grammar/tokenizer");
 var ContextAnalyser = /** @class */ (function () {
     function ContextAnalyser(sent) {
         this._sentence = sent;

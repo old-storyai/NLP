@@ -46,7 +46,7 @@ exports.Time = exports.TimeInfos = exports.OperatorComponent = exports.Repetitio
 var moment_1 = __importDefault(require("moment"));
 var tokenizer_1 = require("../../grammar/tokenizer");
 var Data = __importStar(require("../../data/data"));
-var thing_1 = __importDefault(require("./thing/thing"));
+var info_1 = __importDefault(require("./info/info"));
 var stringParser_1 = __importDefault(require("../../data/stringParser"));
 var durationComponent_1 = __importDefault(require("./timeComponents/durationComponent"));
 exports.DurationComponent = durationComponent_1.default;
@@ -247,6 +247,6 @@ var Time = /** @class */ (function (_super) {
         return undefined;
     };
     return Time;
-}(thing_1.default));
+}(info_1.default));
 exports.Time = Time;
 //# sourceMappingURL=time.js.map

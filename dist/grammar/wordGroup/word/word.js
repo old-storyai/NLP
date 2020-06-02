@@ -9,13 +9,13 @@ var Word = /** @class */ (function () {
     Object.defineProperty(Word.prototype, "str", {
         get: function () { return this._str; },
         set: function (str) { this._str = str; },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Word.prototype, "tag", {
         get: function () { return this._tag.replace('$', 'S'); },
         set: function (tag) { this._tag = tag; },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Word.prototype.getSimplifiedTag = function () {

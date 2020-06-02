@@ -19,10 +19,10 @@ const filesPaths = {
     'lemmatizerExtension': 'language/lemmatizerExtension.sp.json',
     'contextRules':        'language/context.sp.json',
 
-    'value_modifiers':      'things/value/modifiers.tp.json',
-    'verbMeaningInference': 'things/action/meaningInference_VB2NN.bal.json',
-    'composedVerbs':        'things/action/composedVerbs.tp.json',
-    'timeComponents':       'things/time/timeComponents.sp.json',
+    'value_modifiers':      'infos/value/modifiers.tp.json',
+    'verbMeaningInference': 'infos/action/meaningInference_VB2NN.bal.json',
+    'composedVerbs':        'infos/action/composedVerbs.tp.json',
+    'timeComponents':       'infos/time/timeComponents.sp.json',
     'idiomsReplacements':   'idiomsReplacements.sp.json',
 };
 
