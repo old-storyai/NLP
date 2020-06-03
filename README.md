@@ -16,33 +16,46 @@ To run the tests:
 yarn test
 ```
 
-## The two Methods
+## The two Analysers
 
 There are 2 different methods/algorithms to analyse a sentence, here's a quick description of both of them
 
 ### Sentence Analyser (*/src/analyser/*)
 
-**What is it?**
+**What is it?**  
+
 This was the first mechanism to be developed, it's more complete and does a better job at recognizing the parts of the sentence, but it's way less flexible and more scattered, which makes it hard to understand and modify it.
 
-**How does it work?**
-Everything is based on Grammar analysis, see [Gramex](#Gramex) below.
-We can identify specific grammar formations, and figure give them a label / group based on those formation. Once we labeled the groups, we use specific weighed words to find the meaning. There are **2 limitations** to this method:
+**How does it work?**  
+
+Everything is based on Grammar analysis, (see [Gramex](#Gramex) below).  
+
+We can identify specific grammar formations, and figure give them a label / group based on those formation. Once we labeled the groups, we use specific weighed words to find the meaning.  
+There are **2 limitations** to this method:
+
 1. The POS analyser we use is far from being perfect, and makes a lot of mistakes (e.g. "text me after 5PM", "text" will be considered as a noun)
+
 2. Since we use specific, hard-coded words to understand the meaning of a group, we (obviously) don't cover the whole English language, and it's pretty easy to fall in edge cases.
 
-**What's valuable in there?**
-The important/interesting parts of this module is the informations analysis (*/src/infos*), especially the time/date analysis. The Analysis is not linked in any way to the Sentence Analyser, it's its own module, So it can easily be moved around and used somewhere else.
+**What's valuable in there?**  
+
+The most important/interesting part of this module is the **informations analysis** (*/src/infos*), especially the time/date analysis.  
+Note that the informations analysis is not linked in any way to the Sentence Analyser, it's its own module, So it can easily be moved around and used somewhere else.
 
 ### Context Analyser (*/src/contextAnalyser.ts*)
-**What is it**
-This is basically augmented regex. This all began as a Science Day experiment, and I ended up switching to this one as it's much lighter, faster, and less complex than the 1st analyser.
+**What is it**  
 
-**How does it work?**
+This is basically **augmented regex**. This all began as a Science Day experiment, and I ended up switching to this analyser as it's much lighter, faster, and less complex than the first one.
+
+
+**How does it work?**  
+
 Everything is based on the [String Parser](String-Parser). We can define rules to match any type of sentence / grammar formation, and mix everything in a regular expression.
 
-**What's valuable in there?**
-If we want to completely switch to a new analysis mechanism (which will probably be the case, see [Overall Limitations](Overall-Limitations)), we can keep this StringParser for the sentence tokenization (What is a *when* block? What is an *instruction* block?)
+
+**What's valuable in there?**  
+
+If we want to completely switch to a new analysis mechanism (which will probably be the case, see [Overall Limitations](Overall-Limitations)), we can keep this StringParser for the sentence tokenization (What is a `when` block? What is an `instruction` block?)
 
 ## Overall limitations
 The main problem with those analyser is that everything is based on hard-coded rules. Therefore, none of them can be enriched by deep learning.
@@ -213,7 +226,7 @@ new TreeParser(data).findChildrenOfMatching(/less/gi); // ["below", "under", ...
 The String parser is the most powerful, but also the most complicated of the 3 file formats.
 
 Here's an example of the String parser file format: (part of the _timeComponents.sp.json_ file)
-```json
+```
  1 | {
  2 |     "definitions": {
  3 |         "this": "this|este|ce|この|今"
@@ -231,7 +244,7 @@ Let's analyse this line by line, and discover the features along the way:
 
 ---
 
-```json
+```
  2 |     "definitions": {
  3 |         "this": "this|este|ce|この|今"
  4 |         "month": "month|mes|mois|月"
@@ -243,8 +256,8 @@ Those are definitions, they can be referred to later in the code, for example he
 
 ---
 
-```json
-2|    "\\d+h(\\d+)": "m=$1",
+```
+2 |    "\\d+h(\\d+)": "m=$1",
 ```
 The fist thing we can see here, is that the **key supports regex**. It will match a specific part of the sentence, and give you its **transformation**.  
 Here, the transformation is `m=$1`, as in a `replace`, the $1 will be replaced by the captured group.
@@ -253,8 +266,8 @@ So, for example if we apply the above rule to `"18h21"`, the transformation will
 <hr/>
 
 Let's look at the next line:
-```json
-4|     "(\\d+)(:\\d+)?PM": "h={={$1+12}}",
+```
+ 8 |         "(\\d+)(:\\d+)?PM": "h={={$1+12}}",
 ```
 Here, we find a new syntax: `{={...}}`. This syntax is used to make calculations.  This will be replaced by the result of the operation.
 
@@ -265,8 +278,8 @@ So if we apply this rule to `"6:18PM"`, two things will happen:
 <hr/>
 
 Now the final line:
-```json
-5|     "this month": "M={o0{month, 0}}",
+```
+ 9 |         "{{:this:}} {{:month:}}": "M={o0{month, 0}}"
 ```
 
 We find here yet another syntax: `{o0{...}}`. This allows the user to define his own operations. In this example, the user defined a function, which takes 2 arguments: a `unit`("*month*"), and a `number`(*0*).
