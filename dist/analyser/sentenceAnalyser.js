@@ -28,7 +28,7 @@ var Data = __importStar(require("../data/data"));
 var Normalizer = __importStar(require("../language/normalizer"));
 var tokenizer_1 = require("../grammar/tokenizer");
 var sentenceReader_1 = __importDefault(require("./sentenceReader"));
-var meaning_1 = require("../meaning/infos/meaning");
+var meaning_1 = require("../infos/meaning");
 /**
  * This class helps to understand a sentence
  */

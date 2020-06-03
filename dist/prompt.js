@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var prompts_1 = __importDefault(require("prompts"));
 var sentenceAnalyser_1 = __importDefault(require("./analyser/sentenceAnalyser"));
+var contextAnalyser_1 = __importDefault(require("./contextAnalyser"));
 var question = [
     {
         type: 'text',
@@ -57,9 +58,15 @@ function newSentence() {
                 case 1:
                     result = _a.sent();
                     console.log(result);
+                    console.log('Method 1:');
                     new sentenceAnalyser_1.default(result.sentence).createMeanings().forEach(function (meaning) {
-                        console.log('――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――');
+                        console.log('――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――');
                         console.log(meaning.toString());
+                    });
+                    console.log('\n====================================================================================================\n');
+                    console.log('Method 2:');
+                    new contextAnalyser_1.default(result.sentence).analyse().groups.forEach(function (elem) {
+                        console.log(elem.toString());
                     });
                     newSentence();
                     return [2 /*return*/];

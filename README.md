@@ -1,26 +1,51 @@
-
 # Natural Language Processing
 
 ## Installation
 The NLP runs with Node and Typescript. To set it up, simply run;
 ```bash
-npm install
+yarn
 ```
 
-To launch it:
+To provide sentences via the standard input:
 ```bash
-npm start
-```
-
-To provide input sentences via the standard input:
-```bash
-npm start -- --interactive
+yarn prompt
 ```
 
 To run the tests:
 ```bash
-npm run test
+yarn test
 ```
+
+## The two Methods
+
+There are 2 different methods/algorithms to analyse a sentence, here's a quick description of both of them
+
+### Sentence Analyser (*/src/analyser/*)
+
+**What is it?**
+This was the first mechanism to be developed, it's more complete and does a better job at recognizing the parts of the sentence, but it's way less flexible and more scattered, which makes it hard to understand and modify it.
+
+**How does it work?**
+Everything is based on Grammar analysis, see [Gramex](#Gramex) below.
+We can identify specific grammar formations, and figure give them a label / group based on those formation. Once we labeled the groups, we use specific weighed words to find the meaning. There are **2 limitations** to this method:
+1. The POS analyser we use is far from being perfect, and makes a lot of mistakes (e.g. "text me after 5PM", "text" will be considered as a noun)
+2. Since we use specific, hard-coded words to understand the meaning of a group, we (obviously) don't cover the whole English language, and it's pretty easy to fall in edge cases.
+
+**What's valuable in there?**
+The important/interesting parts of this module is the informations analysis (*/src/infos*), especially the time/date analysis. The Analysis is not linked in any way to the Sentence Analyser, it's its own module, So it can easily be moved around and used somewhere else.
+
+### Context Analyser (*/src/contextAnalyser.ts*)
+**What is it**
+This is basically augmented regex. This all began as a Science Day experiment, and I ended up switching to this one as it's much lighter, faster, and less complex than the 1st analyser.
+
+**How does it work?**
+Everything is based on the [String Parser](String-Parser). We can define rules to match any type of sentence / grammar formation, and mix everything in a regular expression.
+
+**What's valuable in there?**
+If we want to completely switch to a new analysis mechanism (which will probably be the case, see [Overall Limitations](Overall-Limitations)), we can keep this StringParser for the sentence tokenization (What is a *when* block? What is an *instruction* block?)
+
+## Overall limitations
+The main problem with those analyser is that everything is based on hard-coded rules. Therefore, none of them can be enriched by deep learning.
 
 ## Inner working
 ### Gramex
@@ -189,14 +214,35 @@ The String parser is the most powerful, but also the most complicated of the 3 f
 
 Here's an example of the String parser file format: (part of the _timeComponents.sp.json_ file)
 ```json
-1| {
-2|     "\\d+h(\\d+)": "m=$1",
-4|     "(\\d+)(:\\d+)?PM": "h={={$1+12}}",
-5|     "this month": "M={o0{month, 0}}",
-6| }
+ 1 | {
+ 2 |     "definitions": {
+ 3 |         "this": "this|este|ce|この|今"
+ 4 |         "month": "month|mes|mois|月"
+ 5 |     },
+ 6 |     "matches": {
+ 7 |         "\\d+h(\\d+)": "m=$1",
+ 8 |         "(\\d+)(:\\d+)?PM": "h={={$1+12}}",
+ 9 |         "{{:this:}} {{:month:}}": "M={o0{month, 0}}"
+10 |     }
+11 | }
 ``` 
 
 Let's analyse this line by line, and discover the features along the way:
+
+---
+
+```json
+ 2 |     "definitions": {
+ 3 |         "this": "this|este|ce|この|今"
+ 4 |         "month": "month|mes|mois|月"
+ 5 |     },
+     [...]
+ 9 |         "{{:this:}} {{:month:}}": "M={o0{month, 0}}"
+```
+Those are definitions, they can be referred to later in the code, for example here, `this` and `month` are used in  the left part of the 9th line. Those definitions can include each other, and circular reference works to some extents. See the tests for more examples.
+
+---
+
 ```json
 2|    "\\d+h(\\d+)": "m=$1",
 ```
@@ -237,11 +283,11 @@ new StringParser(data)
         "Send me flowers at 6:32PM this month",
         (match, transformation) => {
             // This function is called when a
-            // rule is respected
+            // rule is met
         },
         (nonMatch) => {
             // This function is called with all 
-            // the parts that don't match any rule
+            // the parts that don't meet any rule
         },
         [
             (unit, num) => {

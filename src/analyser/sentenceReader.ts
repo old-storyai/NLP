@@ -1,9 +1,9 @@
 import colors from 'colors';
 
 import {WordGroup, Word} from '../grammar/tokenizer';
-import Range from '../meaning/range/range';
+import Range from './range/range';
 
-import {Time, Person, Location, Item, Action, Meaning, Value} from '../meaning/infos/meaning';
+import {Time, Person, Location, Item, Action, Meaning, Value} from '../infos/meaning';
 
 enum SearchScope {
     local= 0,

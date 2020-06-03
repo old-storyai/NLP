@@ -6,7 +6,7 @@ import * as Normalizer from '../language/normalizer';
 import {Tokenizer, WordGroup, Word} from '../grammar/tokenizer';
 
 import SentenceReader from './sentenceReader';
-import {Time, Person, Location, Item, Action, Meaning, Value} from '../meaning/infos/meaning';
+import {Time, Person, Location, Item, Action, Meaning, Value} from '../infos/meaning';
 
 
 /**

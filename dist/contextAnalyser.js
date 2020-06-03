@@ -25,6 +25,78 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Data = __importStar(require("./data/data"));
 var stringParser_1 = __importDefault(require("./data/stringParser"));
 var tokenizer_1 = require("./grammar/tokenizer");
+var Info = /** @class */ (function () {
+    function Info(start0, end0, text0, category0) {
+        this.start = start0;
+        this.end = end0;
+        this.text = text0;
+        this.category = category0;
+    }
+    Info.prototype.toJSON = function () {
+        return {
+            datatype: 'info',
+            data: {
+                start: this.start,
+                end: this.end,
+                text: this.text,
+                category: this.category
+            }
+        };
+    };
+    Info.prototype.toString = function () {
+        return this.category + " - " + this.text;
+    };
+    return Info;
+}());
+var Filter = /** @class */ (function () {
+    function Filter(filterType0, filterBy0, filterByIdx0, data0, dataIdx0) {
+        this.filterType = filterType0;
+        this.filterBy = filterBy0;
+        this.filterByIdx = filterByIdx0;
+        this.data = data0;
+        this.dataIdx = dataIdx0;
+    }
+    Filter.prototype.toJSON = function () {
+        return {
+            datatype: 'filter',
+            data: {
+                filterType: this.filterType,
+                filterBy: this.filterBy,
+                filterByIdx: this.filterByIdx,
+                data: this.data,
+                dataIdx: this.dataIdx
+            }
+        };
+    };
+    Filter.prototype.toString = function () {
+        return this.filterType + " " + this.data + " BY " + this.filterBy;
+    };
+    return Filter;
+}());
+var SentenceType;
+(function (SentenceType) {
+    SentenceType[SentenceType["question"] = 0] = "question";
+    SentenceType[SentenceType["order"] = 1] = "order";
+    SentenceType[SentenceType["description"] = 2] = "description";
+    SentenceType[SentenceType["condition"] = 3] = "condition";
+})(SentenceType || (SentenceType = {}));
+var SentenceMeta = /** @class */ (function () {
+    function SentenceMeta(type0) {
+        this.type = type0;
+    }
+    SentenceMeta.prototype.toJSON = function () {
+        return {
+            datatype: 'sentencemeta',
+            data: {
+                type: this.type
+            }
+        };
+    };
+    SentenceMeta.prototype.toString = function () {
+        return "Sentence type: " + this.type;
+    };
+    return SentenceMeta;
+}());
 var ContextAnalyser = /** @class */ (function () {
     function ContextAnalyser(sent) {
         this._sentence = sent;
@@ -32,25 +104,15 @@ var ContextAnalyser = /** @class */ (function () {
     }
     ContextAnalyser.prototype.handleInfo = function (match, index, category, weight) {
         var length = String(match).split(/\s+/).length;
-        this._groups.push({
-            start: index,
-            end: index + length - 1,
-            category: category,
-            text: match
-        });
+        this._groups.push(new Info(index, index + length - 1, match, category));
         return '';
     };
     ContextAnalyser.prototype.handleSentenceType = function (sentence_type) {
+        this._groups.push(new SentenceMeta(sentence_type));
         return '';
     };
     ContextAnalyser.prototype.handleFilter = function (filterType, filterBy, filterByIdx, filtered, filteredIdx) {
-        this._groups.push({
-            filterType: filterType,
-            filterBy: filterBy,
-            filterByIdx: filterByIdx,
-            data: filtered,
-            dataIdx: filteredIdx
-        });
+        this._groups.push(new Filter(filterType, filterBy, filterByIdx, filtered, filteredIdx));
         return '';
     };
     ContextAnalyser.prototype.handleReference = function (category, many, genre) {
